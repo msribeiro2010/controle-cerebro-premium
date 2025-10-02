@@ -1,0 +1,989 @@
+[
+  {
+    "ds_orgao_julgador": "10ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "11ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "12ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Americana"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Araçatuba"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Assis"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Bauru"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Catanduva"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Franca"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Jaboticabal"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Jacareí"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Jaú"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Lençóis Paulista"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Limeira"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Marília"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Paulínia"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Sertãozinho"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de São Carlos"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "1ª Vara do Trabalho de Taubaté"
+  },
+  {
+    "ds_orgao_julgador": "1º Núcleo de Justiça 4.0"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Americana"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Araçatuba"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Assis"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Bauru"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Catanduva"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Franca"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Jaboticabal"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Jacareí"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Jaú"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Lençóis Paulista"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Limeira"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Marília"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Paulínia"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Sertãozinho"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de São Carlos"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "2ª Vara do Trabalho de Taubaté"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de Araçatuba"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de Bauru"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "3ª Vara do Trabalho de São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "4ª Vara do Trabalho de Bauru"
+  },
+  {
+    "ds_orgao_julgador": "4ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "4ª Vara do Trabalho de Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "4ª Vara do Trabalho de Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "4ª Vara do Trabalho de Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "4ª Vara do Trabalho de São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "4ª Vara do Trabalho de São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "5ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "5ª Vara do Trabalho de Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "5ª Vara do Trabalho de Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "5ª Vara do Trabalho de São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "6ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "6ª Vara do Trabalho de Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "7ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "8ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "9ª Vara do Trabalho de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "Assessoria de Execução I de Sertãozinho, Orlândia, Batatais e Franca"
+  },
+  {
+    "ds_orgao_julgador": "Assessoria de Execução II de Sertãozinho, Orlândia, Batatais e Franca"
+  },
+  {
+    "ds_orgao_julgador": "CCP ARARAQUARA - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP ARAÇATUBA - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP BAURU - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP CAMPINAS - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP DE 2º GRAU - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP FRANCA - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP JUNDIAÍ - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP LIMEIRA - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP PIRACICABA - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP PRESIDENTE PRUDENTE - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP RIBEIRÃO PRETO - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP SOROCABA - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP SÃO JOSÉ DO RIO PRETO - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP SÃO JOSÉ DOS CAMPOS - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CCP TAUBATÉ - Centro de Conciliação Pré Processual"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC ARARAQUARA - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC ARAÇATUBA - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC BAURU - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC CAMPINAS - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC FRANCA - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC JUNDIAÍ - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC LIMEIRA - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC PIRACICABA - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC PRESIDENTE PRUDENTE - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC RIBEIRÃO PRETO - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC SJCAMPOS - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC SJRIO PRETO - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC SOROCABA - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CEJUSC TAUBATÉ - JT Centro Judiciário de Métodos Consensuais de Solução de Disputas da Justiça do Trabalho"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "CON1 - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "CON2 - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "Corregedoria-Geral"
+  },
+  {
+    "ds_orgao_julgador": "DAM - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "DAM - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "DAM - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "DAM - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "DAM - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "DAM - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "DAM - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "DAM - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "DAM - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "DAM - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "DIVEX - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "Divisão de Apoio aos Magistrados de Sertãozinho"
+  },
+  {
+    "ds_orgao_julgador": "Divisão de Execução de Araçatuba "
+  },
+  {
+    "ds_orgao_julgador": "Divisão de Execução de Franca"
+  },
+  {
+    "ds_orgao_julgador": "Divisão de Execução de Limeira"
+  },
+  {
+    "ds_orgao_julgador": "Divisão de Execução de Taubaté"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "EXE1 - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "EXE2 - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "EXE3 - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "EXE4 - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "EXE5 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "EXE6 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de Araçatuba"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de Bauru"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de Fernandópolis"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de Franca"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "Juizado Especial da Infância e Adolescência de São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "Justiça Itinerante/Posto Avançado da Justiça do Trabalho de Ituverava em Igarapava"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "LIQ1 - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - Bauru"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - Campinas"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "LIQ2 - São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho da 15ª Região"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho de Amparo em Pedreira"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho de Andradina em Pereira Barreto"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho de Araraquara em Américo Brasiliense"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho de Campinas em Valinhos"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho de Jundiaí em Vinhedo"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho de Orlândia em Morro Agudo"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho de Pederneiras em Bariri"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho de Pindamonhangaba em Campos do Jordão"
+  },
+  {
+    "ds_orgao_julgador": "Posto Avançado da Justiça do Trabalho de São João da Boa Vista em Espírito Santo Do Pinhal"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Adamantina"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Amparo"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Andradina"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Aparecida"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Araras"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Atibaia"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Avaré"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Barretos"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Batatais"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Bebedouro"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Birigui"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Botucatu"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Bragança Paulista"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Cajuru"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Campo Limpo Paulista"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Capivari"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Capão Bonito"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Caraguatatuba"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Caçapava"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Cravinhos"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Cruzeiro"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Dracena"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Fernandópolis"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Garça"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Guaratinguetá"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Hortolândia"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Indaiatuba"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Itanhaém"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Itapetininga"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Itapeva"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Itapira"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Itararé"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Itatiba"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Itu"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Ituverava"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Itápolis"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Jales"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de José Bonifácio"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Leme"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Lins"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Lorena"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Matão"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Mococa"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Mogi Guaçu"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Mogi Mirim"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Olímpia"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Orlândia"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Ourinhos"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Pederneiras"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Penápolis"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Piedade"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Pindamonhangaba"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Pirassununga"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Porto Ferreira"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Presidente Venceslau"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Rancharia"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Registro"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Rio Claro"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Salto"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Santa Bárbara D'Oeste"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Santa Cruz do Rio Pardo"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Sumaré"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de São Joaquim da Barra"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de São José do Rio Pardo"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de São João da Boa Vista"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de São Roque"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de São Sebastião"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Tanabi"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Taquaritinga"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Tatuí"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Teodoro Sampaio"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Tietê"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Tupã"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Ubatuba"
+  },
+  {
+    "ds_orgao_julgador": "Vara do Trabalho de Votuporanga"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Araraquara"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Araçatuba"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Bauru"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Campinas"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Franca"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Jundiaí"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Limeira"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Piracicaba"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Presidente Prudente"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Ribeirão Preto"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Sorocaba"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de São José do Rio Preto"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de São José dos Campos"
+  },
+  {
+    "ds_orgao_julgador": "Órgão Centralizador de Leilões Judiciais de Taubaté"
+  }
+]

@@ -1,0 +1,806 @@
+{
+  "Vara do Trabalho de Hortolândia": [
+    {
+      "timestamp": "2025-09-09T21:27:00.375Z",
+      "categoria": "hortolandia",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-09T21:34:03.882Z",
+      "categoria": "hortolandia",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Sumaré": [
+    {
+      "timestamp": "2025-09-09T21:27:00.512Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-09T21:34:03.983Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Santa Bárbara D'Oeste": [
+    {
+      "timestamp": "2025-09-09T21:27:00.630Z",
+      "categoria": "santa_barbara",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-09T21:34:04.079Z",
+      "categoria": "santa_barbara",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-29T22:47:11.934Z",
+      "categoria": "santa_barbara",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-29T22:53:55.005Z",
+      "categoria": "santa_barbara",
+      "problema": "normalizacao_apostrofo",
+      "tratamento_aplicado": "SANTA_BARBARA_ESPECIFICO",
+      "status": "falha_todas_variacoes"
+    },
+    {
+      "timestamp": "2025-09-29T22:56:44.874Z",
+      "categoria": "santa_barbara",
+      "problema": "normalizacao_apostrofo",
+      "tratamento_aplicado": "SANTA_BARBARA_NORMALIZACAO",
+      "nome_original": "Vara do Trabalho de Santa Bárbara D'Oeste",
+      "nome_normalizado": "Vara do Trabalho de Santa Bárbara d'Oeste",
+      "status": "normalizado"
+    },
+    {
+      "timestamp": "2025-09-29T22:57:55.483Z",
+      "categoria": "santa_barbara",
+      "problema": "normalizacao_apostrofo",
+      "tratamento_aplicado": "SANTA_BARBARA_NORMALIZACAO",
+      "nome_original": "Vara do Trabalho de Santa Bárbara D'Oeste",
+      "nome_normalizado": "Vara do Trabalho de Santa Bárbara d'Oeste",
+      "status": "normalizado"
+    },
+    {
+      "timestamp": "2025-09-29T23:03:42.183Z",
+      "categoria": "santa_barbara",
+      "problema": "normalizacao_apostrofo",
+      "tratamento_aplicado": "SANTA_BARBARA_NORMALIZACAO",
+      "nome_original": "Vara do Trabalho de Santa Bárbara D'Oeste",
+      "nome_normalizado": "Vara do Trabalho de Santa Bárbara d'Oeste",
+      "status": "normalizado"
+    }
+  ],
+  "Vara do Trabalho de São João da Boa Vista": [
+    {
+      "timestamp": "2025-09-09T21:27:00.738Z",
+      "categoria": "sao_joao_boa_vista",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-09T21:34:04.176Z",
+      "categoria": "sao_joao_boa_vista",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "DIVEX - Limeira": [
+    {
+      "timestamp": "2025-09-14T10:49:55.022Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-14T11:43:41.747Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-14T11:48:24.032Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:28:30.204Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T16:18:40.749Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T16:30:27.168Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T16:34:36.172Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T16:38:54.782Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T16:47:21.838Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T16:51:20.110Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T16:54:48.910Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "4ª Vara do Trabalho de Bauru": [
+    {
+      "timestamp": "2025-09-17T16:27:22.253Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-25T15:27:15.431Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-26T16:09:34.677Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "4ª Vara do Trabalho de Jundiaí": [
+    {
+      "timestamp": "2025-09-17T16:27:39.470Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-25T15:27:19.385Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-26T16:09:39.121Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "4ª Vara do Trabalho de Ribeirão Preto": [
+    {
+      "timestamp": "2025-09-17T16:27:39.484Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "4ª Vara do Trabalho de Sorocaba": [
+    {
+      "timestamp": "2025-09-17T16:27:39.496Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "4ª Vara do Trabalho de São José do Rio Preto": [
+    {
+      "timestamp": "2025-09-17T16:27:39.509Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "5ª Vara do Trabalho de Jundiaí": [
+    {
+      "timestamp": "2025-09-17T16:27:56.799Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-25T15:27:44.334Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-26T16:09:43.377Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "5ª Vara do Trabalho de Ribeirão Preto": [
+    {
+      "timestamp": "2025-09-17T16:27:56.811Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "6ª Vara do Trabalho de Ribeirão Preto": [
+    {
+      "timestamp": "2025-09-17T16:28:13.516Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Amparo": [
+    {
+      "timestamp": "2025-09-17T16:37:32.701Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:21:45.481Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:00:22.978Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Araras": [
+    {
+      "timestamp": "2025-09-17T16:37:39.974Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:21:54.168Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:00:40.271Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-28T22:18:35.607Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Avaré": [
+    {
+      "timestamp": "2025-09-17T16:37:47.900Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-17T17:21:44.705Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-17T17:27:08.712Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-17T17:29:44.931Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:22:04.144Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T16:33:37.789Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:00:56.389Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:22:22.833Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:30:24.170Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:32:55.812Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:37:58.345Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T18:02:44.260Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-28T22:24:57.961Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-28T22:35:19.003Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-28T22:35:48.670Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Cajuru": [
+    {
+      "timestamp": "2025-09-17T16:38:04.820Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:22:30.915Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:02:11.003Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Garça": [
+    {
+      "timestamp": "2025-09-17T16:38:53.882Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-17T17:21:44.718Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-17T17:27:08.729Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-17T17:29:44.953Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:23:25.058Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:04:30.569Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Itararé": [
+    {
+      "timestamp": "2025-09-17T16:39:28.015Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:24:00.798Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T17:05:48.632Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Leme": [
+    {
+      "timestamp": "2025-09-17T16:40:19.446Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:24:54.514Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Orlândia": [
+    {
+      "timestamp": "2025-09-17T16:40:54.254Z",
+      "categoria": "hortolandia",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:25:39.628Z",
+      "categoria": "hortolandia",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Tanabi": [
+    {
+      "timestamp": "2025-09-17T16:42:21.173Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-23T13:27:18.591Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Divisão de Execução de Limeira": [
+    {
+      "timestamp": "2025-09-17T16:47:00.989Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-25T15:21:24.174Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-25T15:30:03.883Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-25T15:54:32.724Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-26T15:55:14.439Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-26T16:02:34.775Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-26T16:31:34.081Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-26T17:34:43.265Z",
+      "categoria": "padrao_suspeito",
+      "problema": "potencial_problema_baseado_em_padrao",
+      "confianca": 0.6,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Tupã": [
+    {
+      "timestamp": "2025-09-23T13:28:02.685Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-25T15:20:55.141Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-26T16:02:30.577Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-26T16:31:29.946Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Itapira": [
+    {
+      "timestamp": "2025-09-26T20:04:05.619Z",
+      "categoria": "avare",
+      "problema": "timeout_cadastro_assessor",
+      "tratamento_aplicado": "AVARE_ESPECIFICO",
+      "configuracao": {
+        "timeout_busca": 15000,
+        "timeout_vinculacao": 20000,
+        "timeout_navegacao": 12000,
+        "max_tentativas": 3,
+        "intervalo_tentativas": 5000
+      },
+      "status": "tratamento_aplicado"
+    }
+  ],
+  "Vara do Trabalho de Salto": [
+    {
+      "timestamp": "2025-09-26T20:04:05.989Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-28T11:33:10.190Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-28T11:59:55.507Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    },
+    {
+      "timestamp": "2025-09-28T12:05:58.550Z",
+      "categoria": "sumare",
+      "problema": "potencial_problema_similar",
+      "confianca": 0.9,
+      "status": "monitorado"
+    }
+  ],
+  "Vara do Trabalho de Capivari": [
+    {
+      "timestamp": "2025-09-26T20:04:06.332Z",
+      "categoria": "avare",
+      "problema": "timeout_cadastro_assessor",
+      "tratamento_aplicado": "AVARE_ESPECIFICO",
+      "configuracao": {
+        "timeout_busca": 15000,
+        "timeout_vinculacao": 20000,
+        "timeout_navegacao": 12000,
+        "max_tentativas": 3,
+        "intervalo_tentativas": 5000
+      },
+      "status": "tratamento_aplicado"
+    }
+  ],
+  "Vara do Trabalho de Atibaia": [
+    {
+      "timestamp": "2025-09-26T20:04:06.673Z",
+      "categoria": "avare",
+      "problema": "timeout_cadastro_assessor",
+      "tratamento_aplicado": "AVARE_ESPECIFICO",
+      "configuracao": {
+        "timeout_busca": 15000,
+        "timeout_vinculacao": 20000,
+        "timeout_navegacao": 12000,
+        "max_tentativas": 3,
+        "intervalo_tentativas": 5000
+      },
+      "status": "tratamento_aplicado"
+    },
+    {
+      "timestamp": "2025-09-28T11:33:10.130Z",
+      "categoria": "avare",
+      "problema": "timeout_cadastro_assessor",
+      "tratamento_aplicado": "AVARE_ESPECIFICO",
+      "configuracao": {
+        "timeout_busca": 15000,
+        "timeout_vinculacao": 20000,
+        "timeout_navegacao": 12000,
+        "max_tentativas": 3,
+        "intervalo_tentativas": 5000
+      },
+      "status": "tratamento_aplicado"
+    },
+    {
+      "timestamp": "2025-09-28T11:59:55.443Z",
+      "categoria": "avare",
+      "problema": "timeout_cadastro_assessor",
+      "tratamento_aplicado": "AVARE_ESPECIFICO",
+      "configuracao": {
+        "timeout_busca": 15000,
+        "timeout_vinculacao": 20000,
+        "timeout_navegacao": 12000,
+        "max_tentativas": 3,
+        "intervalo_tentativas": 5000
+      },
+      "status": "tratamento_aplicado"
+    },
+    {
+      "timestamp": "2025-09-28T12:05:58.483Z",
+      "categoria": "avare",
+      "problema": "timeout_cadastro_assessor",
+      "tratamento_aplicado": "AVARE_ESPECIFICO",
+      "configuracao": {
+        "timeout_busca": 15000,
+        "timeout_vinculacao": 20000,
+        "timeout_navegacao": 12000,
+        "max_tentativas": 3,
+        "intervalo_tentativas": 5000
+      },
+      "status": "tratamento_aplicado"
+    }
+  ]
+}

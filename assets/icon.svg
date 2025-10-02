@@ -1,0 +1,53 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="url(#grad1)" stroke="#2c3e50" stroke-width="4"/>
+  
+  <!-- Gavel handle -->
+  <rect x="100" y="140" width="80" height="12" rx="6" fill="#8b4513" transform="rotate(45 140 146)"/>
+  
+  <!-- Gavel head -->
+  <rect x="70" y="70" width="40" height="20" rx="4" fill="#654321" transform="rotate(45 90 80)"/>
+  <rect x="60" y="80" width="40" height="20" rx="4" fill="#654321" transform="rotate(45 80 90)"/>
+  
+  <!-- Sound block -->
+  <rect x="160" y="160" width="30" height="15" rx="3" fill="#8b4513"/>
+  
+  <!-- Automation gear -->
+  <g transform="translate(180, 60)">
+    <circle cx="0" cy="0" r="20" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+    <circle cx="0" cy="0" r="8" fill="#e67e22"/>
+    <!-- Gear teeth -->
+    <rect x="-2" y="-25" width="4" height="10" fill="#f39c12"/>
+    <rect x="-2" y="15" width="4" height="10" fill="#f39c12"/>
+    <rect x="-25" y="-2" width="10" height="4" fill="#f39c12"/>
+    <rect x="15" y="-2" width="10" height="4" fill="#f39c12"/>
+    <rect x="-18" y="-18" width="8" height="4" fill="#f39c12" transform="rotate(45)"/>
+    <rect x="10" y="10" width="8" height="4" fill="#f39c12" transform="rotate(45)"/>
+    <rect x="-18" y="14" width="8" height="4" fill="#f39c12" transform="rotate(-45)"/>
+    <rect x="10" y="-18" width="8" height="4" fill="#f39c12" transform="rotate(-45)"/>
+  </g>
+  
+  <!-- Document/List icon -->
+  <g transform="translate(50, 180)">
+    <rect x="0" y="0" width="30" height="40" rx="3" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2"/>
+    <line x1="5" y1="8" x2="25" y2="8" stroke="#7f8c8d" stroke-width="2"/>
+    <line x1="5" y1="15" x2="25" y2="15" stroke="#7f8c8d" stroke-width="2"/>
+    <line x1="5" y1="22" x2="25" y2="22" stroke="#7f8c8d" stroke-width="2"/>
+    <line x1="5" y1="29" x2="20" y2="29" stroke="#7f8c8d" stroke-width="2"/>
+  </g>
+  
+  <!-- Justice scales (simplified) -->
+  <g transform="translate(128, 100)">
+    <line x1="-30" y1="0" x2="30" y2="0" stroke="#2c3e50" stroke-width="3"/>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#2c3e50" stroke-width="3"/>
+    <circle cx="-25" cy="0" r="8" fill="none" stroke="#2c3e50" stroke-width="2"/>
+    <circle cx="25" cy="0" r="8" fill="none" stroke="#2c3e50" stroke-width="2"/>
+  </g>
+</svg>

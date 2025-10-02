@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-09-26T19:07:51.046Z",
+  "tests": [
+    {
+      "name": "Seletores Keycloak prioritários",
+      "status": "PASSOU",
+      "details": "3/3 seletores encontrados"
+    },
+    {
+      "name": "Estratégias de fallback",
+      "status": "PASSOU",
+      "details": "4/4 estratégias encontradas"
+    },
+    {
+      "name": "Logs de debug melhorados",
+      "status": "PASSOU",
+      "details": "4/4 features de debug encontradas"
+    },
+    {
+      "name": "Timeout otimizado",
+      "status": "PASSOU",
+      "details": "Timeout reduzido para 8000ms"
+    },
+    {
+      "name": "Tratamento de clique melhorado",
+      "status": "PASSOU",
+      "details": "Tratamento de fallback implementado"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0
+  }
+}

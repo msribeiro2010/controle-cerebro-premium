@@ -1,0 +1,42 @@
+[
+  {
+    "nome": "João Silva Santos",
+    "cpf": "123.456.789-00",
+    "perfil": "Assessor",
+    "ojs": [
+      "1ª Vara do Trabalho de Campinas",
+      "2ª Vara do Trabalho de Campinas",
+      "Vara do Trabalho de Jundiaí"
+    ]
+  },
+  {
+    "nome": "Maria Oliveira Costa",
+    "cpf": "987.654.321-11",
+    "perfil": "Secretário de Audiência",
+    "ojs": [
+      "Vara do Trabalho de Atibaia",
+      "LIQ2 - Jundiaí",
+      "EXE1 - Campinas"
+    ]
+  },
+  {
+    "nome": "Carlos Eduardo Ferreira",
+    "cpf": "456.789.123-22",
+    "perfil": "Administrador",
+    "ojs": [
+      "3ª Vara do Trabalho de Sorocaba",
+      "Vara do Trabalho de Salto",
+      "Vara do Trabalho de Itapetininga"
+    ]
+  },
+  {
+    "nome": "Ana Paula Rodrigues",
+    "cpf": "789.123.456-33",
+    "perfil": "Servidor",
+    "ojs": [
+      "Vara do Trabalho de Santos",
+      "2ª Vara do Trabalho de Santos",
+      "Vara do Trabalho de São Vicente"
+    ]
+  }
+]

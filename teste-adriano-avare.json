@@ -1,0 +1,12 @@
+{
+  "servidor": {
+    "nome": "Servidor Real Avaré",
+    "cpf": "58565345572",
+    "perfil": "Assessor",
+    "grau": "1"
+  },
+  "ojs": [
+    "Vara do Trabalho de Avaré"
+  ],
+  "observacoes": "Teste com servidor real que tem acesso à Vara de Avaré (CPF encontrado no banco de dados)"
+}
