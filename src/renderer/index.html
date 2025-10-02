@@ -143,97 +143,73 @@
             
             <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px;">
                 <!-- Card Servidores -->
-                <div class="dashboard-card" style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('servidores')">
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #fefcf9 0%, #f5f1e8 100%); border: 2px solid #d4c4a8; border-radius: 12px; padding: 24px; box-shadow: 0 8px 20px rgba(139, 115, 85, 0.15), 0 4px 10px rgba(107, 84, 64, 0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('servidores')">
                     <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                        <i class="fas fa-people-group" style="font-size: 32px; color: #4f46e5; margin-right: 16px;"></i>
-                        <h3 style="margin: 0;">Servidores</h3>
+                        <i class="fas fa-people-group" style="font-size: 32px; color: #8b7355; margin-right: 16px;"></i>
+                        <h3 style="margin: 0; color: #6b5440;">Servidores</h3>
                     </div>
-                    <p style="color: #666; margin-bottom: 16px;">Gerencie servidores e suas vinculações com órgãos julgadores</p>
-                    <button class="btn btn-primary" style="width: 100%;">
+                    <p style="color: #8b7355; margin-bottom: 16px;">Gerencie servidores e suas vinculações com órgãos julgadores</p>
+                    <button class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #8b7355 0%, #a08770 100%) !important; border: 1px solid #6b5440 !important; color: #fff !important;">
                         <i class="fas fa-arrow-right"></i> Acessar
-                    </button>
-                </div>
-                
-                <!-- Card Peritos -->
-                <div class="dashboard-card" style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('peritos')">
-                    <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                        <i class="fas fa-user-shield" style="font-size: 32px; color: #7c3aed; margin-right: 16px;"></i>
-                        <h3 style="margin: 0;">Peritos</h3>
-                    </div>
-                    <p style="color: #666; margin-bottom: 16px;">Cadastre e gerencie peritos judiciais</p>
-                    <button class="btn btn-primary" style="width: 100%;">
-                        <i class="fas fa-arrow-right"></i> Acessar
-                    </button>
-                </div>
-                
-                <!-- Card Servidores -->
-                <div class="dashboard-card" style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('servidores')">
-                    <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                        <i class="fas fa-users" style="font-size: 32px; color: #059669; margin-right: 16px;"></i>
-                        <h3 style="margin: 0;">Servidores</h3>
-                    </div>
-                    <p style="color: #666; margin-bottom: 16px;">Gerenciar e automatizar vinculação de servidores</p>
-                    <button class="btn btn-success" style="width: 100%;">
-                        <i class="fas fa-cog"></i> Gerenciar
                     </button>
                 </div>
 
                 <!-- Card Peritos -->
-                <div class="dashboard-card" style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('peritos')">
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #fefcf9 0%, #f5f1e8 100%); border: 2px solid #d4c4a8; border-radius: 12px; padding: 24px; box-shadow: 0 8px 20px rgba(139, 115, 85, 0.15), 0 4px 10px rgba(107, 84, 64, 0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('peritos')">
                     <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                        <i class="fas fa-user-md" style="font-size: 32px; color: #6366f1; margin-right: 16px;"></i>
-                        <h3 style="margin: 0;">Peritos</h3>
+                        <i class="fas fa-user-shield" style="font-size: 32px; color: #8b7355; margin-right: 16px;"></i>
+                        <h3 style="margin: 0; color: #6b5440;">Peritos</h3>
                     </div>
-                    <p style="color: #666; margin-bottom: 16px;">Gerenciar e automatizar vinculação de peritos</p>
-                    <button class="btn" style="width: 100%; background: #6f42c1; color: white;">
-                        <i class="fas fa-cog"></i> Gerenciar
+                    <p style="color: #8b7355; margin-bottom: 16px;">Cadastre e gerencie peritos judiciais</p>
+                    <button class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #8b7355 0%, #a08770 100%) !important; border: 1px solid #6b5440 !important; color: #fff !important;">
+                        <i class="fas fa-arrow-right"></i> Acessar
                     </button>
                 </div>
-                
+
                 <!-- Card Pesquisa Órgãos Julgadores -->
-                <div class="dashboard-card" style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('busca-ojs')">
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #fefcf9 0%, #f5f1e8 100%); border: 2px solid #d4c4a8; border-radius: 12px; padding: 24px; box-shadow: 0 8px 20px rgba(139, 115, 85, 0.15), 0 4px 10px rgba(107, 84, 64, 0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('busca-ojs')">
                     <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                        <i class="fas fa-binoculars" style="font-size: 32px; color: #06b6d4; margin-right: 16px;"></i>
-                        <h3 style="margin: 0;">Pesquisa Órgãos Julgadores</h3>
+                        <i class="fas fa-binoculars" style="font-size: 32px; color: #8b7355; margin-right: 16px;"></i>
+                        <h3 style="margin: 0; color: #6b5440;">Pesquisa Órgãos Julgadores</h3>
                     </div>
-                    <p style="color: #666; margin-bottom: 16px;">Pesquise órgãos julgadores de 1º e 2º grau</p>
-                    <button class="btn btn-info" style="width: 100%;">
+                    <p style="color: #8b7355; margin-bottom: 16px;">Pesquise órgãos julgadores de 1º e 2º grau</p>
+                    <button class="btn btn-info" style="width: 100%; background: linear-gradient(135deg, #8b7355 0%, #a08770 100%) !important; border: 1px solid #6b5440 !important; color: #fff !important;">
                         <i class="fas fa-magnifying-glass"></i> Buscar
                     </button>
                 </div>
-                
+
                 <!-- Card Usuários PJe -->
-                <div class="dashboard-card" style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('usuarios-pje')">
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #fefcf9 0%, #f5f1e8 100%); border: 2px solid #d4c4a8; border-radius: 12px; padding: 24px; box-shadow: 0 8px 20px rgba(139, 115, 85, 0.15), 0 4px 10px rgba(107, 84, 64, 0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('usuarios-pje')">
                     <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                        <i class="fas fa-address-card" style="font-size: 32px; color: #64748b; margin-right: 16px;"></i>
-                        <h3 style="margin: 0;">Usuários/PJe</h3>
+                        <i class="fas fa-address-card" style="font-size: 32px; color: #8b7355; margin-right: 16px;"></i>
+                        <h3 style="margin: 0; color: #6b5440;">Usuários/PJe</h3>
                     </div>
-                    <p style="color: #666; margin-bottom: 16px;">Consulte usuários cadastrados no sistema PJe</p>
-                    <button class="btn btn-secondary" style="width: 100%;">
+                    <p style="color: #8b7355; margin-bottom: 16px;">Consulte usuários cadastrados no sistema PJe</p>
+                    <button class="btn btn-secondary" style="width: 100%; background: linear-gradient(135deg, #8b7355 0%, #a08770 100%) !important; border: 1px solid #6b5440 !important; color: #fff !important;">
                         <i class="fas fa-users"></i> Consultar
                     </button>
                 </div>
-                
+
                 <!-- Card Processos/Tarefa -->
-                <div class="dashboard-card" style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('processos-tarefa')">
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #fefcf9 0%, #f5f1e8 100%); border: 2px solid #d4c4a8; border-radius: 12px; padding: 24px; box-shadow: 0 8px 20px rgba(139, 115, 85, 0.15), 0 4px 10px rgba(107, 84, 64, 0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('processos-tarefa')">
                     <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                        <i class="fas fa-list-check" style="font-size: 32px; color: #f59e0b; margin-right: 16px;"></i>
-                        <h3 style="margin: 0;">Processos/Tarefa</h3>
+                        <i class="fas fa-list-check" style="font-size: 32px; color: #8b7355; margin-right: 16px;"></i>
+                        <h3 style="margin: 0; color: #6b5440;">Processos/Tarefa</h3>
                     </div>
-                    <p style="color: #666; margin-bottom: 16px;">Verifique histórico e tarefas de processos</p>
-                    <button class="btn btn-warning" style="width: 100%;">
+                    <p style="color: #8b7355; margin-bottom: 16px;">Verifique histórico e tarefas de processos</p>
+                    <button class="btn btn-warning" style="width: 100%; background: linear-gradient(135deg, #8b7355 0%, #a08770 100%) !important; border: 1px solid #6b5440 !important; color: #fff !important;">
                         <i class="fas fa-tasks"></i> Verificar
                     </button>
                 </div>
-                
+
                 <!-- Card Configurações -->
-                <div class="dashboard-card" style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('config')">
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #fefcf9 0%, #f5f1e8 100%); border: 2px solid #d4c4a8; border-radius: 12px; padding: 24px; box-shadow: 0 8px 20px rgba(139, 115, 85, 0.15), 0 4px 10px rgba(107, 84, 64, 0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('config')">
                     <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                        <i class="fas fa-sliders-h" style="font-size: 32px; color: #6366f1; margin-right: 16px;"></i>
-                        <h3 style="margin: 0;">Configurações</h3>
+                        <i class="fas fa-sliders-h" style="font-size: 32px; color: #8b7355; margin-right: 16px;"></i>
+                        <h3 style="margin: 0; color: #6b5440;">Configurações</h3>
                     </div>
-                    <p style="color: #666; margin-bottom: 16px;">Configure credenciais do PJe e banco de dados</p>
-                    <button class="btn" style="width: 100%; background: #6f42c1; color: white;">
+                    <p style="color: #8b7355; margin-bottom: 16px;">Configure credenciais do PJe e banco de dados</p>
+                    <button class="btn" style="width: 100%; background: linear-gradient(135deg, #8b7355 0%, #a08770 100%) !important; border: 1px solid #6b5440 !important; color: #fff !important;">
                         <i class="fas fa-sliders-h"></i> Configurar
                     </button>
                 </div>
@@ -424,23 +400,20 @@
 
         <!-- Aba Servidores -->
         <div id="servidores" class="tab-content">
-            <div class="section-header">
-                <h2>Gerenciar Servidores</h2>
+            <div class="section-header" style="background: linear-gradient(135deg, #fefcf9 0%, #f5f1e8 100%); border: 2px solid #d4c4a8; border-radius: 12px; padding: 24px; box-shadow: 0 8px 20px rgba(139, 115, 85, 0.15), 0 4px 10px rgba(107, 84, 64, 0.1);">
+                <h2 style="color: #6b5440;">Gerenciar Servidores</h2>
                 <div class="button-group">
-                    <button id="add-servidor" class="btn btn-primary">
+                    <button id="add-servidor" class="btn btn-primary" style="background: linear-gradient(135deg, #8b7355 0%, #a08770 100%) !important; border: 1px solid #6b5440 !important; color: #fff !important;">
                         <i class="fas fa-plus"></i> Adicionar Servidor
                     </button>
 
-                    <button id="import-servidores-bulk" class="btn btn-secondary">
+                    <button id="import-servidores-bulk" class="btn btn-secondary" style="background: linear-gradient(135deg, #8b7355 0%, #a08770 100%) !important; border: 1px solid #6b5440 !important; color: #fff !important;">
                         <i class="fas fa-download"></i> Importar em Lote
                     </button>
-                    <button id="servidor-import-example" class="btn btn-info">
+                    <button id="servidor-import-example" class="btn btn-info" style="background: linear-gradient(135deg, #8b7355 0%, #a08770 100%) !important; border: 1px solid #6b5440 !important; color: #fff !important;">
                         <i class="fas fa-info-circle"></i> Exemplo de Importação
                     </button>
-                    <button id="verificar-banco" class="btn btn-warning">
-                        <i class="fas fa-database"></i> Verificar Banco
-                    </button>
-                    <button id="bulk-delete-servidores" class="btn btn-danger" disabled>
+                    <button id="bulk-delete-servidores" class="btn btn-danger" style="background: linear-gradient(135deg, #c9483b 0%, #d4624f 100%) !important; border: 1px solid #a83a2f !important; color: #fff !important;" disabled>
                         <i class="fas fa-trash-alt"></i> Excluir Selecionados
                     </button>
                 </div>
