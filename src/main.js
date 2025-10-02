@@ -1345,21 +1345,52 @@ const ServidorDatabaseService = require('./utils/servidor-database-service');
 let servidorDatabaseService = new ServidorDatabaseService();
 
 /**
- * Buscar OJs do 1º grau diretamente do banco de dados
+ * Buscar OJs do 1º grau do arquivo JSON local
  */
 ipcMain.handle('buscar-ojs-1grau', async (_, filtro, limite) => {
   try {
-    console.log(`🔍 Buscando OJs 1º grau${filtro ? ` com filtro: "${filtro}"` : ''}`);
+    console.log(`🔍 Buscando OJs 1º grau do arquivo local${filtro ? ` com filtro: "${filtro}"` : ''}`);
 
-    const ojs = await ojDatabaseService.buscarOJs1Grau(filtro, limite);
+    // Carregar do arquivo JSON local
+    const ojsPath = path.join(__dirname, 'renderer', 'ojs1g.json');
 
-    console.log(`✅ Encontrados ${ojs.length} órgãos julgadores do 1º grau`);
+    let ojs = [];
+    if (fs.existsSync(ojsPath)) {
+      const data = fs.readFileSync(ojsPath, 'utf8');
+      ojs = JSON.parse(data);
+    }
+
+    // Aplicar filtro se fornecido
+    if (filtro && filtro.trim() !== '') {
+      const filtroUpper = filtro.trim().toUpperCase();
+      ojs = ojs.filter(oj =>
+        (oj.ds_orgao_julgador || '').toUpperCase().includes(filtroUpper)
+      );
+    }
+
+    // Aplicar limite se fornecido
+    if (limite && limite > 0) {
+      ojs = ojs.slice(0, limite);
+    }
+
+    // Transformar para o formato esperado
+    const ojsFormatados = ojs.map(oj => ({
+      id: null,
+      nome: oj.ds_orgao_julgador,
+      ds_orgao_julgador: oj.ds_orgao_julgador,
+      sigla: '',
+      sg_orgao_julgador: '',
+      ativo: 'S',
+      grau: 'Primeiro Grau'
+    }));
+
+    console.log(`✅ Encontrados ${ojsFormatados.length} órgãos julgadores do 1º grau`);
 
     return {
       success: true,
-      data: ojs,
+      data: ojsFormatados,
       grau: '1',
-      total: ojs.length,
+      total: ojsFormatados.length,
       filtro: filtro || ''
     };
 
@@ -1374,21 +1405,55 @@ ipcMain.handle('buscar-ojs-1grau', async (_, filtro, limite) => {
 });
 
 /**
- * Buscar OJs do 2º grau diretamente do banco de dados
+ * Buscar OJs do 2º grau do arquivo JSON local
  */
 ipcMain.handle('buscar-ojs-2grau', async (_, filtro, limite) => {
   try {
-    console.log(`🔍 Buscando OJs 2º grau${filtro ? ` com filtro: "${filtro}"` : ''}`);
+    console.log(`🔍 Buscando OJs 2º grau do arquivo local${filtro ? ` com filtro: "${filtro}"` : ''}`);
 
-    const ojs = await ojDatabaseService.buscarOJs2Grau(filtro, limite);
+    // Carregar do arquivo JSON local
+    const ojsPath = path.join(__dirname, 'renderer', 'ojs2g.json');
 
-    console.log(`✅ Encontrados ${ojs.length} órgãos julgadores do 2º grau`);
+    let ojs = [];
+    if (fs.existsSync(ojsPath)) {
+      const data = fs.readFileSync(ojsPath, 'utf8');
+      ojs = JSON.parse(data);
+    } else {
+      console.log('⚠️ Arquivo ojs2g.json não encontrado - retornando lista vazia');
+    }
+
+    // Aplicar filtro se fornecido
+    if (filtro && filtro.trim() !== '') {
+      const filtroUpper = filtro.trim().toUpperCase();
+      ojs = ojs.filter(oj =>
+        (oj.ds_orgao_julgador || '').toUpperCase().includes(filtroUpper)
+      );
+    }
+
+    // Aplicar limite se fornecido
+    if (limite && limite > 0) {
+      ojs = ojs.slice(0, limite);
+    }
+
+    // Transformar para o formato esperado
+    const ojsFormatados = ojs.map(oj => ({
+      id: null,
+      nome: oj.ds_orgao_julgador,
+      ds_orgao_julgador: oj.ds_orgao_julgador,
+      sigla: '',
+      sg_orgao_julgador: '',
+      ativo: 'S',
+      grau: 'Segundo Grau',
+      membros: oj.membros || []
+    }));
+
+    console.log(`✅ Encontrados ${ojsFormatados.length} órgãos julgadores do 2º grau`);
 
     return {
       success: true,
-      data: ojs,
+      data: ojsFormatados,
       grau: '2',
-      total: ojs.length,
+      total: ojsFormatados.length,
       filtro: filtro || ''
     };
 

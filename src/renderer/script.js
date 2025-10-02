@@ -148,6 +148,9 @@ class PeritoApp {
     this.switchConfigTab('sistema');
     this.initializeConfigurationEnhancements(); // Melhorias na configuração
 
+    // Definir status de conexão do banco como desconectado por padrão
+    this.updateConnectionIndicator(false);
+
     // Toggle "Mostrar todas as seções"
     const toggleShowAll = document.getElementById('toggleShowAll');
     if (toggleShowAll) {
@@ -2786,6 +2789,17 @@ class PeritoApp {
       } else if (type === 'error') {
         this.currentAutomationStats.erros++;
       }
+
+      // Atualizar indicador visual principal com informações contextuais
+      if (this.currentAutomationStats.servidorAtual && this.currentAutomationStats.ojAtual) {
+        this.setAutomationRunning('servidor',
+          `Processando: ${this.currentAutomationStats.servidorAtual} → ${this.currentAutomationStats.ojAtual}`
+        );
+      } else if (this.currentAutomationStats.servidorAtual) {
+        this.setAutomationRunning('servidor',
+          `Servidor: ${this.currentAutomationStats.servidorAtual} - ${this.currentAutomationStats.ojsProcessados}/${this.currentAutomationStats.totalOjs} OJs`
+        );
+      }
     }
 
     // Atualizar mensagem de status com detalhes em tempo real
@@ -2802,8 +2816,12 @@ class PeritoApp {
     if (orgaoJulgador) {
       contextInfo.push(`OJ: ${orgaoJulgador}`);
     }
-    if (ojProcessed !== undefined && totalOjs !== undefined) {
-      contextInfo.push(`Progresso: ${ojProcessed}/${totalOjs} OJs`);
+    // Usar valores das estatísticas atualizadas para mostrar progresso correto
+    if (this.currentAutomationStats &&
+        this.currentAutomationStats.ojsProcessados !== undefined &&
+        this.currentAutomationStats.totalOjs !== undefined &&
+        this.currentAutomationStats.totalOjs > 0) {
+      contextInfo.push(`Progresso: ${this.currentAutomationStats.ojsProcessados}/${this.currentAutomationStats.totalOjs} OJs`);
     }
 
     if (contextInfo.length > 0) {
@@ -3401,8 +3419,8 @@ class PeritoApp {
     // Configurar listeners para progresso em tempo real
     this.setupRealtimeProgressListeners();
 
-    // Atualizar indicador visual
-    this.setAutomationRunning('servidor', `Executando automação sequencial - ${this.selectedServidores.length} servidor(es)`);
+    // Atualizar indicador visual (será atualizado dinamicamente conforme processa)
+    this.setAutomationRunning('servidor', `Preparando automação - ${this.selectedServidores.length} servidor(es) selecionado(s)`);
 
     // Calcular total de passos para progress
     const selectedServidoresList = this.selectedServidores.map(index => this.servidores[index]);
@@ -4644,7 +4662,24 @@ class PeritoApp {
       indicator.className = isConnected ? 'connection-indicator connected' : 'connection-indicator disconnected';
       indicator.title = isConnected ? 'Conectado ao banco de dados' : 'Desconectado do banco de dados';
     }
-    
+
+    // Atualizar indicador no cabeçalho do card de banco de dados
+    const connectionStatus = document.getElementById('db-connection-status');
+    if (connectionStatus) {
+      const statusDot = connectionStatus.querySelector('.status-dot');
+      const statusText = connectionStatus.querySelector('span');
+
+      if (isConnected) {
+        connectionStatus.classList.add('connected');
+        connectionStatus.classList.remove('disconnected');
+        if (statusText) statusText.textContent = 'Conectado';
+      } else {
+        connectionStatus.classList.add('disconnected');
+        connectionStatus.classList.remove('connected');
+        if (statusText) statusText.textContent = 'Desconectado';
+      }
+    }
+
     // Atualizar status no botão de teste
     const testButton = document.getElementById('testDbConnection');
     if (testButton && isConnected) {
@@ -4652,11 +4687,11 @@ class PeritoApp {
     } else if (testButton) {
       testButton.classList.remove('connected');
     }
-    
+
     // Atualizar texto de status se existir
-    const statusText = document.getElementById('dbStatusText');
-    if (statusText && isConnected) {
-      statusText.textContent = 'Conectado';
+    const dbStatusText = document.getElementById('dbStatusText');
+    if (dbStatusText && isConnected) {
+      dbStatusText.textContent = 'Conectado';
     }
   }
 
@@ -6444,91 +6479,149 @@ class PeritoApp {
       return 'Outros';
     };
 
-    // Agrupar OJs por cidade
-    const ojsPorCidade = {};
-    ojs.forEach(oj => {
-      const nomeOrgao = oj.ds_orgao_julgador || oj.nome || 'Nome não disponível';
-      const cidade = extrairCidade(nomeOrgao);
-      
-      if (!ojsPorCidade[cidade]) {
-        ojsPorCidade[cidade] = [];
-      }
-      
-      ojsPorCidade[cidade].push({
-        ...oj,
-        nomeOrgao
-      });
+    // Preparar lista de OJs sem agrupamento por cidade
+    const ojsComNome = ojs.map(oj => ({
+      ...oj,
+      nomeOrgao: oj.ds_orgao_julgador || oj.nome || 'Nome não disponível'
+    }));
+
+    // Ordenar OJs alfabeticamente e numericamente (ordem natural)
+    ojsComNome.sort((a, b) => {
+      return a.nomeOrgao.localeCompare(b.nomeOrgao, 'pt-BR', { numeric: true });
     });
 
-    // Ordenar cidades alfabeticamente
-    const cidadesOrdenadas = Object.keys(ojsPorCidade).sort((a, b) => {
-      if (a === 'Outros') return 1;
-      if (b === 'Outros') return -1;
-      return a.localeCompare(b, 'pt-BR');
-    });
-
-    // Ordenar OJs dentro de cada cidade alfabeticamente e numericamente
-    cidadesOrdenadas.forEach(cidade => {
-      ojsPorCidade[cidade].sort((a, b) => {
-        return a.nomeOrgao.localeCompare(b.nomeOrgao, 'pt-BR', { numeric: true });
-      });
-    });
-
-    // Renderizar tabela agrupada por cidade
+    // Renderizar tabela direta sem agrupamento
     let totalOjs = 0;
 
-    // Adicionar ícone de cópia no cabeçalho do modal
-    this.adicionarIconeCopiaModal(tabelaId, ojsPorCidade, cidadesOrdenadas, ojs.length);
-    cidadesOrdenadas.forEach(cidade => {
-      const ojsDaCidade = ojsPorCidade[cidade];
-      
-      // Cabeçalho da cidade
-      const linhaCidade = document.createElement('tr');
-      linhaCidade.className = 'city-header';
-      linhaCidade.innerHTML = `
+    // Adicionar ícone de cópia no cabeçalho do modal (versão simplificada)
+    this.adicionarIconeCopiaDireto(tabelaId, ojsComNome, ojs.length);
+
+    // Renderizar todos os OJs diretamente
+    ojsComNome.forEach((oj, index) => {
+      const linha = document.createElement('tr');
+      linha.className = 'oj-row';
+
+      // Construir HTML dos membros se existirem
+      let membrosHTML = '';
+      if (oj.membros && oj.membros.length > 0) {
+        membrosHTML = `
+          <div class="oj-membros" style="margin-top: 8px; padding: 8px; background: rgba(139, 115, 85, 0.05); border-left: 3px solid var(--primary-color); border-radius: 4px; display: none;">
+            <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 4px; font-size: 0.9em;">
+              <i class="fas fa-users"></i> Membros:
+            </div>
+            ${oj.membros.map(membro => `
+              <div style="padding: 2px 0; font-size: 0.85em; color: #666;">
+                • ${membro}
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      linha.innerHTML = `
         <td>
-          <div class="city-group">
-            <h4 class="city-name">${cidade} (${ojsDaCidade.length} órgãos)</h4>
+          <div class="oj-item" style="cursor: ${oj.membros && oj.membros.length > 0 ? 'pointer' : 'default'};">
+            <div class="oj-name" style="display: flex; align-items: center; gap: 8px;">
+              ${oj.nomeOrgao}
+              ${oj.membros && oj.membros.length > 0 ? '<i class="fas fa-chevron-down" style="font-size: 0.8em; color: var(--primary-color); transition: transform 0.3s;"></i>' : ''}
+            </div>
+            ${oj.sg_orgao_julgador ? `<div class="oj-sigla">${oj.sg_orgao_julgador}</div>` : ''}
+            ${oj.id_orgao_julgador ? `<div class="oj-id">ID: ${oj.id_orgao_julgador}</div>` : ''}
+            ${membrosHTML}
           </div>
         </td>
       `;
-      tabela.appendChild(linhaCidade);
 
-      // OJs da cidade
-      ojsDaCidade.forEach((oj, index) => {
-        const linha = document.createElement('tr');
-        linha.className = 'oj-row';
-        linha.innerHTML = `
-          <td>
-            <div class="oj-item">
-              <div class="oj-name">${oj.nomeOrgao}</div>
-              ${oj.sg_orgao_julgador ? `<div class="oj-sigla">${oj.sg_orgao_julgador}</div>` : ''}
-              ${oj.id_orgao_julgador ? `<div class="oj-id">ID: ${oj.id_orgao_julgador}</div>` : ''}
-            </div>
-          </td>
-        `;
-        
-        // Adicionar classe zebrada para melhor visualização
-        if (index % 2 === 0) {
-          linha.classList.add('even-row');
-        }
-        
-        tabela.appendChild(linha);
-        totalOjs++;
-      });
+      // Adicionar evento de clique para expandir/recolher membros
+      if (oj.membros && oj.membros.length > 0) {
+        const ojItem = linha.querySelector('.oj-item');
+        const membrosDiv = linha.querySelector('.oj-membros');
+        const chevron = linha.querySelector('.fa-chevron-down');
+
+        ojItem.addEventListener('click', () => {
+          const isVisible = membrosDiv.style.display !== 'none';
+          membrosDiv.style.display = isVisible ? 'none' : 'block';
+          if (chevron) {
+            chevron.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+          }
+        });
+      }
+
+      // Adicionar classe zebrada para melhor visualização
+      if (index % 2 === 0) {
+        linha.classList.add('even-row');
+      }
+
+      tabela.appendChild(linha);
+      totalOjs++;
     });
 
-    console.log(`✅ Tabela renderizada com ${totalOjs} órgãos julgadores agrupados por ${cidadesOrdenadas.length} cidades`);
+    console.log(`✅ Tabela renderizada com ${totalOjs} órgãos julgadores em ordem alfabética/numérica`);
   }
 
   /**
-   * Adiciona ícone de cópia no cabeçalho do modal
+   * Adiciona ícone de cópia no cabeçalho do modal (versão direta sem agrupamento)
+   */
+  adicionarIconeCopiaDireto(tabelaId, ojsLista, totalOjs) {
+    // Determinar qual grau baseado no ID da tabela
+    const grau = tabelaId.includes('1Grau') ? '1' : '2';
+    const resultadoDiv = document.getElementById(`resultadoOjs${grau}Grau`);
+
+    if (!resultadoDiv) {
+      console.error(`❌ Container de resultado não encontrado para ${grau}º grau`);
+      return;
+    }
+
+    const resultsHeader = resultadoDiv.querySelector('.results-header');
+    if (!resultsHeader) {
+      console.error(`❌ Cabeçalho de resultados não encontrado para ${grau}º grau`);
+      return;
+    }
+
+    // Remover ícone existente se houver
+    const iconeExistente = resultsHeader.querySelector('.copy-icon');
+    if (iconeExistente) {
+      iconeExistente.remove();
+    }
+
+    // Criar ícone de cópia
+    const iconeCopia = document.createElement('div');
+    iconeCopia.className = 'copy-icon';
+    iconeCopia.innerHTML = `
+      <button class="btn-copy-modal" title="Copiar lista de órgãos julgadores">
+        <i class="fas fa-copy"></i>
+      </button>
+    `;
+
+    // Adicionar ao cabeçalho
+    resultsHeader.appendChild(iconeCopia);
+
+    // Implementar funcionalidade de cópia
+    const btnCopia = iconeCopia.querySelector('.btn-copy-modal');
+    if (btnCopia) {
+      btnCopia.addEventListener('click', () => {
+        let textoCompleto = `ÓRGÃOS JULGADORES ${grau}º GRAU - TOTAL: ${totalOjs}\n`;
+        textoCompleto += '='.repeat(70) + '\n\n';
+
+        ojsLista.forEach(oj => {
+          textoCompleto += `${oj.nomeOrgao}\n`;
+        });
+
+        this.copiarParaClipboard(textoCompleto, `Resultados ${grau}º grau copiados!`);
+      });
+    }
+
+    console.log(`✅ Ícone de cópia adicionado ao cabeçalho ${grau}º grau`);
+  }
+
+  /**
+   * Adiciona ícone de cópia no cabeçalho do modal (versão com agrupamento - mantida para compatibilidade)
    */
   adicionarIconeCopiaModal(tabelaId, ojsPorCidade, cidadesOrdenadas, totalOjs) {
     // Determinar qual grau baseado no ID da tabela
     const grau = tabelaId.includes('1Grau') ? '1' : '2';
     const resultadoDiv = document.getElementById(`resultadoOjs${grau}Grau`);
-    
+
     if (!resultadoDiv) {
       console.error(`❌ Container de resultado não encontrado para ${grau}º grau`);
       return;
@@ -6564,19 +6657,19 @@ class PeritoApp {
       btnCopia.addEventListener('click', () => {
         let textoCompleto = `ÓRGÃOS JULGADORES ${grau}º GRAU AGRUPADOS POR CIDADE - TOTAL: ${totalOjs}\n`;
         textoCompleto += '='.repeat(70) + '\n\n';
-        
+
         cidadesOrdenadas.forEach(cidade => {
           const ojsDaCidade = ojsPorCidade[cidade];
           textoCompleto += `${cidade.toUpperCase()} (${ojsDaCidade.length} órgãos)\n`;
           textoCompleto += '-'.repeat(40) + '\n';
-          
+
           ojsDaCidade.forEach(oj => {
             textoCompleto += `• ${oj.nomeOrgao}\n`;
           });
-          
+
           textoCompleto += '\n';
         });
-        
+
         this.copiarParaClipboard(textoCompleto, `Resultados ${grau}º grau copiados!`);
       });
     }
@@ -10853,6 +10946,107 @@ document.addEventListener('DOMContentLoaded', () => {
           e.target.value = valorFormatado;
         }
       }
+    });
+  }
+
+  // DateTime Widget Update Function
+  function updateDateTime() {
+    const now = new Date();
+
+    // Format date
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateStr = now.toLocaleDateString('pt-BR', options);
+    document.getElementById('current-date').textContent = dateStr;
+
+    // Format time
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+  }
+
+  // Initialize and update every second
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+
+  // ===== SISTEMA DE MEMÓRIA DE CONFIGURAÇÕES =====
+
+  // IDs dos campos que devem ter memória
+  const configFieldsWithMemory = [
+    'pje-url', 'login', 'password',
+    'dbHost', 'dbPort', 'dbUser', 'dbPassword',
+    'dbHost1Grau', 'dbDatabase1Grau',
+    'dbHost2Grau', 'dbDatabase2Grau'
+  ];
+
+  // Função para salvar valor em localStorage
+  function saveFieldToMemory(fieldId, value) {
+    try {
+      localStorage.setItem(`config_memory_${fieldId}`, value);
+    } catch (error) {
+      console.error(`Erro ao salvar campo ${fieldId} na memória:`, error);
+    }
+  }
+
+  // Função para carregar valor de localStorage
+  function loadFieldFromMemory(fieldId, defaultValue = '') {
+    try {
+      const saved = localStorage.getItem(`config_memory_${fieldId}`);
+      return saved !== null ? saved : defaultValue;
+    } catch (error) {
+      console.error(`Erro ao carregar campo ${fieldId} da memória:`, error);
+      return defaultValue;
+    }
+  }
+
+  // Função para carregar todos os campos com valores padrão otimizados
+  function loadAllConfigFieldsFromMemory() {
+    const defaultValues = {
+      'dbHost1Grau': 'pje-dbpr-a1-replica',
+      'dbDatabase1Grau': 'pje_1grau',
+      'dbHost2Grau': 'pje-dbpr-a2-replica',
+      'dbDatabase2Grau': 'pje_2grau',
+      'dbHost': 'localhost',
+      'dbPort': '5432'
+    };
+
+    configFieldsWithMemory.forEach(fieldId => {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        const defaultValue = defaultValues[fieldId] || field.value || '';
+        const savedValue = loadFieldFromMemory(fieldId, defaultValue);
+        field.value = savedValue;
+      }
+    });
+  }
+
+  // Adicionar listeners de input para salvar automaticamente
+  configFieldsWithMemory.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      // Eventos para salvar quando o usuário modifica o campo
+      field.addEventListener('input', (e) => {
+        saveFieldToMemory(fieldId, e.target.value);
+      });
+
+      field.addEventListener('change', (e) => {
+        saveFieldToMemory(fieldId, e.target.value);
+      });
+
+      field.addEventListener('blur', (e) => {
+        saveFieldToMemory(fieldId, e.target.value);
+      });
+    }
+  });
+
+  // Carregar valores salvos na inicialização
+  loadAllConfigFieldsFromMemory();
+
+  // Também carregar quando a aba de configurações for aberta
+  const configTabButton = document.querySelector('[onclick*="config"]');
+  if (configTabButton) {
+    configTabButton.addEventListener('click', () => {
+      setTimeout(loadAllConfigFieldsFromMemory, 100);
     });
   }
 });

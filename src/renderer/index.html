@@ -16,8 +16,22 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-brain"></i> Central IA - NAPJe</h1>
-        <p>Sistema de automação inteligente para vinculação de peritos e servidores no PJE</p>
+            <div class="header-left">
+                <h1><i class="fas fa-brain"></i> Central IA - NAPJe</h1>
+                <p>Sistema de automação inteligente para vinculação de peritos e servidores no PJE</p>
+            </div>
+            <div class="header-right">
+                <div class="datetime-widget">
+                    <div class="date-display">
+                        <i class="fas fa-calendar-days"></i>
+                        <span id="current-date"></span>
+                    </div>
+                    <div class="time-display">
+                        <i class="fas fa-clock"></i>
+                        <span id="current-time"></span>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <nav class="tabs">
@@ -35,7 +49,7 @@
             </button>
             <button class="tab-button" data-tab="busca-ojs">
                 <i class="fas fa-search tab-icon"></i>
-                <span>Busca OJs</span>
+                <span>Pesquisa Órgãos Julgadores</span>
             </button>
             <button class="tab-button" data-tab="usuarios-pje">
                 <i class="fas fa-user-tie tab-icon"></i>
@@ -176,11 +190,11 @@
                     </button>
                 </div>
                 
-                <!-- Card Busca OJs -->
+                <!-- Card Pesquisa Órgãos Julgadores -->
                 <div class="dashboard-card" style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onclick="app.switchTab('busca-ojs')">
                     <div style="display: flex; align-items: center; margin-bottom: 16px;">
                         <i class="fas fa-binoculars" style="font-size: 32px; color: #06b6d4; margin-right: 16px;"></i>
-                        <h3 style="margin: 0;">Busca OJs</h3>
+                        <h3 style="margin: 0;">Pesquisa Órgãos Julgadores</h3>
                     </div>
                     <p style="color: #666; margin-bottom: 16px;">Pesquise órgãos julgadores de 1º e 2º grau</p>
                     <button class="btn btn-info" style="width: 100%;">
@@ -343,15 +357,35 @@
 
             <!-- Tab Automação -->
             <div id="perito-automacao-tab" class="perito-tab-content">
-                <div class="automation-header">
-                    <h3><i class="fas fa-user-shield"></i> Console de Automação</h3>
-                    <p class="automation-description">
-                        <i class="fas fa-info-circle"></i>
-                        Execute processos automatizados de vinculação de órgãos julgadores para os peritos selecionados.
-                    </p>
-                </div>
-
                 <div class="automation-controls">
+                    <div class="automation-buttons">
+                        <div class="automation-top-controls">
+                            <div class="robot-icon">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div class="button-row">
+                                <button id="start-automation" class="btn btn-success" disabled>
+                                    <i class="fas fa-play"></i> Iniciar Automação
+                                </button>
+                                <button id="pause-resume-automation" class="btn btn-warning" disabled>
+                                    <i class="fas fa-pause"></i> Pausar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="automation-status-indicator" id="perito-status-indicator">
+                            <div class="status-badge status-idle">
+                                <i class="fas fa-circle"></i>
+                                <span class="status-text">INATIVO</span>
+                            </div>
+                            <div class="status-details" id="perito-status-details">
+                                <span class="status-message">
+                                    <i class="fas fa-circle-check"></i> Sistema pronto para automação
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="selected-peritos">
                         <div class="peritos-header">
                             <h3><i class="fas fa-user-shield"></i> Peritos na Fila de Processamento</h3>
@@ -368,29 +402,6 @@
                                 <br>
                                 <small>Marque os peritos acima que deseja processar</small>
                             </p>
-                        </div>
-                    </div>
-
-                    <div class="automation-buttons">
-                        <div class="automation-status-indicator" id="perito-status-indicator">
-                            <div class="status-badge status-idle">
-                                <i class="fas fa-circle"></i>
-                                <span class="status-text">INATIVO</span>
-                            </div>
-                            <div class="status-details" id="perito-status-details">
-                                <span class="status-message">
-                                    <i class="fas fa-circle-check"></i> Sistema pronto para automação
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="button-row">
-                            <button id="start-automation" class="btn btn-success" disabled>
-                                <i class="fas fa-play"></i> Iniciar Automação
-                            </button>
-                            <button id="pause-resume-automation" class="btn btn-warning" disabled>
-                                <i class="fas fa-pause"></i> Pausar
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -471,40 +482,28 @@
 
             <!-- Tab Automação -->
             <div id="servidor-automacao-tab" class="servidor-tab-content">
-                <div class="automation-header">
-                    <h3><i class="fas fa-robot"></i> Console de Automação</h3>
-                    <p class="automation-description">
-                        <i class="fas fa-info-circle"></i>
-                        Execute processos automatizados de vinculação de órgãos julgadores para os servidores selecionados.
-                    </p>
-                </div>
-
             <div class="automation-controls">
-                <div class="selected-servidores">
-                    <div class="servidores-header">
-                        <h3><i class="fas fa-people-group"></i> Servidores na Fila de Processamento</h3>
-                        <div class="servidores-header-actions">
-                            <div id="selected-servidores-display" class="selection-info">
-                                <i class="fas fa-list-check"></i>
-                                <strong id="selected-count">0</strong> de <strong id="total-count">0</strong> servidores selecionados
-                            </div>
-                            <button id="clear-servidor-queue" class="btn btn-secondary btn-sm" style="display: none;">
-                                <i class="fas fa-trash-alt"></i> Limpar Fila
+                <div class="automation-buttons">
+                    <div class="automation-top-controls">
+                        <div class="robot-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="button-row">
+                            <button id="start-servidor-automation" class="btn btn-success" disabled>
+                                <i class="fas fa-play"></i> Iniciar Automação
+                            </button>
+                            <button id="stop-servidor-automation" class="btn btn-danger" disabled>
+                                <i class="fas fa-stop"></i> Parar
+                            </button>
+                            <button id="pause-resume-servidor-automation" class="btn btn-warning" disabled style="display:none">
+                                <i class="fas fa-pause"></i> Pausar
+                            </button>
+                            <button id="resume-servidor-automation" class="btn btn-primary" style="display:none">
+                                <i class="fas fa-play"></i> Prosseguir
                             </button>
                         </div>
                     </div>
-                    <div id="selected-servidores-list" class="selected-list">
-                        <p class="no-selection">
-                            <i class="fas fa-inbox"></i>
-                            <br>
-                            Nenhum servidor selecionado
-                            <br>
-                            <small>Marque os servidores acima que deseja processar</small>
-                        </p>
-                    </div>
-                </div>
 
-                <div class="automation-buttons">
                     <div class="automation-mode-selector">
                         <h4><i class="fas fa-gears"></i> Modo de Processamento</h4>
                         <div class="mode-options">
@@ -557,20 +556,29 @@
                             </span>
                         </div>
                     </div>
+                </div>
 
-                    <div class="button-row">
-                        <button id="start-servidor-automation" class="btn btn-success" disabled>
-                            <i class="fas fa-play"></i> Iniciar Automação
-                        </button>
-                        <button id="stop-servidor-automation" class="btn btn-danger" disabled>
-                            <i class="fas fa-stop"></i> Parar
-                        </button>
-                        <button id="pause-resume-servidor-automation" class="btn btn-warning" disabled style="display:none">
-                            <i class="fas fa-pause"></i> Pausar
-                        </button>
-                        <button id="resume-servidor-automation" class="btn btn-primary" style="display:none">
-                            <i class="fas fa-play"></i> Prosseguir
-                        </button>
+                <div class="selected-servidores">
+                    <div class="servidores-header">
+                        <h3><i class="fas fa-people-group"></i> Servidores na Fila de Processamento</h3>
+                        <div class="servidores-header-actions">
+                            <div id="selected-servidores-display" class="selection-info">
+                                <i class="fas fa-list-check"></i>
+                                <strong id="selected-count">0</strong> de <strong id="total-count">0</strong> servidores selecionados
+                            </div>
+                            <button id="clear-servidor-queue" class="btn btn-secondary btn-sm" style="display: none;">
+                                <i class="fas fa-trash-alt"></i> Limpar Fila
+                            </button>
+                        </div>
+                    </div>
+                    <div id="selected-servidores-list" class="selected-list">
+                        <p class="no-selection">
+                            <i class="fas fa-inbox"></i>
+                            <br>
+                            Nenhum servidor selecionado
+                            <br>
+                            <small>Marque os servidores acima que deseja processar</small>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -801,14 +809,14 @@
                                             <div class="form-group-premium">
                                                 <div class="input-wrapper grau-1">
                                                     <i class="fas fa-server input-icon"></i>
-                                                    <input type="text" id="dbHost1Grau" placeholder="172.21.1.21" value="172.21.1.21">
+                                                    <input type="text" id="dbHost1Grau" placeholder="pje-dbpr-a1-replica" value="pje-dbpr-a1-replica">
                                                     <label for="dbHost1Grau" class="floating-label">Host 1º Grau</label>
                                                 </div>
                                             </div>
                                             <div class="form-group-premium">
                                                 <div class="input-wrapper grau-1">
                                                     <i class="fas fa-database input-icon"></i>
-                                                    <input type="text" id="dbDatabase1Grau" placeholder="pje_1grau_bugfix" value="pje_1grau_bugfix">
+                                                    <input type="text" id="dbDatabase1Grau" placeholder="pje_1grau" value="pje_1grau">
                                                     <label for="dbDatabase1Grau" class="floating-label">Base 1º Grau</label>
                                                 </div>
                                             </div>
@@ -825,14 +833,14 @@
                                             <div class="form-group-premium">
                                                 <div class="input-wrapper grau-2">
                                                     <i class="fas fa-server input-icon"></i>
-                                                    <input type="text" id="dbHost2Grau" placeholder="172.21.1.22" value="172.21.1.22">
+                                                    <input type="text" id="dbHost2Grau" placeholder="pje-dbpr-a2-replica" value="pje-dbpr-a2-replica">
                                                     <label for="dbHost2Grau" class="floating-label">Host 2º Grau</label>
                                                 </div>
                                             </div>
                                             <div class="form-group-premium">
                                                 <div class="input-wrapper grau-2">
                                                     <i class="fas fa-database input-icon"></i>
-                                                    <input type="text" id="dbDatabase2Grau" placeholder="pje_2grau_bugfix" value="pje_2grau_bugfix">
+                                                    <input type="text" id="dbDatabase2Grau" placeholder="pje_2grau" value="pje_2grau">
                                                     <label for="dbDatabase2Grau" class="floating-label">Base 2º Grau</label>
                                                 </div>
                                             </div>
@@ -1000,10 +1008,10 @@
                 </div>
                 <div class="bugfix-banner-content">
                     <div class="bugfix-banner-title">
-                        <i class="fas fa-database"></i> Dados do Ambiente BugFix
+                        <i class="fas fa-database"></i> Dados do Ambiente Réplica do PJe
                     </div>
                     <div class="bugfix-banner-text">
-                        Informações de processos e tarefas baseadas no banco <strong>BugFix</strong>. Dados sincronizados diariamente - podem diferir do ambiente de produção.
+                        Informações de processos e tarefas baseadas no banco <strong>Réplica</strong>. Dados sincronizados quase simultaneamente.
                     </div>
                 </div>
                 <button class="bugfix-banner-close" onclick="app.hideBugfixBanner('bugfixBannerProcessos')" title="Fechar aviso">
@@ -1141,10 +1149,10 @@
             </div>
         </div>
 
-        <!-- Aba Busca OJs -->
+        <!-- Aba Pesquisa Órgãos Julgadores -->
         <div id="busca-ojs" class="tab-content">
             <div class="section-header">
-                <h2>Busca OJs</h2>
+                <h2>Pesquisa Órgãos Julgadores</h2>
             </div>
 
             <div class="config-tabs">
@@ -1207,15 +1215,30 @@
                 </div>
 
                 <div id="resultadoOjs1Grau" class="results-container hidden">
-                    <div class="results-header">
-                        <h4>Órgãos Julgadores 1º Grau</h4>
-                        <div class="results-stats">
-                            <span class="results-count" style="display: none;">
-                                <span id="countOjs1Grau">0</span> órgãos encontrados
-                            </span>
-                            <span class="database-info">
-                                <i class="fas fa-database"></i> Consulta realizada em tempo real
-                            </span>
+                    <div class="results-header modern">
+                        <div class="results-title-section">
+                            <div class="results-icon">
+                                <i class="fas fa-gavel"></i>
+                            </div>
+                            <div class="results-title-content">
+                                <h4>Órgãos Julgadores 1º Grau</h4>
+                                <span class="results-subtitle">Varas do Trabalho da 15ª Região</span>
+                            </div>
+                        </div>
+                        <div class="results-stats-modern">
+                            <div class="stat-card highlight">
+                                <div class="stat-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="countOjs1Grau">0</div>
+                                    <div class="stat-label">Órgãos retornados</div>
+                                </div>
+                            </div>
+                            <div class="stat-badge success">
+                                <i class="fas fa-bolt"></i>
+                                <span>Arquivo local</span>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -1288,15 +1311,30 @@
                 </div>
 
                 <div id="resultadoOjs2Grau" class="results-container hidden">
-                    <div class="results-header">
-                        <h4>Órgãos Julgadores 2º Grau</h4>
-                        <div class="results-stats">
-                            <span class="results-count">
-                                <span id="countOjs2Grau">0</span> órgãos encontrados
-                            </span>
-                            <span class="database-info">
-                                <i class="fas fa-database"></i> Consulta realizada em tempo real
-                            </span>
+                    <div class="results-header modern">
+                        <div class="results-title-section">
+                            <div class="results-icon">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <div class="results-title-content">
+                                <h4>Órgãos Julgadores 2º Grau</h4>
+                                <span class="results-subtitle">Tribunal Regional do Trabalho 15ª Região</span>
+                            </div>
+                        </div>
+                        <div class="results-stats-modern">
+                            <div class="stat-card highlight">
+                                <div class="stat-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="countOjs2Grau">0</div>
+                                    <div class="stat-label">Órgãos retornados</div>
+                                </div>
+                            </div>
+                            <div class="stat-badge success">
+                                <i class="fas fa-bolt"></i>
+                                <span>Arquivo local</span>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive">
