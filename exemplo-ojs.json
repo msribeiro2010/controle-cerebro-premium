@@ -1,0 +1,45 @@
+{
+  "descricao": "Exemplo de arquivo JSON para importação de OJs na seção Comparação de Órgãos Julgadores",
+  "versao": "1.0",
+  "formato": "Suporta array simples de strings ou objetos com propriedades 'oj' e 'perfil'",
+  "instrucoes": [
+    "Use hífen (-) para separar OJ do perfil quando usar formato string",
+    "O perfil é opcional",
+    "Linhas vazias são ignoradas automaticamente",
+    "Pode importar tanto array direto quanto objeto com propriedade 'ojs'"
+  ],
+  "exemplos": {
+    "formato_simples": [
+      "1ª Vara do Trabalho de Campinas",
+      "2ª Vara do Trabalho de Campinas - Diretor de Secretaria",
+      "Vara do Trabalho de Botucatu - Assessor",
+      "3ª Vara Cível de Limeira - Servidor"
+    ],
+    "formato_objetos": [
+      {
+        "oj": "1ª Vara do Trabalho de Campinas",
+        "perfil": "Diretor de Secretaria"
+      },
+      {
+        "oj": "2ª Vara do Trabalho de Campinas",
+        "perfil": null
+      },
+      {
+        "oj": "Vara do Trabalho de Botucatu",
+        "perfil": "Assessor"
+      }
+    ]
+  },
+  "ojs": [
+    "1ª Vara do Trabalho de Campinas",
+    "2ª Vara do Trabalho de Campinas - Diretor de Secretaria",
+    "Vara do Trabalho de Botucatu - Assessor",
+    "3ª Vara Cível de Limeira - Servidor",
+    "4ª Vara do Trabalho de São Paulo",
+    "Tribunal Regional do Trabalho da 15ª Região - Desembargador",
+    "5ª Vara Cível de Campinas - Escrevente",
+    "Vara do Trabalho de Americana",
+    "2ª Vara Cível de Piracicaba - Técnico Judiciário",
+    "Vara do Trabalho de Sumaré - Analista Judiciário"
+  ]
+}

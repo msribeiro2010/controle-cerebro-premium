@@ -1,0 +1,30 @@
+[
+  {
+    "nome": "Luciene Bochini",
+    "cpf": "133.438.888-18",
+    "perfil": "Assessor",
+    "ojs": [
+      "Vara do Trabalho de Bebedouro",
+      "1ª Vara do Trabalho de Jaboticabal",
+      "Vara do Trabalho de Mococa"
+    ]
+  },
+  {
+    "nome": "Regiane Simoni Franco",
+    "cpf": "220.289.998-70",
+    "perfil": "Assessor",
+    "ojs": [
+      "Vara do Trabalho de Bebedouro",
+      "1ª Vara do Trabalho de Jaboticabal"
+    ]
+  },
+  {
+    "nome": "João da Silva",
+    "cpf": "123.456.789-00",
+    "perfil": "Diretor",
+    "ojs": [
+      "Vara do Trabalho de São Carlos",
+      "2ª Vara do Trabalho de São Carlos"
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "nome": "João Silva",
+    "cpf": "123.456.789-01",
+    "perfil": "Servidor",
+    "ojs": [
+      "Vara do Trabalho de São Paulo",
+      "Vara do Trabalho de Campinas"
+    ]
+  },
+  {
+    "nome": "Maria Santos",
+    "cpf": "987.654.321-00",
+    "perfil": "Servidor",
+    "ojs": [
+      "Vara do Trabalho de Santos",
+      "CON1 - Araraquara"
+    ]
+  },
+  {
+    "nome": "Pedro Oliveira",
+    "cpf": "111.222.333-44",
+    "perfil": "Perito",
+    "ojs": [
+      "TRT2 - São Paulo"
+    ]
+  }
+]

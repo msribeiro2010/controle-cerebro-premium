@@ -1,0 +1,32 @@
+[
+  {
+    "nome": "Aryelle Marcondes de Rezende",
+    "cpf": "372.854.118-41",
+    "perfil": "Secretário de Audiência",
+    "ojs": [
+      "Vara do Trabalho de Bebedouro",
+      "1ª Vara do Trabalho de Jaboticabal",
+      "2ª Vara do Trabalho de Jaboticabal",
+      "Vara do Trabalho de Mococa"
+    ]
+  },
+  {
+    "nome": "João Silva Santos",
+    "cpf": "123.456.789-00",
+    "perfil": "Assessor",
+    "ojs": [
+      "1ª Vara do Trabalho de Campinas",
+      "2ª Vara do Trabalho de Campinas"
+    ]
+  },
+  {
+    "nome": "Maria Oliveira Costa",
+    "cpf": "987.654.321-11",
+    "perfil": "Secretário de Audiência",
+    "email": "maria@email.com",
+    "cidade": "Campinas",
+    "ojs": [
+      "Vara do Trabalho de Atibaia"
+    ]
+  }
+]

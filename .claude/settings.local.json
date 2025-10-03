@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(npm install)",
+      "Bash(npm run create-shortcut:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Otimizações de performance e correções\n\n- Otimizado tempo de processamento de OJs (redução de ~70%)\n- Reduzidos timeouts em clearFieldsForNextOJ e selectOrgaoJulgador\n- Removidos logs verbosos para acelerar processamento\n- Corrigido erro \"opcaoEncontrada is not defined\"\n- Simplificada função clearModalFields\n- Criado arquivo database.config.js\n- Corrigidos imports do arquivo solucao-limeira-completa.js\n- Implementada funcionalidade toggle de senha no campo password\n- Criado atalho na área de trabalho do Windows\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(powershell:*)",
+      "Bash(npm start)",
+      "Bash(node:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

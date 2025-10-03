@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#1e3a8a" stroke="#3b82f6" stroke-width="8"/>
+  
+  <!-- Gear/Automation Symbol -->
+  <g transform="translate(256,256)">
+    <!-- Main Gear -->
+    <circle r="80" fill="#60a5fa" stroke="#1e40af" stroke-width="4"/>
+    
+    <!-- Gear Teeth -->
+    <g fill="#3b82f6">
+      <rect x="-8" y="-100" width="16" height="20" rx="2"/>
+      <rect x="-8" y="80" width="16" height="20" rx="2"/>
+      <rect x="-100" y="-8" width="20" height="16" rx="2"/>
+      <rect x="80" y="-8" width="20" height="16" rx="2"/>
+      
+      <!-- Diagonal teeth -->
+      <rect x="-70" y="-70" width="16" height="20" rx="2" transform="rotate(45)"/>
+      <rect x="54" y="-70" width="16" height="20" rx="2" transform="rotate(45)"/>
+      <rect x="-70" y="54" width="16" height="20" rx="2" transform="rotate(45)"/>
+      <rect x="54" y="54" width="16" height="20" rx="2" transform="rotate(45)"/>
+    </g>
+    
+    <!-- Center Circle -->
+    <circle r="25" fill="#1e40af"/>
+    <circle r="15" fill="#60a5fa"/>
+  </g>
+  
+  <!-- AI/Intelligence Symbol -->
+  <g transform="translate(180,180)">
+    <!-- Neural Network Nodes -->
+    <circle cx="0" cy="0" r="8" fill="#fbbf24"/>
+    <circle cx="40" cy="-20" r="6" fill="#f59e0b"/>
+    <circle cx="40" cy="20" r="6" fill="#f59e0b"/>
+    <circle cx="80" cy="0" r="8" fill="#fbbf24"/>
+    
+    <!-- Connections -->
+    <line x1="8" y1="0" x2="32" y2="-20" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="8" y1="0" x2="32" y2="20" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="48" y1="-20" x2="72" y2="0" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="48" y1="20" x2="72" y2="0" stroke="#f59e0b" stroke-width="2"/>
+  </g>
+  
+  <!-- Justice/Legal Symbol -->
+  <g transform="translate(320,180)">
+    <!-- Scale Base -->
+    <rect x="-2" y="20" width="4" height="40" fill="#dc2626"/>
+    <rect x="-15" y="58" width="30" height="4" fill="#dc2626"/>
+    
+    <!-- Scale Arms -->
+    <line x1="-30" y1="20" x2="30" y2="20" stroke="#dc2626" stroke-width="3"/>
+    
+    <!-- Scale Pans -->
+    <ellipse cx="-25" cy="25" rx="12" ry="4" fill="#ef4444"/>
+    <ellipse cx="25" cy="25" rx="12" ry="4" fill="#ef4444"/>
+    
+    <!-- Chains -->
+    <line x1="-25" y1="20" x2="-25" y2="21" stroke="#dc2626" stroke-width="2"/>
+    <line x1="25" y1="20" x2="25" y2="21" stroke="#dc2626" stroke-width="2"/>
+  </g>
+  
+  <!-- Text "AUTO" -->
+  <text x="256" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#ffffff">AUTO</text>
+  
+  <!-- Text "PJe" -->
+  <text x="256" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#60a5fa">PJe</text>
+  
+  <!-- Decorative Elements -->
+  <g opacity="0.3">
+    <circle cx="100" cy="100" r="3" fill="#ffffff"/>
+    <circle cx="400" cy="120" r="2" fill="#ffffff"/>
+    <circle cx="80" cy="400" r="2" fill="#ffffff"/>
+    <circle cx="420" cy="380" r="3" fill="#ffffff"/>
+  </g>
+</svg>
