@@ -334,28 +334,44 @@ class ServidorDatabaseService {
    * @returns {Promise<Array>} Lista de OJs vinculados ao servidor
    */
   async buscarOJsDoServidor(cpf, grau = '1') {
+    let pool = null;
     try {
       console.log(`🔍 Buscando OJs do servidor CPF: ${cpf} no ${grau}º grau`);
-      
-      // Verificar se o banco está habilitado
-      const config = require('../../database.config.js');
-      const dbConfig = grau === '2' ? config.database2Grau : config.database1Grau;
-      
-      if (!dbConfig.enabled) {
-        console.log(`⚠️ Banco do ${grau}º grau está desabilitado. Retornando dados mockados.`);
-        return this.getMockOJs(cpf, grau);
+
+      // Carregar credenciais salvas
+      const fs = require('fs');
+      const path = require('path');
+      const credentialsPath = path.resolve(__dirname, '../../database-credentials.json');
+      let credentials = null;
+
+      if (fs.existsSync(credentialsPath)) {
+        credentials = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
+        console.log('✅ Credenciais carregadas de database-credentials.json');
       }
-      
-      console.log(`📋 Conectando ao banco do ${grau}º grau: ${dbConfig.database}`);
-      
-      // Reutilizar a conexão existente do DatabaseConnection
-      await this.dbConnection.initialize();
-      
-      // Usar o pool da conexão existente
-      const pool = this.dbConnection.pool;
-      if (!pool) {
-        throw new Error('Pool de conexão não disponível');
-      }
+
+      // Determinar host e database baseado no grau
+      const database = grau === '2'
+        ? (credentials?.database2Grau || 'pje_2grau')
+        : (credentials?.database1Grau || 'pje_1grau');
+
+      const host = grau === '2'
+        ? (credentials?.host2Grau || credentials?.host || 'localhost')
+        : (credentials?.host1Grau || credentials?.host || 'localhost');
+
+      console.log(`🔗 Conectando ao banco: ${database}@${host}...`);
+
+      // Criar pool específico para este grau
+      const { Pool } = require('pg');
+      pool = new Pool({
+        host: host,
+        port: credentials?.port || 5432,
+        database: database,
+        user: credentials?.user,
+        password: credentials?.password,
+        max: 10,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 5000,
+      });
       
       // Query específica para buscar OJs do servidor (apenas vínculos ativos)
       const query = `
@@ -389,18 +405,29 @@ class ServidorDatabaseService {
       const client = await pool.connect();
       const result = await client.query(query, [cpf]);
       client.release();
-      
+
       console.log(`✅ Encontrados ${result.rows.length} OJs para o servidor ${cpf}`);
-      
+
+      // Fechar pool
+      await pool.end();
+
       // Retornar array de OJs
       return result.rows.map(row => ({
         orgaoJulgador: row.orgao_julgador,
         id: row.id_orgao_julgador,
         perfil: row.perfil
       }));
-      
+
     } catch (error) {
       console.error('❌ Erro ao buscar OJs do servidor:', error);
+      // Fechar pool em caso de erro
+      if (pool) {
+        try {
+          await pool.end();
+        } catch (poolError) {
+          console.error('❌ Erro ao fechar pool:', poolError);
+        }
+      }
       throw error;
     }
   }

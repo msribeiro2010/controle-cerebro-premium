@@ -70,22 +70,22 @@ class PeritoApp {
   updateAutomationStatus(type, status, message) {
     const indicatorId = type === 'perito' ? 'perito-status-indicator' : 'servidor-status-indicator';
     const detailsId = type === 'perito' ? 'perito-status-details' : 'servidor-status-details';
-    
+
     const indicator = document.getElementById(indicatorId);
     const details = document.getElementById(detailsId);
-    
+
     if (!indicator || !details) return;
-    
+
     const badge = indicator.querySelector('.status-badge');
     const statusText = badge.querySelector('.status-text');
     const statusMessage = details.querySelector('.status-message');
-    
+
     // Remover classes de status anteriores
     badge.classList.remove('status-idle', 'status-running', 'status-paused', 'status-error', 'status-completed');
-    
+
     // Adicionar nova classe de status
     badge.classList.add(`status-${status}`);
-    
+
     // Atualizar textos
     const statusTexts = {
       idle: 'Inativo',
@@ -94,10 +94,23 @@ class PeritoApp {
       error: 'Erro',
       completed: 'Concluído'
     };
-    
+
     statusText.textContent = statusTexts[status] || status;
     statusMessage.textContent = message || 'Sistema pronto para automação';
-    
+
+    // Controlar animação do ícone do robô
+    const automationContainer = type === 'perito'
+      ? document.querySelector('#perito-automacao-tab .robot-icon')
+      : document.querySelector('#servidor-automacao-tab .robot-icon');
+
+    if (automationContainer) {
+      if (status === 'running') {
+        automationContainer.classList.add('active');
+      } else {
+        automationContainer.classList.remove('active');
+      }
+    }
+
     // Log do status
     const timestamp = new Date().toLocaleTimeString();
     console.log(`📊 [${timestamp}] STATUS ${type.toUpperCase()}: ${status} - ${message}`);
@@ -1352,10 +1365,10 @@ class PeritoApp {
         tarefaAtual.forEach((t) => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${t.nome_tarefa || ''}</td>
-            <td>${t.login_usuario || ''}</td>
-            <td>${t.ds_orgao_julgador || ''}</td>
-            <td>${t.ds_orgao_julgador_colegiado || ''}</td>
+            <td><strong>${t.nome_tarefa || '-'}</strong></td>
+            <td>${t.login_usuario || '-'}</td>
+            <td>${t.ds_orgao_julgador || '-'}</td>
+            <td>${t.ds_orgao_julgador_colegiado || '-'}</td>
           `;
           tbodyTarefa.appendChild(tr);
         });
@@ -1373,13 +1386,25 @@ class PeritoApp {
         if (vazioPartes) vazioPartes.style.display = 'none';
         partes.forEach((p) => {
           const tr = document.createElement('tr');
+
+          // Formatar tipo de parte
+          const tipoParte = this.formatTipoParte(p.id_tipo_parte);
+
+          // Formatar badges
+          const principalBadge = p.in_parte_principal === 'S'
+            ? '<span class="badge badge-success">Principal</span>'
+            : '<span class="badge badge-secondary">Secundária</span>';
+
+          const participacaoBadge = this.formatParticipacao(p.in_participacao);
+          const situacaoBadge = this.formatSituacao(p.in_situacao);
+
           tr.innerHTML = `
-            <td>${p.ds_nome || ''}</td>
-            <td>${p.ds_login || ''}</td>
-            <td>${p.id_tipo_parte ?? ''}</td>
-            <td>${p.in_parte_principal || ''}</td>
-            <td>${p.in_participacao || ''}</td>
-            <td>${p.in_situacao || ''}</td>
+            <td><strong>${p.ds_nome || '-'}</strong></td>
+            <td><code>${p.ds_login || '-'}</code></td>
+            <td>${tipoParte}</td>
+            <td>${principalBadge}</td>
+            <td>${participacaoBadge}</td>
+            <td>${situacaoBadge}</td>
           `;
           tbodyPartes.appendChild(tr);
         });
@@ -1398,17 +1423,48 @@ class PeritoApp {
         historico.forEach((h) => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${this.formatDateTime(h.data_criacao)}</td>
-            <td>${this.formatDateTime(h.data_abertura)}</td>
-            <td>${this.formatDateTime(h.data_saida)}</td>
-            <td>${h.tarefa || ''}</td>
-            <td>${h.fluxo || ''}</td>
-            <td>${h.task_instance || ''}</td>
+            <td><small>${this.formatDateTime(h.data_criacao)}</small></td>
+            <td><small>${this.formatDateTime(h.data_abertura)}</small></td>
+            <td><small>${this.formatDateTime(h.data_saida)}</small></td>
+            <td><strong>${h.tarefa || '-'}</strong></td>
+            <td>${h.fluxo || '-'}</td>
+            <td><code>${h.task_instance || '-'}</code></td>
           `;
           tbodyHist.appendChild(tr);
         });
       }
     }
+  }
+
+  formatTipoParte(idTipo) {
+    const tipos = {
+      '7': 'Reclamante',
+      '65': 'Reclamada',
+      '66': 'Reclamada',
+      '75': 'Advogado',
+      'NP': 'Não Principal',
+      'SP': 'Segunda Parte',
+      'ST': 'Substituto'
+    };
+    return tipos[idTipo] || idTipo || '-';
+  }
+
+  formatParticipacao(participacao) {
+    const tipos = {
+      'NA': '<span class="badge badge-info">Não Aplicável</span>',
+      'SA': '<span class="badge badge-primary">Situação A</span>',
+      'A': '<span class="badge badge-primary">Ativa</span>'
+    };
+    return tipos[participacao] || `<span class="badge badge-secondary">${participacao || '-'}</span>`;
+  }
+
+  formatSituacao(situacao) {
+    const tipos = {
+      'A': '<span class="badge badge-success">Ativa</span>',
+      'I': '<span class="badge badge-danger">Inativa</span>',
+      'P': '<span class="badge badge-warning">Pendente</span>'
+    };
+    return tipos[situacao] || `<span class="badge badge-secondary">${situacao || '-'}</span>`;
   }
 
   formatDateTime(value) {
@@ -1657,24 +1713,30 @@ class PeritoApp {
 
     const count = this.selectedServidores.length;
     const message = `Tem certeza que deseja excluir ${count} servidor${count > 1 ? 'es' : ''}?`;
-    
+
     if (confirm(message)) {
       // Sort indices in descending order to avoid index shifting issues
       const sortedIndices = this.selectedServidores.sort((a, b) => b - a);
-      
+
       // Remove servidores in reverse order
       sortedIndices.forEach(index => {
         this.servidores.splice(index, 1);
       });
-      
+
       // Clear selected servidores
       this.selectedServidores = [];
-      
+
       await this.saveServidores();
       this.renderServidoresTable();
       this.updateSelectedServidoresDisplay();
       this.updateBulkDeleteButtons();
-      
+
+      // Atualizar badge da aba de automação
+      this.updateAutomacaoTabBadge();
+
+      // Atualizar botão flutuante
+      this.updateQuickAutomationButton();
+
       this.showNotification(`${count} servidor${count > 1 ? 'es excluídos' : ' excluído'} com sucesso!`, 'success');
     }
   }

@@ -9211,6 +9211,11 @@ input:-webkit-autofill + .floating-label {
 }
 
 .robot-icon i {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Animação apenas quando automação está ativa */
+.robot-icon.active i {
     animation: pulse 2s ease-in-out infinite;
 }
 
@@ -9239,8 +9244,8 @@ input:-webkit-autofill + .floating-label {
     align-items: center;
     gap: 12px;
     padding: 16px 24px;
-    background: linear-gradient(135deg, var(--success-color), var(--success-dark));
-    color: var(--text-light);
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: #ffffff;
     border: none;
     border-radius: 50px;
     font-size: 1rem;
@@ -9255,6 +9260,7 @@ input:-webkit-autofill + .floating-label {
 .quick-automation-fab:hover {
     transform: translateY(-4px) scale(1.05);
     box-shadow: 0 12px 32px rgba(40, 167, 69, 0.5);
+    background: linear-gradient(135deg, #218838, #1e7e34);
 }
 
 .quick-automation-fab:active {
@@ -9263,11 +9269,13 @@ input:-webkit-autofill + .floating-label {
 
 .quick-automation-fab i {
     font-size: 1.3rem;
+    color: #ffffff;
 }
 
 .fab-text {
     font-weight: 700;
     letter-spacing: 0.3px;
+    color: #ffffff;
 }
 
 .fab-count {
@@ -9277,8 +9285,8 @@ input:-webkit-autofill + .floating-label {
     min-width: 28px;
     height: 28px;
     padding: 0 8px;
-    background: var(--text-light);
-    color: var(--success-color);
+    background: #ffffff;
+    color: #28a745;
     border-radius: 14px;
     font-size: 0.85rem;
     font-weight: 800;

@@ -59,10 +59,6 @@
                 <i class="fas fa-tasks tab-icon"></i>
                 <span>Processos/Tarefa</span>
             </button>
-            <button class="tab-button" data-tab="multi-servidor">
-                <i class="fas fa-server tab-icon"></i>
-                <span>Multi-Servidor</span>
-            </button>
             <button class="tab-button" data-tab="config">
                 <i class="fas fa-cog tab-icon"></i>
                 <span>Configurações</span>
@@ -424,6 +420,9 @@
                 <button class="servidor-tab-button active" data-servidor-tab="lista">
                     <i class="fas fa-list"></i> Lista
                 </button>
+                <button class="servidor-tab-button" data-servidor-tab="compara-oj">
+                    <i class="fas fa-server"></i> Compara/OJ
+                </button>
                 <button class="servidor-tab-button" data-servidor-tab="automacao" id="automacao-tab-btn">
                     <i class="fas fa-robot"></i> Automação
                     <span class="tab-badge" id="automacao-tab-badge" style="display: none;">0</span>
@@ -450,6 +449,57 @@
                         </tbody>
                     </table>
                 </div>
+                </div>
+            </div>
+
+            <!-- Tab Compara/OJ -->
+            <div id="servidor-compara-oj-tab" class="servidor-tab-content">
+                <div class="multi-servidor-container">
+                    <!-- Seção de entrada de dados -->
+                    <div class="input-section">
+                        <h3><i class="fas fa-upload"></i> Dados dos Servidores</h3>
+                        <div class="input-controls">
+                            <button id="importarServidoresJSON" class="btn btn-secondary">
+                                <i class="fas fa-file-import"></i> Importar JSON
+                            </button>
+                            <button id="mostrarFormato" class="btn btn-info">
+                                <i class="fas fa-info-circle"></i> Ver Formato
+                            </button>
+                        </div>
+                        <textarea
+                            id="servidoresTextarea"
+                            placeholder="Cole aqui os dados dos servidores no formato JSON ou use o botão 'Importar JSON'..."
+                            rows="10"
+                        ></textarea>
+                    </div>
+
+                    <!-- Seção de controles -->
+                    <div class="controls-section">
+                        <button id="verificarServidores" class="btn btn-primary">
+                            <i class="fas fa-play"></i> Verificar Servidores
+                        </button>
+                        <button id="limparServidores" class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> Limpar
+                        </button>
+                        <button id="exportarResultados" class="btn btn-success" disabled>
+                            <i class="fas fa-download"></i> Exportar Resultados
+                        </button>
+                    </div>
+
+                    <!-- Barra de progresso -->
+                    <div id="progressContainer" class="progress-container" style="display: none;">
+                        <div class="progress-info">
+                            <span id="progressText">Preparando verificação...</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="progressBar" class="progress-bar"></div>
+                        </div>
+                    </div>
+
+                    <!-- Seção de resultados -->
+                    <div id="resultadosContainer" class="resultados-container">
+                        <!-- Resultados serão exibidos aqui -->
+                    </div>
                 </div>
             </div>
 
@@ -572,56 +622,6 @@
             </button>
         </div>
 
-        <!-- Aba Multi-Servidor -->
-        <div id="multi-servidor" class="tab-content">
-            <div class="multi-servidor-container">
-                <!-- Seção de entrada de dados -->
-                <div class="input-section">
-                    <h3><i class="fas fa-upload"></i> Dados dos Servidores</h3>
-                    <div class="input-controls">
-                        <button id="importarServidoresJSON" class="btn btn-secondary">
-                            <i class="fas fa-file-import"></i> Importar JSON
-                        </button>
-                        <button id="mostrarFormato" class="btn btn-info">
-                            <i class="fas fa-info-circle"></i> Ver Formato
-                        </button>
-                    </div>
-                    <textarea 
-                        id="servidoresTextarea" 
-                        placeholder="Cole aqui os dados dos servidores no formato JSON ou use o botão 'Importar JSON'..."
-                        rows="10"
-                    ></textarea>
-                </div>
-
-                <!-- Seção de controles -->
-                <div class="controls-section">
-                    <button id="verificarServidores" class="btn btn-primary">
-                        <i class="fas fa-play"></i> Verificar Servidores
-                    </button>
-                    <button id="limparServidores" class="btn btn-secondary">
-                        <i class="fas fa-trash"></i> Limpar
-                    </button>
-                    <button id="exportarResultados" class="btn btn-success" disabled>
-                        <i class="fas fa-download"></i> Exportar Resultados
-                    </button>
-                </div>
-
-                <!-- Barra de progresso -->
-                <div id="progressContainer" class="progress-container" style="display: none;">
-                    <div class="progress-info">
-                        <span id="progressText">Preparando verificação...</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div id="progressBar" class="progress-bar"></div>
-                    </div>
-                </div>
-
-                <!-- Seção de resultados -->
-                <div id="resultadosContainer" class="resultados-container">
-                    <!-- Resultados serão exibidos aqui -->
-                </div>
-            </div>
-        </div>
 
         <!-- Aba Configurações -->
         <div id="config" class="tab-content">
