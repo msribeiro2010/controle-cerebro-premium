@@ -1004,67 +1004,14 @@ Sucessos por Servidor:
           const urlAposAbaServidor = this.page.url();
           console.log(`🔍 [DEBUG] URL após aba servidor: ${urlAposAbaServidor}`);
           console.log(`🔍 [DEBUG] Aba servidor acessada para ${servidor.nome}`);
-
-          // VERIFICAÇÃO CRÍTICA: Buscar OJs já vinculados no banco de dados
-          let ojsParaProcessarFinal = servidor.ojs || [];
-
-          if (this.dbConnection && this.dbConnection.isConnected) {
-            try {
-              console.log(`🔍 [VERIFICAÇÃO DB] Consultando OJs já vinculados para CPF ${servidor.cpf}...`);
-
-              // Buscar OJs realmente vinculados no banco de dados
-              const ojsJaVinculadosDB = await this.dbConnection.buscarOJsDoServidor(servidor.cpf);
-
-              console.log(`📊 [VERIFICAÇÃO DB] Encontrados ${ojsJaVinculadosDB.length} OJs já vinculados no banco`);
-              console.log(`📋 [VERIFICAÇÃO DB] OJs da configuração: ${servidor.ojs?.length || 0}`);
-
-              if (ojsJaVinculadosDB.length > 0) {
-                console.log(`🔍 [VERIFICAÇÃO DB] OJs já vinculados:`);
-                ojsJaVinculadosDB.forEach((oj, idx) => {
-                  console.log(`   ${idx + 1}. ${oj.orgaoJulgador || oj.orgao_julgador || oj}`);
-                });
-
-                // Filtrar OJs que realmente precisam ser processados
-                const ojsNormalizadosDB = ojsJaVinculadosDB.map(oj =>
-                  this.smartOJCache._normalizarTexto(oj.orgaoJulgador || oj.orgao_julgador || oj)
-                );
-
-                ojsParaProcessarFinal = (servidor.ojs || []).filter(ojConfig => {
-                  const ojNormalizado = this.smartOJCache._normalizarTexto(ojConfig);
-                  const jaVinculado = ojsNormalizadosDB.some(ojDB => ojDB === ojNormalizado);
-
-                  if (jaVinculado) {
-                    console.log(`   ⏭️  "${ojConfig}" - JÁ VINCULADO (pulando)`);
-                  }
-
-                  return !jaVinculado;
-                });
-
-                console.log(`✅ [VERIFICAÇÃO DB] ${ojsJaVinculadosDB.length} OJs já vinculados, ${ojsParaProcessarFinal.length} precisam ser processados`);
-              } else {
-                console.log(`📝 [VERIFICAÇÃO DB] Nenhum OJ vinculado encontrado - processando todos`);
-              }
-            } catch (error) {
-              console.error(`❌ [VERIFICAÇÃO DB] Erro ao consultar banco: ${error.message}`);
-              console.log(`⚠️ [VERIFICAÇÃO DB] Continuando com todos os OJs da configuração`);
-              // Em caso de erro, processar todos os OJs da configuração
-              ojsParaProcessarFinal = servidor.ojs || [];
-            }
-          } else {
-            console.log(`⚠️ [VERIFICAÇÃO DB] Banco desconectado - processando todos os OJs da configuração`);
-          }
-
-          // Atualizar servidor com OJs filtrados
-          const ojsOriginais = servidor.ojs || [];
-          servidor.ojs = ojsParaProcessarFinal;
-
+          
           // Processar OJs com monitoramento detalhado
-          console.log(`🎯 [${i + 1}/${servidores.length}] Processando ${ojsParaProcessarFinal.length} de ${ojsOriginais.length} OJs...`);
+          console.log(`🎯 [${i + 1}/${servidores.length}] Processando ${servidor.ojs?.length || 0} OJs...`);
           console.log(`🔍 [DEBUG] Iniciando processamento de OJs para ${servidor.nome}:`);
-          for (let debugOJ = 0; debugOJ < Math.min(3, ojsParaProcessarFinal.length); debugOJ++) {
-            console.log(`   OJ ${debugOJ + 1}: ${ojsParaProcessarFinal[debugOJ]}`);
+          for (let debugOJ = 0; debugOJ < Math.min(3, servidor.ojs?.length || 0); debugOJ++) {
+            console.log(`   OJ ${debugOJ + 1}: ${servidor.ojs[debugOJ]}`);
           }
-
+          
           await this.processOrgaosJulgadoresWithServerTracking(servidor);
           console.log(`✅ [${i + 1}/${servidores.length}] Processamento de OJs concluído`);
           console.log(`🔍 [DEBUG] Processamento de OJs FINALIZADO para ${servidor.nome}`);

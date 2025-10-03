@@ -29,13 +29,8 @@ class DatabaseConnection {
     this.pool = null;
     this.isConnected = false;
     this.credentials = credentials;
-    // CORREÇÃO: Usar primeiroGrau e segundoGrau (nomes corretos no database.config.js)
-    this.connectionConfig = credentials
-      ? this.buildConnectionConfig(credentials, credentials.database1Grau || 'pje_1grau')
-      : (config.primeiroGrau || config.database1Grau || config.connection);
-    this.connectionConfig2Grau = credentials
-      ? this.buildConnectionConfig(credentials, credentials.database2Grau || 'pje_2grau')
-      : (config.segundoGrau || config.database2Grau);
+    this.connectionConfig = credentials ? this.buildConnectionConfig(credentials, credentials.database1Grau || 'pje_1grau') : config.database1Grau;
+    this.connectionConfig2Grau = credentials ? this.buildConnectionConfig(credentials, credentials.database2Grau || 'pje_2grau') : config.database2Grau;
   }
 
   /**
@@ -111,22 +106,13 @@ class DatabaseConnection {
           const client = await this.pool.connect();
           await client.query('SELECT 1');
           client.release();
-          console.log('✅ Pool de conexão existente está funcionando');
-          return true; // CORREÇÃO: Retornar true em vez de undefined
+          return; // Pool está funcionando, não precisa recriar
         } catch (error) {
           console.log('Pool existente com problema, recriando...');
           await this.pool.end();
         }
       }
 
-      // Verificar se temos uma configuração válida
-      if (!this.connectionConfig) {
-        console.error('❌ Configuração de banco de dados não encontrada');
-        this.isConnected = false;
-        return false;
-      }
-
-      console.log(`🔗 Conectando ao banco: ${this.connectionConfig.database}@${this.connectionConfig.host}...`);
       this.pool = new Pool(this.connectionConfig);
 
       // Testar conexão
@@ -139,11 +125,6 @@ class DatabaseConnection {
       return true;
     } catch (error) {
       console.error('❌ Erro ao conectar com banco de dados:', error.message);
-      console.error('📋 Config tentado:', {
-        host: this.connectionConfig?.host,
-        database: this.connectionConfig?.database,
-        user: this.connectionConfig?.user
-      });
       this.isConnected = false;
       return false;
     }
@@ -399,13 +380,13 @@ class DatabaseConnection {
 
     try {
       const client = await this.pool.connect();
-
+      
       const query = `
-        SELECT
+        SELECT 
           id_orgao_julgador,
           ds_orgao_julgador,
           sg_orgao_julgador
-        FROM pje.tb_orgao_julgador
+        FROM pje.tb_orgao_julgador 
         WHERE LOWER(ds_orgao_julgador) LIKE LOWER($1)
         ORDER BY ds_orgao_julgador
         LIMIT 10
@@ -423,78 +404,15 @@ class DatabaseConnection {
   }
 
   /**
-   * Busca OJs já vinculados de um servidor por CPF
-   * @param {string} cpf - CPF do servidor
-   * @param {string} grau - '1' para 1º grau, '2' para 2º grau (opcional)
-   * @returns {Array} Lista de OJs vinculados ao servidor
-   */
-  async buscarOJsDoServidor(cpf, grau = '1') {
-    if (!this.isConnected || !this.pool) {
-      console.log('⚠️ Banco não conectado - retornando array vazio');
-      return [];
-    }
-
-    try {
-      console.log(`🔍 [DB] Buscando OJs vinculados para CPF ${cpf}...`);
-
-      const client = await this.pool.connect();
-
-      const query = `
-        SELECT DISTINCT
-          o.ds_orgao_julgador as orgao_julgador,
-          o.id_orgao_julgador,
-          p.ds_nome as perfil,
-          us.dt_final
-        FROM
-          pje.tb_usuario_login l
-        JOIN
-          pje.tb_usuario_localizacao ul
-            ON l.id_usuario = ul.id_usuario
-        JOIN
-          pje.tb_usu_local_mgtdo_servdor us
-            ON ul.id_usuario_localizacao = us.id_usu_local_mgstrado_servidor
-        JOIN
-          pje.tb_orgao_julgador o
-            ON us.id_orgao_julgador = o.id_orgao_julgador
-        JOIN
-          pje.tb_papel p
-            ON p.id_papel = ul.id_papel
-        WHERE
-          l.ds_login = $1
-          AND us.dt_final IS NULL
-          AND o.in_ativo = 'S'
-        ORDER BY
-          o.ds_orgao_julgador
-      `;
-
-      const result = await client.query(query, [cpf]);
-      client.release();
-
-      console.log(`✅ [DB] Encontrados ${result.rows.length} OJs vinculados para CPF ${cpf}`);
-
-      return result.rows.map(row => ({
-        orgaoJulgador: row.orgao_julgador,
-        id: row.id_orgao_julgador,
-        perfil: row.perfil
-      }));
-
-    } catch (error) {
-      console.error(`❌ [DB] Erro ao buscar OJs do servidor ${cpf}:`, error.message);
-      return [];
-    }
-  }
-
-  /**
    * Buscar órgãos julgadores por grau
    * @param {string} grau - '1' para 1º grau, '2' para 2º grau
    * @returns {Array} Lista de órgãos julgadores com nome e código
    */
   async buscarOrgaosJulgadores(grau) {
     try {
-      const dbConfig = require('../../database.config.js');
-      const config = grau === '1'
-        ? (dbConfig.primeiroGrau || dbConfig.database1Grau)
-        : (dbConfig.segundoGrau || dbConfig.database2Grau);
+      const config = grau === '1' 
+        ? require('../../database.config.js').database1Grau 
+        : require('../../database.config.js').database2Grau;
       
       const { Pool } = require('pg');
       const specificPool = new Pool(config);
@@ -532,10 +450,9 @@ class DatabaseConnection {
    */
   async buscarServidores(grau, filtroNome = '', filtroPerfil = '') {
     try {
-      const dbConfig = require('../../database.config.js');
       const config = grau === '1'
-        ? (dbConfig.primeiroGrau || dbConfig.database1Grau)
-        : (dbConfig.segundoGrau || dbConfig.database2Grau);
+        ? require('../../database.config.js').database1Grau
+        : require('../../database.config.js').database2Grau;
 
       const { Pool } = require('pg');
       const specificPool = new Pool(config);

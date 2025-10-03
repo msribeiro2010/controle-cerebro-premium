@@ -75,8 +75,7 @@ class OJDatabaseService {
   async buscarOJs2Grau(filtro = '', limite = 0) {
     try {
       // Usar configuração específica do 2º grau
-      const dbCfg = require('../../database.config.js');
-      const config = dbCfg.segundoGrau || dbCfg.database2Grau;
+      const config = require('../../database.config.js').database2Grau;
       const { Pool } = require('pg');
       const pool2Grau = new Pool(config);
 
@@ -193,8 +192,7 @@ class OJDatabaseService {
 
     // Testar 2º grau
     try {
-      const dbCfg = require('../../database.config.js');
-      const config = dbCfg.segundoGrau || dbCfg.database2Grau;
+      const config = require('../../database.config.js').database2Grau;
       const { Pool } = require('pg');
       const pool2Grau = new Pool(config);
       const client = await pool2Grau.connect();
@@ -275,8 +273,7 @@ class OJDatabaseService {
 
       // Estatísticas 2º grau
       try {
-        const dbCfg = require('../../database.config.js');
-      const config = dbCfg.segundoGrau || dbCfg.database2Grau;
+        const config = require('../../database.config.js').database2Grau;
         const { Pool } = require('pg');
         const pool2Grau = new Pool(config);
 

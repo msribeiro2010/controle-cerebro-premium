@@ -30,12 +30,10 @@ class ServidorDatabaseService {
             
       // Verificar se o banco está habilitado
       const config = require('../../database.config.js');
-      const dbConfig = grau === '2'
-        ? (config.segundoGrau || config.database2Grau)
-        : (config.primeiroGrau || config.database1Grau);
-
-      if (!dbConfig || !config.enabled) {
-        console.log(`⚠️ Banco do ${grau}º grau está desabilitado ou não configurado. Retornando dados mockados.`);
+      const dbConfig = grau === '2' ? config.database2Grau : config.database1Grau;
+      
+      if (!dbConfig.enabled) {
+        console.log(`⚠️ Banco do ${grau}º grau está desabilitado. Retornando dados mockados.`);
         return this.getMockServidores(grau, filtroNome);
       }
       
@@ -298,10 +296,8 @@ class ServidorDatabaseService {
     try {
       const config = require('../../database.config.js');
       const { Pool } = require('pg');
-
-      const dbConfig = grau === '2'
-        ? (config.segundoGrau || config.database2Grau)
-        : (config.primeiroGrau || config.database1Grau);
+      
+      const dbConfig = grau === '2' ? config.database2Grau : config.database1Grau;
       const pool = new Pool(dbConfig);
       
       const query = `
@@ -343,18 +339,10 @@ class ServidorDatabaseService {
       
       // Verificar se o banco está habilitado
       const config = require('../../database.config.js');
-
-      // Verificar se o sistema de banco de dados está habilitado
-      if (!config || !config.enabled) {
-        console.log(`⚠️ Sistema de banco de dados está desabilitado. Retornando dados mockados.`);
-        return this.getMockOJs(cpf, grau);
-      }
-
-      // Selecionar configuração correta baseada no grau
-      const dbConfig = grau === '2' ? config.segundoGrau : config.primeiroGrau;
-
-      if (!dbConfig) {
-        console.log(`⚠️ Configuração do ${grau}º grau não encontrada. Retornando dados mockados.`);
+      const dbConfig = grau === '2' ? config.database2Grau : config.database1Grau;
+      
+      if (!dbConfig.enabled) {
+        console.log(`⚠️ Banco do ${grau}º grau está desabilitado. Retornando dados mockados.`);
         return this.getMockOJs(cpf, grau);
       }
       

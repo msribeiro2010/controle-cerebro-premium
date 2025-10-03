@@ -25,8 +25,7 @@ class ProcessDatabaseService {
       return this.dbConnection.pool.connect();
     } else {
       // Criar pool específico do 2º grau on-demand
-      const dbCfg = require('../../database.config.js');
-      const config = dbCfg.segundoGrau || dbCfg.database2Grau;
+      const config = require('../../database.config.js').database2Grau;
       const pool2 = new this.pg.Pool(config);
       // Atenção: chamador deve liberar client e encerrar pool
       const client = await pool2.connect();
