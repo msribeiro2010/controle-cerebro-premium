@@ -14,7 +14,8 @@
       "Bash(node:*)",
       "Bash(git branch:*)",
       "Bash(git pull:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []

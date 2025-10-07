@@ -163,7 +163,7 @@ class PeritoApp {
     this.switchTab('inicio');
     this.updateDashboardStats(); // Atualizar estatísticas do dashboard
     this.switchConfigTab('sistema');
-    this.initializeConfigurationEnhancements(); // Melhorias na configuração
+    // this.initializeConfigurationEnhancements(); // Melhorias na configuração - função removida
 
     // Definir status de conexão do banco como desconectado por padrão
     this.updateConnectionIndicator(false);
@@ -2639,16 +2639,18 @@ class PeritoApp {
       return;
     }
 
-    // Focar no campo de nome
-    const nomeInput = document.getElementById('nomeFavorita');
-    if (nomeInput) {
-      nomeInput.focus();
-      nomeInput.select();
+    // Mostrar painel de favoritar
+    const panel = document.getElementById('sqlFavoritePanel');
+    if (panel) {
+      panel.style.display = 'block';
 
-      // Scroll suave para a seção de favoritos
-      const favoritasSection = nomeInput.closest('.config-section');
-      if (favoritasSection) {
-        favoritasSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Focar no campo de nome
+      const nomeInput = document.getElementById('nomeFavorita');
+      if (nomeInput) {
+        setTimeout(() => {
+          nomeInput.focus();
+          nomeInput.select();
+        }, 100);
       }
     }
 
