@@ -10760,7 +10760,8 @@ class PeritoApp {
         'Assessor',
         'Secretário de Audiência',
         'Técnico Judiciário',
-        'Analista Judiciário'
+        'Analista Judiciário',
+        'Servidor'
       ];
 
       // Validar campos obrigatórios do novo formato
