@@ -1,0 +1,44 @@
+[
+  {
+    "nome": "João Silva",
+    "cpf": "123.456.789-10",
+    "perfil": "Assessor",
+    "ojs": ["1ª Vara do Trabalho de São Paulo"]
+  },
+  {
+    "nome": "Maria Santos",
+    "cpf": "111.111.111-11",
+    "perfil": "Secretário de Audiência",
+    "ojs": ["2ª Vara do Trabalho de Campinas"]
+  },
+  {
+    "nome": "Pedro Oliveira",
+    "cpf": "529.982.247-25",
+    "perfil": "Assessor",
+    "ojs": ["3ª Vara do Trabalho de Ribeirão Preto"]
+  },
+  {
+    "nome": "Ana Costa",
+    "cpf": "999.999.999-99",
+    "perfil": "Secretário de Audiência",
+    "ojs": ["4ª Vara do Trabalho de Sorocaba"]
+  },
+  {
+    "nome": "Carlos Pereira",
+    "cpf": "",
+    "perfil": "Assessor",
+    "ojs": ["5ª Vara do Trabalho de Santos"]
+  },
+  {
+    "nome": "Lucia Ferreira",
+    "cpf": "123456789",
+    "perfil": "Secretário de Audiência",
+    "ojs": ["6ª Vara do Trabalho de Piracicaba"]
+  },
+  {
+    "nome": "",
+    "cpf": "123.456.789-00",
+    "perfil": "Assessor",
+    "ojs": ["7ª Vara do Trabalho de Jundiaí"]
+  }
+]

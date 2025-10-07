@@ -1,0 +1,185 @@
+[
+  {
+    "ds_orgao_julgador": "1ª Turma",
+    "membros": [
+      "Desembargador Fábio Bueno de Aguiar - Presidente da 1ª Câmara",
+      "Desembargadora Tereza Aparecida Asta Gemignani",
+      "Desembargador Ricardo Antonio de Plato",
+      "Desembargador José Carlos Abile",
+      "Desembargador Paulo Augusto Ferreira",
+      "Desembargador José Otávio de Souza Ferreira - Presidente da 1ª Turma e da 2ª Câmara",
+      "Desembargadora Susana Graciela Santiso",
+      "Desembargador Wilton Borba Canicoba",
+      "Desembargadora Larissa Carotta Martins da Silva Scarabelim",
+      "Desembargador Helio Grasselli"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "2ª Turma",
+    "membros": [
+      "Desembargador Samuel Corrêa Levis - Presidente",
+      "Desembargador Eduardo Benedito de Oliveira Zanella",
+      "Desembargadora Ivani Contini Bramante"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "3ª Turma",
+    "membros": [
+      "Desembargador João Batista Martins César - Presidente",
+      "Desembargador Flávio Allegretti de Campos Cooper",
+      "Desembargadora Ana Paula Pellegrina Lockmann"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "4ª Turma",
+    "membros": [
+      "Desembargador Luís Henrique Rafael - Presidente",
+      "Desembargador Odwake Zanetoni de Oliveira",
+      "Desembargadora Beatriz de Lima Pereira"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "5ª Turma",
+    "membros": [
+      "Desembargador José Otávio de Souza Ferreira - Presidente",
+      "Desembargador Rovirso Aparecido Boldo",
+      "Desembargadora Eleonora Bordini Coca"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "6ª Turma",
+    "membros": [
+      "Desembargador Paulo de Tarso Salomão - Presidente",
+      "Desembargador Luiz Antonio Lazarim",
+      "Desembargadora Erotilde Ribeiro dos Santos Minharro"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "7ª Turma",
+    "membros": [
+      "Desembargadora Maria Inês Corrêa de Cerqueira César Targa - Presidente",
+      "Desembargador Luiz Edgar Ferraz de Oliveira",
+      "Desembargadora Maria Cristina Fisch"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "8ª Turma",
+    "membros": [
+      "Desembargador Marcelo Freire Gonçalves - Presidente",
+      "Desembargador Ricardo Artur Costa e Trigueiros",
+      "Desembargadora Lourdes Conceição Martins de Abreu Costa"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "9ª Turma",
+    "membros": [
+      "Desembargador Décio Sebastião Daidone - Presidente",
+      "Desembargador José Ruffolo",
+      "Desembargadora Nilva Maria Ferreira da Silva"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "10ª Turma",
+    "membros": [
+      "Desembargador Dallegrave Neto - Presidente",
+      "Desembargador Marcos Neves Fava",
+      "Desembargadora Rita Maria Silvestre"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Seção Especializada I",
+    "membros": [
+      "Composta pelas Turmas 1ª a 5ª"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Seção Especializada II",
+    "membros": [
+      "Composta pelas Turmas 6ª a 10ª"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Seção de Dissídios Coletivos",
+    "membros": [
+      "Presidente do Tribunal",
+      "Vice-Presidente do Tribunal",
+      "Corregedor Regional",
+      "Presidentes das Turmas"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Seção de Dissídios Individuais I",
+    "membros": [
+      "Composta pelas Turmas 1ª a 5ª"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Seção de Dissídios Individuais II",
+    "membros": [
+      "Composta pelas Turmas 6ª a 10ª"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Órgão Especial",
+    "membros": [
+      "Presidente do Tribunal",
+      "Vice-Presidente do Tribunal",
+      "Corregedor Regional",
+      "Os 11 Desembargadores mais antigos"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Pleno",
+    "membros": [
+      "Todos os Desembargadores do Tribunal"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Comissão de Ética",
+    "membros": [
+      "Membros designados pelo Pleno"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Presidência",
+    "membros": [
+      "Desembargador Presidente do TRT-15"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Vice-Presidência",
+    "membros": [
+      "Desembargador Vice-Presidente do TRT-15"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Corregedoria Regional",
+    "membros": [
+      "Desembargador Corregedor Regional"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Gabinete da Presidência",
+    "membros": [
+      "Assessores e servidores do Gabinete da Presidência"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Gabinete da Vice-Presidência",
+    "membros": [
+      "Assessores e servidores do Gabinete da Vice-Presidência"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Gabinete da Corregedoria",
+    "membros": [
+      "Assessores e servidores do Gabinete da Corregedoria"
+    ]
+  },
+  {
+    "ds_orgao_julgador": "Escola Judicial",
+    "membros": [
+      "Direção e equipe da Escola Judicial"
+    ]
+  }
+]

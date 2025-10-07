@@ -1,0 +1,35 @@
+name: View Commits
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  show-commits:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Display commit information
+        run: |
+          echo "=== Commits in this push ==="
+          echo ""
+          
+          # Get commits from the push
+          COMMITS=$(git log --format="%H" ${{ github.event.before }}..${{ github.sha }} 2>/dev/null || git log --format="%H" -n 5)
+          
+          for commit in $COMMITS; do
+            echo "----------------------------------------"
+            echo "SHA: $commit"
+            echo "Author: $(git log -1 --format='%an <%ae>' $commit)"
+            echo "Date: $(git log -1 --format='%ad' $commit)"
+            echo "Message: $(git log -1 --format='%s' $commit)"
+            echo ""
+          done
+          
+          echo "========================================"

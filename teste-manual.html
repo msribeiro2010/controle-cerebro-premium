@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Manual - Novo Formato JSON</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste Manual - Novo Formato JSON para Importação de Servidores</h1>
+    
+    <div class="container">
+        <h2>📄 Dados de Teste</h2>
+        <p>Cole o JSON dos servidores no formato abaixo:</p>
+        <textarea id="jsonInput" placeholder="Cole aqui o JSON dos servidores...">[
+  {
+    "nome": "Aryelle Marcondes de Rezende",
+    "cpf": "372.854.118-41",
+    "perfil": "Secretário de Audiência",
+    "ojs": [
+      "Vara do Trabalho de Bebedouro",
+      "1ª Vara do Trabalho de Jaboticabal",
+      "2ª Vara do Trabalho de Jaboticabal",
+      "Vara do Trabalho de Mococa"
+    ]
+  },
+  {
+    "nome": "João Silva Santos",
+    "cpf": "123.456.789-00",
+    "perfil": "Assessor",
+    "email": "joao@email.com",
+    "cidade": "Campinas",
+    "ojs": [
+      "1ª Vara do Trabalho de Campinas",
+      "2ª Vara do Trabalho de Campinas"
+    ]
+  }
+]</textarea>
+        
+        <button onclick="validarJSON()">🔍 Validar JSON</button>
+        <button onclick="simularVerificacao()">⚡ Simular Verificação</button>
+        <button onclick="limparResultados()">🧹 Limpar</button>
+    </div>
+    
+    <div class="container">
+        <h2>📊 Resultados</h2>
+        <div id="resultados"></div>
+    </div>
+
+    <script>
+        function mostrarResultado(tipo, mensagem) {
+            const resultados = document.getElementById('resultados');
+            const div = document.createElement('div');
+            div.className = `result ${tipo}`;
+            div.innerHTML = mensagem;
+            resultados.appendChild(div);
+        }
+
+        function limparResultados() {
+            document.getElementById('resultados').innerHTML = '';
+        }
+
+        function validarJSON() {
+            limparResultados();
+            const input = document.getElementById('jsonInput').value.trim();
+            
+            if (!input) {
+                mostrarResultado('error', '❌ Por favor, insira um JSON para validar');
+                return;
+            }
+
+            let servidores;
+            try {
+                servidores = JSON.parse(input);
+                mostrarResultado('success', '✅ JSON válido - parsing bem-sucedido');
+            } catch (error) {
+                mostrarResultado('error', `❌ Erro no parsing do JSON: ${error.message}`);
+                return;
+            }
+
+            if (!Array.isArray(servidores)) {
+                mostrarResultado('error', '❌ O JSON deve ser um array de servidores');
+                return;
+            }
+
+            if (servidores.length === 0) {
+                mostrarResultado('error', '❌ O array não pode estar vazio');
+                return;
+            }
+
+            mostrarResultado('success', `✅ Array válido com ${servidores.length} servidor(es)`);
+
+            // Validar cada servidor
+            let servidoresValidos = 0;
+            let servidoresComAvisos = 0;
+            let servidoresComErros = 0;
+
+            for (let i = 0; i < servidores.length; i++) {
+                const servidor = servidores[i];
+                const erros = [];
+                const avisos = [];
+
+                // Validar campos obrigatórios
+                if (!servidor.nome || typeof servidor.nome !== 'string' || servidor.nome.trim() === '') {
+                    erros.push('Campo "nome" é obrigatório');
+                }
+
+                if (!servidor.cpf || typeof servidor.cpf !== 'string' || servidor.cpf.trim() === '') {
+                    erros.push('Campo "cpf" é obrigatório');
+                }
+
+                if (!servidor.perfil || typeof servidor.perfil !== 'string' || servidor.perfil.trim() === '') {
+                    erros.push('Campo "perfil" é obrigatório');
+                }
+
+                if (!servidor.ojs || !Array.isArray(servidor.ojs) || servidor.ojs.length === 0) {
+                    erros.push('Campo "ojs" deve ser um array não vazio');
+                } else {
+                    for (let j = 0; j < servidor.ojs.length; j++) {
+                        if (!servidor.ojs[j] || typeof servidor.ojs[j] !== 'string' || servidor.ojs[j].trim() === '') {
+                            erros.push(`OJ ${j + 1} deve ser uma string não vazia`);
+                        }
+                    }
+                }
+
+                // Verificar campos desnecessários
+                if (servidor.email) {
+                    avisos.push('Campo "email" será removido');
+                }
+                if (servidor.cidade) {
+                    avisos.push('Campo "cidade" será removido');
+                }
+
+                // Mostrar resultados para este servidor
+                if (erros.length === 0) {
+                    servidoresValidos++;
+                    if (avisos.length > 0) {
+                        servidoresComAvisos++;
+                        mostrarResultado('warning', `⚠️ Servidor ${i + 1} (${servidor.nome}): Válido com avisos - ${avisos.join(', ')}`);
+                    } else {
+                        mostrarResultado('success', `✅ Servidor ${i + 1} (${servidor.nome}): Válido`);
+                    }
+                } else {
+                    servidoresComErros++;
+                    mostrarResultado('error', `❌ Servidor ${i + 1} (${servidor.nome}): ${erros.join(', ')}`);
+                }
+            }
+
+            // Resumo final
+            mostrarResultado('success', `📊 Resumo: ${servidoresValidos} válidos, ${servidoresComAvisos} com avisos, ${servidoresComErros} com erros`);
+        }
+
+        function simularVerificacao() {
+            limparResultados();
+            const input = document.getElementById('jsonInput').value.trim();
+            
+            if (!input) {
+                mostrarResultado('error', '❌ Por favor, insira um JSON para simular a verificação');
+                return;
+            }
+
+            let servidores;
+            try {
+                servidores = JSON.parse(input);
+            } catch (error) {
+                mostrarResultado('error', `❌ Erro no parsing do JSON: ${error.message}`);
+                return;
+            }
+
+            mostrarResultado('success', '🚀 Iniciando simulação de verificação...');
+
+            // Simular verificação de servidores já cadastrados
+            const servidoresJaCadastrados = [];
+            const servidoresFaltantes = [];
+
+            for (let i = 0; i < servidores.length; i++) {
+                const servidor = servidores[i];
+                
+                // Remover campos desnecessários
+                if (servidor.email) {
+                    delete servidor.email;
+                }
+                if (servidor.cidade) {
+                    delete servidor.cidade;
+                }
+
+                // Simular busca no banco (alguns CPFs fictícios como já cadastrados)
+                const cpfsJaCadastrados = ['372.854.118-41', '111.222.333-44'];
+                
+                if (cpfsJaCadastrados.includes(servidor.cpf)) {
+                    servidoresJaCadastrados.push(servidor);
+                    mostrarResultado('success', `✅ Servidor ${servidor.nome} (CPF: ${servidor.cpf}) já está cadastrado - verificando OJs...`);
+                } else {
+                    servidoresFaltantes.push(servidor);
+                    mostrarResultado('warning', `⚠️ Servidor ${servidor.nome} (CPF: ${servidor.cpf}) não está cadastrado - será incluído no arquivo de automação`);
+                }
+            }
+
+            // Simular geração de arquivo para servidores faltantes
+            if (servidoresFaltantes.length > 0) {
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                const nomeArquivo = `servidores-faltantes-${timestamp}.json`;
+                
+                mostrarResultado('success', `📁 Arquivo gerado: ${nomeArquivo} com ${servidoresFaltantes.length} servidor(es) faltante(s)`);
+                
+                // Mostrar conteúdo do arquivo que seria gerado
+                const conteudoArquivo = JSON.stringify(servidoresFaltantes, null, 2);
+                mostrarResultado('success', `📄 Conteúdo do arquivo:<br><pre style="background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto;">${conteudoArquivo}</pre>`);
+            }
+
+            // Simular verificação de OJs para servidores já cadastrados
+            if (servidoresJaCadastrados.length > 0) {
+                mostrarResultado('success', `🔍 Verificando OJs para ${servidoresJaCadastrados.length} servidor(es) já cadastrado(s)...`);
+                
+                for (const servidor of servidoresJaCadastrados) {
+                    // Simular verificação de OJs
+                    const ojsEncontrados = Math.floor(Math.random() * servidor.ojs.length) + 1;
+                    const ojsFaltantes = servidor.ojs.length - ojsEncontrados;
+                    
+                    if (ojsFaltantes === 0) {
+                        mostrarResultado('success', `✅ ${servidor.nome}: Todos os ${servidor.ojs.length} OJs estão corretos`);
+                    } else {
+                        mostrarResultado('warning', `⚠️ ${servidor.nome}: ${ojsEncontrados} OJs corretos, ${ojsFaltantes} OJs faltantes ou incorretos`);
+                    }
+                }
+            }
+
+            mostrarResultado('success', '🎯 Simulação de verificação concluída!');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+===============================================
+    CENTRAL IA - NAPJE SISTEMA DE AUTOMACAO INTELIGENTE
+    Sistema de automação inteligente para vinculação de peritos e servidores no PJE
+===============================================
+
+🚀 COMO INICIAR O SISTEMA:
+
+OPÇÃO 1 - ATALHO NO DESKTOP (RECOMENDADO):
+   1. Execute: npm run create-shortcut
+   2. Vá para o desktop
+   3. Clique duas vezes no atalho "PJE Automation"
+
+OPÇÃO 2 - COMANDO RÁPIDO:
+   npm start
+
+OPÇÃO 3 - SCRIPTS MANUAIS:
+   Windows: Clique duas vezes em "start.bat"
+   Mac/Linux: Execute "./start.sh" no terminal
+
+===============================================
+
+📋 PRIMEIRA INSTALAÇÃO:
+   npm run setup
+   (Instala dependências + cria atalho)
+
+===============================================
+
+💡 DICAS:
+   - O sistema abre automaticamente no navegador
+   - Use a aba "Peritos" para automação de peritos
+   - Use a aba "Servidores" para automação de servidores
+   - Configure credenciais na aba "Configurações"
+
+===============================================
+
+🆘 PROBLEMAS?
+   1. Verifique se Node.js está instalado
+   2. Execute: npm install
+   3. Tente: npm start
+
+===============================================

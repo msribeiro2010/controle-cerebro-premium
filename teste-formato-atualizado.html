@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Formato JSON Atualizado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste - Formato JSON Atualizado</h1>
+        
+        <p>Este teste simula a função <code>mostrarFormatoJSON()</code> atualizada para verificar se o novo formato está correto.</p>
+        
+        <button class="test-button" onclick="mostrarFormatoJSON()">
+            📋 Ver Formato JSON (Simulação)
+        </button>
+        
+        <div id="resultado" class="result" style="display: none;">
+            <h3>✅ Resultado do Teste</h3>
+            <p>O formato JSON foi atualizado com sucesso! Principais mudanças:</p>
+            <ul>
+                <li>❌ Removido campo <code>email</code></li>
+                <li>❌ Removido campo <code>cidade_nascimento</code></li>
+                <li>✅ Mantidos apenas campos obrigatórios: <code>nome</code>, <code>cpf</code>, <code>perfil</code>, <code>ojs</code></li>
+                <li>✅ Atualizada documentação sobre funcionalidades</li>
+                <li>✅ Adicionadas observações sobre campos ignorados</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function mostrarFormatoJSON() {
+            // Simulação da função atualizada
+            const formatoExemplo = [
+                {
+                    "nome": "Aryelle Marcondes de Rezende",
+                    "cpf": "372.854.118-41",
+                    "perfil": "Secretário de Audiência",
+                    "ojs": [
+                        "Vara do Trabalho de Bebedouro",
+                        "1ª Vara do Trabalho de Jaboticabal",
+                        "2ª Vara do Trabalho de Jaboticabal",
+                        "Vara do Trabalho de Mococa"
+                    ]
+                },
+                {
+                    "nome": "Newton Trevisan Júnior",
+                    "cpf": "228.302.228-22",
+                    "perfil": "Secretário de Audiência",
+                    "ojs": [
+                        "1ª Vara do Trabalho de São Carlos",
+                        "2ª Vara do Trabalho de São Carlos",
+                        "Vara do Trabalho de São José do Rio Pardo",
+                        "Vara do Trabalho de Taquaritinga"
+                    ]
+                }
+            ];
+
+            const helpHTML = `
+                <div style="text-align: left; max-width: 700px;">
+                    <h3>📋 Formato JSON Esperado para Importação</h3>
+                    
+                    <h4>Estrutura do JSON:</h4>
+                    <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-size: 13px; overflow-x: auto;">${JSON.stringify(formatoExemplo, null, 2)}</pre>
+
+                    <h4 style="margin-top: 20px;">📝 Campos Obrigatórios:</h4>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>nome:</strong> Nome completo do servidor</li>
+                        <li><strong>cpf:</strong> CPF do servidor (formato: XXX.XXX.XXX-XX ou apenas números)</li>
+                        <li><strong>perfil:</strong> Perfil/cargo do servidor no sistema</li>
+                        <li><strong>ojs:</strong> Array com os nomes dos órgãos julgadores</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 20px;">🔧 Funcionalidades de Verificação:</h4>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>Verificação de Cadastro:</strong> Identifica servidores já cadastrados no sistema</li>
+                        <li><strong>Arquivo de Automação:</strong> Gera arquivo JSON com servidores faltantes para automação</li>
+                        <li><strong>Verificação de OJs:</strong> Verifica vínculos apenas para servidores já cadastrados</li>
+                        <li><strong>Relatório Detalhado:</strong> Apresenta resultados completos da verificação</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 20px;">⚠️ Observações Importantes:</h4>
+                    <ul style="line-height: 1.8;">
+                        <li>Todos os campos são <strong>obrigatórios</strong> para o funcionamento correto</li>
+                        <li>Os nomes dos OJs devem corresponder aos nomes exatos dos órgãos julgadores no PJE</li>
+                        <li>O campo <strong>ojs</strong> é um array, mesmo que contenha apenas um item</li>
+                        <li>Campos como <strong>email</strong> e <strong>cidade</strong> são ignorados se presentes</li>
+                        <li>CPFs duplicados não são permitidos no mesmo arquivo</li>
+                    </ul>
+
+                    <h4 style="margin-top: 20px;">💡 Dica:</h4>
+                    <p>Você pode copiar o exemplo acima e modificar com seus dados. O sistema automaticamente separará servidores cadastrados dos não cadastrados.</p>
+                </div>
+            `;
+
+            // Criar modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.5); z-index: 10000; display: flex; 
+                align-items: center; justify-content: center;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: white; padding: 25px; border-radius: 10px; 
+                max-width: 90%; max-height: 90%; overflow-y: auto;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            `;
+            
+            content.innerHTML = helpHTML + `
+                <div style="text-align: center; margin-top: 25px;">
+                    <button onclick="navigator.clipboard.writeText('${JSON.stringify(formatoExemplo, null, 2).replace(/'/g, "\\'")}').then(() => alert('Exemplo copiado!'))" 
+                            style="padding: 10px 20px; background: #28a745; color: white; 
+                                   border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                        📋 Copiar Exemplo
+                    </button>
+                    <button onclick="this.closest('div[style]').parentElement.remove()" 
+                            style="padding: 10px 20px; background: #007bff; color: white; 
+                                   border: none; border-radius: 5px; cursor: pointer;">
+                        Fechar
+                    </button>
+                </div>
+            `;
+            
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            // Fechar ao clicar fora
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+
+            // Mostrar resultado do teste
+            document.getElementById('resultado').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
