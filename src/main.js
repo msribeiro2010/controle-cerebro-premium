@@ -1738,6 +1738,105 @@ ipcMain.handle('exportar-ojs-json', async (event, payload) => {
 });
 
 /**
+ * Obter sugestões de queries SQL da OpenAI
+ */
+ipcMain.handle('obter-sugestoes-ai', async (event, contexto) => {
+  try {
+    console.log('🤖 Solicitando sugestões de queries da OpenAI...');
+
+    // Carregar chave da API do arquivo .env
+    const config = loadConfig();
+    const apiKey = config.OPENAI_API_KEY || process.env.OPENAI_API_KEY;
+
+    if (!apiKey) {
+      throw new Error('Chave da API OpenAI não configurada. Adicione OPENAI_API_KEY no arquivo .env');
+    }
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `Você é um especialista em SQL e PostgreSQL para o sistema PJE (Processo Judicial Eletrônico) do Tribunal Regional do Trabalho.
+
+O banco de dados PJE possui as seguintes tabelas principais:
+
+**Schema: pje**
+- tb_processo: processos judiciais (nr_processo, id_processo)
+- tb_processo_trf: dados do processo no TRF (id_processo_trf, id_orgao_julgador)
+- tb_processo_parte: partes do processo (id_processo_parte, id_pessoa, id_tipo_parte)
+- tb_orgao_julgador: órgãos julgadores/varas (id_orgao_julgador, ds_orgao_julgador)
+- tb_orgao_julgador_colegiado: órgãos colegiados/câmaras (id_orgao_julgador_colegiado, ds_orgao_julgador_colegiado)
+- tb_usuario_login: usuários do sistema (id_usuario, ds_login, ds_nome)
+- tb_processo_instance: instâncias de processos JBPM (id_processo, id_proc_inst)
+- jbpm_taskinstance: tarefas JBPM (id_, name_, actorid_, procinst_, end_, isopen_)
+- jbpm_variableinstance: variáveis JBPM (name_, processinstance_)
+- jbpm_token: tokens JBPM (id_, processinstance_)
+- jbpm_processinstance: instâncias de processo JBPM (id_, processdefinition_)
+- jbpm_processdefinition: definições de processo (name_)
+- jbpm_task: tarefas (name_)
+
+Forneça 5 sugestões de queries SQL úteis, criativas e práticas para o PJE. Cada sugestão deve:
+1. Ter um título curto e descritivo
+2. Incluir a query SQL completa e funcional
+3. Ter uma breve explicação do que faz
+
+Formate sua resposta como JSON válido:
+{
+  "sugestoes": [
+    {
+      "titulo": "Título da Query",
+      "query": "SELECT...",
+      "descricao": "O que esta query faz"
+    }
+  ]
+}`
+          },
+          {
+            role: 'user',
+            content: contexto || 'Me sugira queries SQL interessantes para análise de processos, órgãos julgadores e servidores no PJE.'
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 2000
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`OpenAI API error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const conteudo = data.choices[0].message.content;
+
+    // Tentar extrair JSON do conteúdo
+    let sugestoes;
+    try {
+      // Se vier com markdown code block, remover
+      const jsonMatch = conteudo.match(/```json\n([\s\S]*?)\n```/) || conteudo.match(/```\n([\s\S]*?)\n```/);
+      const jsonString = jsonMatch ? jsonMatch[1] : conteudo;
+      sugestoes = JSON.parse(jsonString);
+    } catch (e) {
+      console.error('Erro ao parsear JSON da OpenAI:', e);
+      sugestoes = { sugestoes: [] };
+    }
+
+    console.log('✅ Sugestões recebidas da OpenAI');
+    return { success: true, sugestoes: sugestoes.sugestoes || [] };
+
+  } catch (error) {
+    console.error('❌ Erro ao obter sugestões da OpenAI:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+/**
  * Testar conectividade com bancos de dados PJE
  */
 ipcMain.handle('testar-conectividade-pje', async () => {

@@ -107,6 +107,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   executarQueryCustomizada: (grau, sqlQuery) => ipcRenderer.invoke('executar-query-customizada', grau, sqlQuery),
   listarBancosDisponiveis: () => ipcRenderer.invoke('listar-bancos-disponiveis'),
   buscarMetadadosBanco: (grau, schemaFilter) => ipcRenderer.invoke('buscar-metadados-banco', grau, schemaFilter),
+  obterSugestoesAI: (contexto) => ipcRenderer.invoke('obter-sugestoes-ai', contexto),
 
   // Central de Configurações - Cache Management
   clearCache: () => ipcRenderer.invoke('clear-cache'),

@@ -2076,6 +2076,161 @@ class PeritoApp {
     }
   }
 
+  async obterSugestoesAI() {
+    try {
+      this.showNotification('🤖 Consultando IA para sugestões de queries...', 'info');
+
+      // Obter contexto do editor (se houver alguma query parcial)
+      const sqlInput = document.getElementById('sqlQueryInput');
+      const textoAtual = sqlInput ? sqlInput.value.trim() : '';
+      const contexto = textoAtual
+        ? `Considerando que o usuário está trabalhando com esta query: "${textoAtual}", me sugira 5 queries SQL relacionadas e úteis para o PJE.`
+        : 'Me sugira 5 queries SQL interessantes e úteis para análise de processos, órgãos julgadores e servidores no sistema PJE.';
+
+      const resultado = await window.electronAPI.obterSugestoesAI(contexto);
+
+      if (!resultado.success) {
+        throw new Error(resultado.error || 'Erro ao obter sugestões');
+      }
+
+      // Mostrar modal com sugestões
+      this.mostrarModalSugestoesAI(resultado.sugestoes);
+
+    } catch (error) {
+      console.error('Erro ao obter sugestões da IA:', error);
+      this.showNotification(`❌ Erro: ${error.message}`, 'error');
+    }
+  }
+
+  mostrarModalSugestoesAI(sugestoes) {
+    if (!sugestoes || sugestoes.length === 0) {
+      this.showNotification('⚠️ Nenhuma sugestão foi retornada pela IA', 'warning');
+      return;
+    }
+
+    const html = `
+      <div class="modal-overlay" id="modalSugestoesAI" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      ">
+        <div style="
+          background: #2d2d30;
+          border: 2px solid #4ec9b0;
+          border-radius: 12px;
+          padding: 30px;
+          max-width: 900px;
+          max-height: 85vh;
+          overflow-y: auto;
+          color: #cccccc;
+        ">
+          <h2 style="color: #4ec9b0; margin-top: 0; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            Sugestões de Queries IA
+          </h2>
+          <p style="color: #9cdcfe; margin-bottom: 20px;">
+            <i class="fas fa-lightbulb"></i> Clique em uma sugestão para usá-la no editor
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 15px;">
+            ${sugestoes.map((sug, index) => `
+              <div class="sugestao-ai-card" data-index="${index}" style="
+                background: #1e1e1e;
+                border: 1px solid #3c3c3c;
+                border-radius: 8px;
+                padding: 20px;
+                cursor: pointer;
+                transition: all 0.3s;
+              " onmouseover="this.style.borderColor='#4ec9b0'; this.style.background='#252526';"
+                 onmouseout="this.style.borderColor='#3c3c3c'; this.style.background='#1e1e1e';"
+                 onclick="app.usarSugestaoAI(${index})">
+                <h3 style="color: #d4c4a8; margin: 0 0 10px 0; font-size: 16px;">
+                  <i class="fas fa-star" style="color: #ffd700;"></i>
+                  ${sug.titulo}
+                </h3>
+                <p style="color: #9cdcfe; margin: 0 0 15px 0; font-size: 14px;">
+                  ${sug.descricao}
+                </p>
+                <pre style="
+                  background: #1a1a1a;
+                  border: 1px solid #3c3c3c;
+                  border-radius: 4px;
+                  padding: 12px;
+                  margin: 0;
+                  overflow-x: auto;
+                  font-family: 'Courier New', monospace;
+                  font-size: 13px;
+                  color: #ce9178;
+                  white-space: pre-wrap;
+                  word-break: break-word;
+                ">${sug.query}</pre>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="margin-top: 30px; text-align: center;">
+            <button onclick="document.getElementById('modalSugestoesAI').remove()" style="
+              background: #d4c4a8;
+              color: #1e1e1e;
+              border: none;
+              padding: 12px 30px;
+              border-radius: 6px;
+              font-size: 16px;
+              font-weight: bold;
+              cursor: pointer;
+              transition: all 0.3s;
+            " onmouseover="this.style.background='#e5d4b8'" onmouseout="this.style.background='#d4c4a8'">
+              <i class="fas fa-times"></i> Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Salvar sugestões para uso posterior
+    this.sugestoesAIAtual = sugestoes;
+
+    // Adicionar modal ao body
+    const modalDiv = document.createElement('div');
+    modalDiv.innerHTML = html;
+    document.body.appendChild(modalDiv);
+
+    // Fechar ao clicar fora do modal
+    document.getElementById('modalSugestoesAI').addEventListener('click', (e) => {
+      if (e.target.id === 'modalSugestoesAI') {
+        e.target.remove();
+      }
+    });
+  }
+
+  usarSugestaoAI(index) {
+    if (!this.sugestoesAIAtual || !this.sugestoesAIAtual[index]) {
+      this.showNotification('❌ Sugestão não encontrada', 'error');
+      return;
+    }
+
+    const sugestao = this.sugestoesAIAtual[index];
+    const sqlInput = document.getElementById('sqlQueryInput');
+
+    if (sqlInput) {
+      sqlInput.value = sugestao.query;
+      sqlInput.focus();
+
+      // Fechar modal
+      const modal = document.getElementById('modalSugestoesAI');
+      if (modal) modal.remove();
+
+      this.showNotification(`✅ Query "${sugestao.titulo}" inserida no editor`, 'success');
+    }
+  }
+
   limparEditorSQL() {
     const sqlInput = document.getElementById('sqlQueryInput');
     if (sqlInput) {
