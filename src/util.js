@@ -34,7 +34,8 @@ function loadConfig() {
     return {
       PJE_URL: process.env.PJE_URL || envFromFile.PJE_URL || savedCredentials.PJE_URL || '',
       LOGIN: process.env.LOGIN || envFromFile.LOGIN || savedCredentials.LOGIN || '',
-      PASSWORD: process.env.PASSWORD || envFromFile.PASSWORD || savedCredentials.PASSWORD || ''
+      PASSWORD: process.env.PASSWORD || envFromFile.PASSWORD || savedCredentials.PASSWORD || '',
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY || envFromFile.OPENAI_API_KEY || ''
     };
   } catch (error) {
     console.error('Erro ao carregar configurações:', error);
