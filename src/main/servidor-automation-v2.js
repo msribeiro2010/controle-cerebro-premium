@@ -5535,16 +5535,16 @@ Sucessos por Servidor:
       }
       
       if (this.page && !this.page.isClosed()) {
-        if (this.isProduction) {
-          await this.page.close();
-        } else {
-          console.log('Mantendo página aberta para desenvolvimento');
-        }
+        console.log('🔒 Fechando página do navegador...');
+        await this.page.close();
       }
-            
-      if (this.browser && this.isProduction) {
+
+      if (this.browser) {
+        console.log('🔒 Fechando navegador...');
         await this.browser.close();
       }
+
+      console.log('✅ [CLEANUP] Navegador fechado com sucesso');
     } catch (error) {
       console.error('Erro durante cleanup:', error);
     }
