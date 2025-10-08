@@ -3894,9 +3894,52 @@ class PeritoApp {
       document.body.appendChild(modal);
     }
 
-    // Extrair dados do resumo geral ou calcular manualmente
-    const resumo = relatorio.resumoGeral || {};
-    const servidores = relatorio.servidores || [];
+    // Normalizar estrutura de dados - suportar tanto formato antigo quanto novo (parallel)
+    let resumo, servidores;
+
+    if (relatorio.resultados && Array.isArray(relatorio.resultados)) {
+      // Formato NOVO do parallel-server-manager
+      console.log('📊 Formato paralelo detectado');
+
+      // Criar resumo geral a partir dos dados consolidados
+      resumo = {
+        totalSucessos: relatorio.sucessos || 0,
+        totalErros: relatorio.erros || 0,
+        totalJaIncluidos: 0, // Calcular a partir dos resultados
+        totalServidores: relatorio.servidoresProcessados || 0,
+        percentualOJsSucesso: relatorio.validacao?.taxaSucesso || 0
+      };
+
+      // Transformar resultados em formato de servidores
+      servidores = relatorio.resultados.map(resultado => {
+        const detalhesOJs = resultado.detalhesOJs || [];
+        const jaIncluidos = detalhesOJs.filter(oj =>
+          oj.status && (oj.status.includes('Já') || oj.status.includes('Pulado'))
+        ).length;
+
+        return {
+          nome: resultado.servidor?.nome || resultado.nome || 'Servidor não especificado',
+          cpf: resultado.servidor?.cpf || resultado.cpf || 'CPF não informado',
+          perfil: resultado.servidor?.perfil || resultado.perfil || 'Perfil não especificado',
+          status: resultado.erros > 0 ? 'Erro' : 'Concluído',
+          estatisticas: {
+            sucessos: resultado.sucessos || 0,
+            erros: resultado.erros || 0,
+            jaIncluidos: jaIncluidos
+          },
+          detalhesOJs: detalhesOJs
+        };
+      });
+
+      // Somar totalJaIncluidos
+      resumo.totalJaIncluidos = servidores.reduce((sum, s) => sum + (s.estatisticas.jaIncluidos || 0), 0);
+
+    } else {
+      // Formato ANTIGO original
+      console.log('📊 Formato original detectado');
+      resumo = relatorio.resumoGeral || {};
+      servidores = relatorio.servidores || [];
+    }
 
     const totalSucessos = resumo.totalSucessos || servidores.reduce((sum, s) => sum + (s.estatisticas?.sucessos || 0), 0);
     const totalErros = resumo.totalErros || servidores.reduce((sum, s) => sum + (s.estatisticas?.erros || 0), 0);
