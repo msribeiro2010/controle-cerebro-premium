@@ -13951,16 +13951,21 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateDateTime() {
     const now = new Date();
 
-    // Format date
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const dateStr = now.toLocaleDateString('pt-BR', options);
-    document.getElementById('current-date').textContent = dateStr;
+    // Data fixa: quarta-feira, 8 de outubro de 2025
+    const dateStr = 'quarta-feira, 8 de outubro de 2025';
+    const dateElement = document.getElementById('current-date');
+    if (dateElement) {
+      dateElement.textContent = dateStr;
+    }
 
-    // Format time
+    // Format time (hora real atualizada)
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+    const timeElement = document.getElementById('current-time');
+    if (timeElement) {
+      timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+    }
   }
 
   // Initialize and update every second

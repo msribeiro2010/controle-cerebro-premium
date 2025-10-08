@@ -231,6 +231,190 @@ header p {
     -webkit-text-fill-color: transparent;
 }
 
+/* Constellation Icon */
+.constellation-icon {
+    background: linear-gradient(135deg,
+        #667eea 0%,
+        #764ba2 50%,
+        #f093fb 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.5));
+    animation: constellation-pulse 4s ease-in-out infinite;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+@keyframes constellation-pulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.5));
+        transform: scale(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 16px rgba(118, 75, 162, 0.8))
+                drop-shadow(0 0 24px rgba(240, 147, 251, 0.4));
+        transform: scale(1.05);
+    }
+}
+
+/* Version Badge */
+.version-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-left: 12px;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+    animation: pulse-badge 3s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 4px 16px rgba(52, 152, 219, 0.5);
+        transform: scale(1.05);
+    }
+}
+
+/* DateTime Widget Modern */
+.datetime-widget-modern {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(248, 250, 252, 0.95) 100%);
+    border: 2px solid rgba(139, 115, 85, 0.15);
+    border-radius: 16px;
+    box-shadow:
+        0 10px 40px rgba(139, 115, 85, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 1px 3px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.datetime-widget-modern:hover {
+    border-color: rgba(139, 115, 85, 0.3);
+    box-shadow:
+        0 15px 50px rgba(139, 115, 85, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 2px 5px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.date-display-modern,
+.time-display-modern {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.date-display-modern:hover,
+.time-display-modern:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateX(2px);
+}
+
+.date-icon,
+.time-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    border-radius: 12px;
+    box-shadow:
+        0 4px 12px rgba(52, 152, 219, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    animation: icon-pulse 3s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+    0%, 100% {
+        box-shadow:
+            0 4px 12px rgba(52, 152, 219, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        box-shadow:
+            0 6px 20px rgba(52, 152, 219, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+}
+
+.time-icon {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    box-shadow:
+        0 4px 12px rgba(39, 174, 96, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.date-icon i,
+.time-icon i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.date-content,
+.time-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.date-label,
+.time-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.date-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.time-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 8px rgba(39, 174, 96, 0.2);
+    animation: time-glow 2s ease-in-out infinite;
+}
+
+@keyframes time-glow {
+    0%, 100% {
+        filter: drop-shadow(0 2px 4px rgba(39, 174, 96, 0.2));
+    }
+    50% {
+        filter: drop-shadow(0 4px 8px rgba(39, 174, 96, 0.4));
+    }
+}
+
 /* Tabs - Estilo Pergaminho Moderno */
 .tabs {
     display: flex;
