@@ -5575,7 +5575,8 @@ class PeritoApp {
     }
 
     // Adicionar OJ à lista quando processada
-    if (data.orgao && data.type) {
+    const orgaoNome = data.orgaoJulgador || data.orgao;
+    if (orgaoNome && data.type) {
       const listItem = document.createElement('li');
       listItem.className = `oj-item ${data.type}`;
 
@@ -5592,7 +5593,7 @@ class PeritoApp {
       }
 
       const text = document.createElement('span');
-      text.textContent = data.orgao;
+      text.textContent = orgaoNome;
 
       listItem.appendChild(icon);
       listItem.appendChild(text);
@@ -11146,14 +11147,7 @@ class PeritoApp {
             <p style="margin: 5px 0;"><strong>CPF:</strong> ${servidor.cpf || 'Não informado'}</p>
             <p style="margin: 5px 0;"><strong>Perfil:</strong> ${detalhes.perfil || 'Não informado'}</p>
             
-            ${detalhes.ojsFaltantes && detalhes.ojsFaltantes.length > 0 ? `
-              <div style="margin-top: 10px;">
-                <strong style="color: #dc3545;">OJs Faltantes (${detalhes.ojsFaltantes.length}):</strong>
-                <ul style="margin: 5px 0; padding-left: 20px; color: #dc3545;">
-                  ${detalhes.ojsFaltantes.map(oj => `<li>${oj}</li>`).join('')}
-                </ul>
-              </div>
-            ` : resultado.status === 'completo' ? `
+            ${detalhes.ojsFaltantes && detalhes.ojsFaltantes.length > 0 ? this.formatarOJsFaltantes(detalhes.ojsFaltantes) : resultado.status === 'completo' ? `
               <div style="margin-top: 10px; color: #28a745;">
                 <strong>✅ Todos os OJs do JSON já estão cadastrados no banco!</strong>
               </div>
