@@ -727,6 +727,7 @@ header p {
     box-shadow: var(--shadow-lg);
     border: 2px solid var(--border-medium);
     position: relative;
+    margin-bottom: 120px; /* Espaço para não sobrepor o botão flutuante */
 }
 
 .table-container::before {
@@ -737,6 +738,11 @@ header p {
     right: 0;
     height: 4px;
     background: linear-gradient(90deg, var(--amber-light), var(--terracota-light), var(--beige-light), var(--olive-light));
+}
+
+/* Container da lista de servidores com espaço para botão flutuante */
+.servidores-list {
+    padding-bottom: 20px;
 }
 
 table {
@@ -9306,7 +9312,7 @@ input:-webkit-autofill + .floating-label {
 /* ===== BOTÃO FLUTUANTE DE AÇÃO RÁPIDA ===== */
 .quick-automation-fab {
     position: fixed;
-    bottom: 32px;
+    bottom: 80px; /* Aumentado para evitar sobreposição */
     right: 32px;
     display: flex;
     align-items: center;
@@ -9321,8 +9327,9 @@ input:-webkit-autofill + .floating-label {
     cursor: pointer;
     box-shadow: 0 8px 24px rgba(40, 167, 69, 0.4);
     transition: all 0.3s ease;
-    z-index: 1000;
+    z-index: 100; /* Reduzido para evitar sobrepor elementos interativos */
     animation: slideInFab 0.5s ease, pulseFab 2s ease-in-out 1s infinite;
+    pointer-events: auto; /* Garante que o botão capture cliques */
 }
 
 .quick-automation-fab:hover {
@@ -9383,7 +9390,7 @@ input:-webkit-autofill + .floating-label {
 /* Responsividade para FAB */
 @media (max-width: 768px) {
     .quick-automation-fab {
-        bottom: 20px;
+        bottom: 70px; /* Ajustado para mobile também */
         right: 20px;
         padding: 14px 20px;
         font-size: 0.9rem;
