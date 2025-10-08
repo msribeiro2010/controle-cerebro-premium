@@ -3883,6 +3883,8 @@ class PeritoApp {
    * Exibe modal de relatório final ao término da automação
    */
   showAutomationReportModal(relatorio) {
+    console.log('📊 Relatório recebido:', relatorio);
+
     // Criar modal se não existir
     let modal = document.getElementById('automation-report-modal');
     if (!modal) {
@@ -3892,57 +3894,103 @@ class PeritoApp {
       document.body.appendChild(modal);
     }
 
-    // Calcular estatísticas
-    const totalSucessos = relatorio.servidores?.reduce((sum, s) => sum + (s.sucessos || 0), 0) || relatorio.sucessos || 0;
-    const totalErros = relatorio.servidores?.reduce((sum, s) => sum + (s.erros || 0), 0) || relatorio.erros || 0;
-    const totalProcessados = relatorio.servidores?.length || 1;
+    // Extrair dados do resumo geral ou calcular manualmente
+    const resumo = relatorio.resumoGeral || {};
+    const servidores = relatorio.servidores || [];
+
+    const totalSucessos = resumo.totalSucessos || servidores.reduce((sum, s) => sum + (s.estatisticas?.sucessos || 0), 0);
+    const totalErros = resumo.totalErros || servidores.reduce((sum, s) => sum + (s.estatisticas?.erros || 0), 0);
+    const totalJaIncluidos = resumo.totalJaIncluidos || servidores.reduce((sum, s) => sum + (s.estatisticas?.jaIncluidos || 0), 0);
+    const totalProcessados = resumo.totalServidores || servidores.length;
     const tempoTotal = relatorio.tempoTotal || this.getElapsedTime();
+    const percentualSucesso = resumo.percentualOJsSucesso ||
+      (totalSucessos + totalErros > 0 ? ((totalSucessos / (totalSucessos + totalErros)) * 100).toFixed(1) : 0);
 
-    // Construir lista de OJs bem-sucedidas
-    let ojsSucessoHTML = '';
-    if (relatorio.servidores && Array.isArray(relatorio.servidores)) {
-      relatorio.servidores.forEach(servidor => {
-        if (servidor.ojsProcessados && servidor.ojsProcessados.length > 0) {
-          servidor.ojsProcessados.forEach(oj => {
-            if (oj.sucesso || oj.status === 'success') {
-              ojsSucessoHTML += `
-                <li class="report-list-item success">
-                  <i class="fas fa-check-circle"></i>
-                  <div class="report-list-item-content">
-                    <div class="report-list-item-title">${oj.orgaoJulgador || oj.nome}</div>
-                    <div class="report-list-item-details">Servidor: ${servidor.nome}</div>
-                  </div>
-                </li>
-              `;
-            }
-          });
-        }
-      });
-    }
+    // Construir lista de servidores processados
+    let servidoresHTML = '';
+    if (servidores && Array.isArray(servidores) && servidores.length > 0) {
+      servidores.forEach((servidor, index) => {
+        const stats = servidor.estatisticas || {};
+        const detalhes = servidor.detalhesOJs || [];
+        const statusIcon = servidor.status === 'Concluído' ? 'fa-check-circle' :
+                          servidor.status === 'Erro' ? 'fa-times-circle' : 'fa-info-circle';
+        const statusColor = servidor.status === 'Concluído' ? 'success' :
+                           servidor.status === 'Erro' ? 'error' : 'info';
 
-    // Construir lista de erros
-    let errosHTML = '';
-    if (relatorio.servidores && Array.isArray(relatorio.servidores)) {
-      relatorio.servidores.forEach(servidor => {
-        if (servidor.ojsProcessados && servidor.ojsProcessados.length > 0) {
-          servidor.ojsProcessados.forEach(oj => {
-            if (!oj.sucesso || oj.status === 'error') {
-              errosHTML += `
-                <li class="report-list-item error">
-                  <i class="fas fa-times-circle"></i>
-                  <div class="report-list-item-content">
-                    <div class="report-list-item-title">${oj.orgaoJulgador || oj.nome}</div>
-                    <div class="report-list-item-details">
-                      Servidor: ${servidor.nome}<br>
-                      Erro: ${oj.erro || 'Erro desconhecido'}
-                    </div>
-                  </div>
-                </li>
-              `;
-            }
-          });
-        }
+        // OJs com sucesso
+        const ojsSucesso = detalhes.filter(oj => oj.status === 'Incluído com Sucesso');
+        const ojsErro = detalhes.filter(oj => oj.status && oj.status.toLowerCase().includes('erro'));
+        const ojsJaIncluidos = detalhes.filter(oj => oj.status === 'Já Incluído' || oj.status === 'Pulado');
+
+        servidoresHTML += `
+          <div class="servidor-report-card ${statusColor}">
+            <div class="servidor-report-header" onclick="app.toggleServidorDetails(${index})">
+              <div class="servidor-info">
+                <i class="fas ${statusIcon}"></i>
+                <div>
+                  <div class="servidor-nome">${servidor.nome}</div>
+                  <div class="servidor-meta">${servidor.perfil} • ${servidor.cpf}</div>
+                </div>
+              </div>
+              <div class="servidor-stats">
+                <span class="stat-badge success">✓ ${stats.sucessos || 0}</span>
+                ${(stats.erros || 0) > 0 ? `<span class="stat-badge error">✗ ${stats.erros}</span>` : ''}
+                ${(stats.jaIncluidos || 0) > 0 ? `<span class="stat-badge info">⊙ ${stats.jaIncluidos}</span>` : ''}
+                <i class="fas fa-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div class="servidor-report-details" id="servidor-details-${index}" style="display: none;">
+              ${ojsSucesso.length > 0 ? `
+                <div class="oj-group success-group">
+                  <h4><i class="fas fa-check-circle"></i> OJs Vinculadas (${ojsSucesso.length})</h4>
+                  <ul class="oj-list">
+                    ${ojsSucesso.map(oj => `
+                      <li class="oj-item">
+                        <i class="fas fa-check"></i>
+                        <span>${oj.orgao || oj.nome || 'OJ não especificada'}</span>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+
+              ${ojsJaIncluidos.length > 0 ? `
+                <div class="oj-group info-group">
+                  <h4><i class="fas fa-info-circle"></i> Já Incluídas (${ojsJaIncluidos.length})</h4>
+                  <ul class="oj-list">
+                    ${ojsJaIncluidos.slice(0, 5).map(oj => `
+                      <li class="oj-item">
+                        <i class="fas fa-check-double"></i>
+                        <span>${oj.orgao || oj.nome || 'OJ não especificada'}</span>
+                      </li>
+                    `).join('')}
+                    ${ojsJaIncluidos.length > 5 ? `<li class="oj-item more">... e mais ${ojsJaIncluidos.length - 5} OJs</li>` : ''}
+                  </ul>
+                </div>
+              ` : ''}
+
+              ${ojsErro.length > 0 ? `
+                <div class="oj-group error-group">
+                  <h4><i class="fas fa-exclamation-triangle"></i> Erros (${ojsErro.length})</h4>
+                  <ul class="oj-list">
+                    ${ojsErro.map(oj => `
+                      <li class="oj-item">
+                        <i class="fas fa-times"></i>
+                        <div>
+                          <div>${oj.orgao || oj.nome || 'OJ não especificada'}</div>
+                          ${oj.erro || oj.motivo ? `<div class="oj-error-msg">${oj.erro || oj.motivo}</div>` : ''}
+                        </div>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
       });
+    } else {
+      servidoresHTML = '<div class="no-data">Nenhum servidor foi processado.</div>';
     }
 
     modal.innerHTML = `
@@ -3963,10 +4011,16 @@ class PeritoApp {
               <div class="stat-label">OJs Vinculadas</div>
             </div>
 
-            <div class="report-stat-card ${totalErros > 0 ? 'error' : 'info'}">
+            <div class="report-stat-card ${totalErros > 0 ? 'error' : 'warning'}">
               <div class="stat-icon"><i class="fas ${totalErros > 0 ? 'fa-times-circle' : 'fa-info-circle'}"></i></div>
               <div class="stat-value">${totalErros}</div>
               <div class="stat-label">Erros</div>
+            </div>
+
+            <div class="report-stat-card info">
+              <div class="stat-icon"><i class="fas fa-check-double"></i></div>
+              <div class="stat-value">${totalJaIncluidos}</div>
+              <div class="stat-label">Já Incluídas</div>
             </div>
 
             <div class="report-stat-card info">
@@ -3974,46 +4028,35 @@ class PeritoApp {
               <div class="stat-value">${totalProcessados}</div>
               <div class="stat-label">Servidores</div>
             </div>
-
-            <div class="report-stat-card warning">
-              <div class="stat-icon"><i class="fas fa-clock"></i></div>
-              <div class="stat-value">${tempoTotal}</div>
-              <div class="stat-label">Tempo Total</div>
-            </div>
           </div>
 
-          <!-- Lista de OJs Concluídas -->
-          ${ojsSucessoHTML ? `
-            <div class="report-section">
-              <h3><i class="fas fa-check-circle"></i> OJs Vinculadas com Sucesso</h3>
-              <ul class="report-list">
-                ${ojsSucessoHTML}
-              </ul>
+          <!-- Barra de Progresso -->
+          ${totalSucessos + totalErros > 0 ? `
+            <div class="progress-bar-container">
+              <div class="progress-bar">
+                <div class="progress-fill success" style="width: ${percentualSucesso}%"></div>
+              </div>
+              <div class="progress-label">${percentualSucesso}% de sucesso</div>
             </div>
           ` : ''}
 
-          <!-- Lista de Erros -->
-          ${errosHTML ? `
-            <div class="report-section">
-              <h3><i class="fas fa-exclamation-triangle"></i> Erros Encontrados</h3>
-              <ul class="report-list">
-                ${errosHTML}
-              </ul>
-            </div>
-          ` : ''}
+          <!-- Lista de Servidores -->
+          <div class="servidores-section">
+            <h3><i class="fas fa-users"></i> Servidores Processados</h3>
+            ${servidoresHTML}
+          </div>
         </div>
 
         <div class="report-modal-footer">
-          <button class="report-export-btn" onclick="app.exportAutomationReport()">
-            <i class="fas fa-download"></i>
-            Exportar Relatório
-          </button>
           <button class="report-close-btn" onclick="app.closeAutomationReportModal()">
-            Fechar
+            <i class="fas fa-times"></i> Fechar
           </button>
         </div>
       </div>
     `;
+
+    // Salvar relatório para exportação
+    this.currentReport = relatorio;
 
     // Mostrar modal com animação
     modal.classList.add('active');
@@ -4024,6 +4067,24 @@ class PeritoApp {
         this.closeAutomationReportModal();
       }
     });
+  }
+
+  /**
+   * Toggle detalhes de um servidor no relatório
+   */
+  toggleServidorDetails(index) {
+    const details = document.getElementById(`servidor-details-${index}`);
+    const header = details?.previousElementSibling;
+
+    if (details && header) {
+      const isVisible = details.style.display !== 'none';
+      details.style.display = isVisible ? 'none' : 'block';
+
+      const icon = header.querySelector('.toggle-icon');
+      if (icon) {
+        icon.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+      }
+    }
   }
 
   /**
