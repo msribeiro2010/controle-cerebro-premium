@@ -163,7 +163,7 @@ class PeritoApp {
     this.switchTab('inicio');
     this.updateDashboardStats(); // Atualizar estatísticas do dashboard
     this.switchConfigTab('sistema');
-    // this.initializeConfigurationEnhancements(); // Melhorias na configuração - função removida
+    this.initializeConfigurationEnhancements(); // Melhorias na configuração
 
     // Definir status de conexão do banco como desconectado por padrão
     this.updateConnectionIndicator(false);
@@ -1847,16 +1847,11 @@ class PeritoApp {
         infoEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Executando query...';
       }
 
-      const startTime = Date.now();
       const response = await window.electronAPI.executarQueryCustomizada(grau, sqlQuery);
-      const executionTime = (Date.now() - startTime) / 1000;
 
       if (response.success) {
         this.renderQueryResultsCustom(response.data, response.info);
         this.showNotification(`✅ ${response.info.rowCount} resultados em ${response.info.executionTime}`, 'success');
-
-        // Registrar execução se a query estiver salva como favorita
-        await this.registrarExecucaoQuery(sqlQuery, grau, executionTime, response.info.rowCount);
 
         if (response.info.warnings && response.info.warnings.length > 0) {
           response.info.warnings.forEach(warning => {
@@ -2076,161 +2071,6 @@ class PeritoApp {
     }
   }
 
-  async obterSugestoesAI() {
-    try {
-      this.showNotification('🤖 Consultando IA para sugestões de queries...', 'info');
-
-      // Obter contexto do editor (se houver alguma query parcial)
-      const sqlInput = document.getElementById('sqlQueryInput');
-      const textoAtual = sqlInput ? sqlInput.value.trim() : '';
-      const contexto = textoAtual
-        ? `Considerando que o usuário está trabalhando com esta query: "${textoAtual}", me sugira 5 queries SQL relacionadas e úteis para o PJE.`
-        : 'Me sugira 5 queries SQL interessantes e úteis para análise de processos, órgãos julgadores e servidores no sistema PJE.';
-
-      const resultado = await window.electronAPI.obterSugestoesAI(contexto);
-
-      if (!resultado.success) {
-        throw new Error(resultado.error || 'Erro ao obter sugestões');
-      }
-
-      // Mostrar modal com sugestões
-      this.mostrarModalSugestoesAI(resultado.sugestoes);
-
-    } catch (error) {
-      console.error('Erro ao obter sugestões da IA:', error);
-      this.showNotification(`❌ Erro: ${error.message}`, 'error');
-    }
-  }
-
-  mostrarModalSugestoesAI(sugestoes) {
-    if (!sugestoes || sugestoes.length === 0) {
-      this.showNotification('⚠️ Nenhuma sugestão foi retornada pela IA', 'warning');
-      return;
-    }
-
-    const html = `
-      <div class="modal-overlay" id="modalSugestoesAI" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-      ">
-        <div style="
-          background: #2d2d30;
-          border: 2px solid #4ec9b0;
-          border-radius: 12px;
-          padding: 30px;
-          max-width: 900px;
-          max-height: 85vh;
-          overflow-y: auto;
-          color: #cccccc;
-        ">
-          <h2 style="color: #4ec9b0; margin-top: 0; display: flex; align-items: center; gap: 10px;">
-            <i class="fas fa-wand-magic-sparkles"></i>
-            Sugestões de Queries IA
-          </h2>
-          <p style="color: #9cdcfe; margin-bottom: 20px;">
-            <i class="fas fa-lightbulb"></i> Clique em uma sugestão para usá-la no editor
-          </p>
-
-          <div style="display: flex; flex-direction: column; gap: 15px;">
-            ${sugestoes.map((sug, index) => `
-              <div class="sugestao-ai-card" data-index="${index}" style="
-                background: #1e1e1e;
-                border: 1px solid #3c3c3c;
-                border-radius: 8px;
-                padding: 20px;
-                cursor: pointer;
-                transition: all 0.3s;
-              " onmouseover="this.style.borderColor='#4ec9b0'; this.style.background='#252526';"
-                 onmouseout="this.style.borderColor='#3c3c3c'; this.style.background='#1e1e1e';"
-                 onclick="app.usarSugestaoAI(${index})">
-                <h3 style="color: #d4c4a8; margin: 0 0 10px 0; font-size: 16px;">
-                  <i class="fas fa-star" style="color: #ffd700;"></i>
-                  ${sug.titulo}
-                </h3>
-                <p style="color: #9cdcfe; margin: 0 0 15px 0; font-size: 14px;">
-                  ${sug.descricao}
-                </p>
-                <pre style="
-                  background: #1a1a1a;
-                  border: 1px solid #3c3c3c;
-                  border-radius: 4px;
-                  padding: 12px;
-                  margin: 0;
-                  overflow-x: auto;
-                  font-family: 'Courier New', monospace;
-                  font-size: 13px;
-                  color: #ce9178;
-                  white-space: pre-wrap;
-                  word-break: break-word;
-                ">${sug.query}</pre>
-              </div>
-            `).join('')}
-          </div>
-
-          <div style="margin-top: 30px; text-align: center;">
-            <button onclick="document.getElementById('modalSugestoesAI').remove()" style="
-              background: #d4c4a8;
-              color: #1e1e1e;
-              border: none;
-              padding: 12px 30px;
-              border-radius: 6px;
-              font-size: 16px;
-              font-weight: bold;
-              cursor: pointer;
-              transition: all 0.3s;
-            " onmouseover="this.style.background='#e5d4b8'" onmouseout="this.style.background='#d4c4a8'">
-              <i class="fas fa-times"></i> Fechar
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-
-    // Salvar sugestões para uso posterior
-    this.sugestoesAIAtual = sugestoes;
-
-    // Adicionar modal ao body
-    const modalDiv = document.createElement('div');
-    modalDiv.innerHTML = html;
-    document.body.appendChild(modalDiv);
-
-    // Fechar ao clicar fora do modal
-    document.getElementById('modalSugestoesAI').addEventListener('click', (e) => {
-      if (e.target.id === 'modalSugestoesAI') {
-        e.target.remove();
-      }
-    });
-  }
-
-  usarSugestaoAI(index) {
-    if (!this.sugestoesAIAtual || !this.sugestoesAIAtual[index]) {
-      this.showNotification('❌ Sugestão não encontrada', 'error');
-      return;
-    }
-
-    const sugestao = this.sugestoesAIAtual[index];
-    const sqlInput = document.getElementById('sqlQueryInput');
-
-    if (sqlInput) {
-      sqlInput.value = sugestao.query;
-      sqlInput.focus();
-
-      // Fechar modal
-      const modal = document.getElementById('modalSugestoesAI');
-      if (modal) modal.remove();
-
-      this.showNotification(`✅ Query "${sugestao.titulo}" inserida no editor`, 'success');
-    }
-  }
-
   limparEditorSQL() {
     const sqlInput = document.getElementById('sqlQueryInput');
     if (sqlInput) {
@@ -2312,43 +2152,12 @@ class PeritoApp {
       // Limpar e adicionar opção padrão
       selectEl.innerHTML = '<option value="">-- Selecione uma query favorita --</option>';
 
-      // Agrupar por categoria
-      const porCategoria = favoritas.reduce((acc, fav, index) => {
-        const cat = fav.categoria || 'Geral';
-        if (!acc[cat]) acc[cat] = [];
-        acc[cat].push({ ...fav, index });
-        return acc;
-      }, {});
-
-      // Ordenar categorias alfabeticamente
-      const categorias = Object.keys(porCategoria).sort();
-
-      // Adicionar favoritas agrupadas por categoria
-      categorias.forEach(categoria => {
-        // Criar optgroup
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = `📁 ${categoria}`;
-
-        // Ordenar favoritas da categoria (favoritos primeiro, depois por nome)
-        const favoritasOrdenadas = porCategoria[categoria].sort((a, b) => {
-          if (a.favorito && !b.favorito) return -1;
-          if (!a.favorito && b.favorito) return 1;
-          return a.nome.localeCompare(b.nome);
-        });
-
-        favoritasOrdenadas.forEach(favorita => {
-          const option = document.createElement('option');
-          option.value = favorita.index;
-
-          // Adicionar estrela se for favorito
-          const estrela = favorita.favorito ? '⭐ ' : '';
-          const execucoes = favorita.contador_execucoes > 0 ? ` (${favorita.contador_execucoes}x)` : '';
-
-          option.textContent = `${estrela}${favorita.nome} - ${favorita.grau}º grau${execucoes}`;
-          optgroup.appendChild(option);
-        });
-
-        selectEl.appendChild(optgroup);
+      // Adicionar favoritas
+      favoritas.forEach((favorita, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = `${favorita.nome} (${favorita.grau}º grau)`;
+        selectEl.appendChild(option);
       });
     } catch (error) {
       console.error('Erro ao carregar favoritas:', error);
@@ -2360,9 +2169,6 @@ class PeritoApp {
       const nome = document.getElementById('nomeFavorita')?.value?.trim();
       const query = document.getElementById('sqlQueryInput')?.value?.trim();
       const grau = document.getElementById('selectGrauPesquisa')?.value || '1';
-      const categoria = document.getElementById('categoriaFavorita')?.value?.trim() || 'Geral';
-      const descricao = document.getElementById('descricaoFavorita')?.value?.trim() || '';
-      const tags = document.getElementById('tagsFavorita')?.value?.trim() || '';
 
       if (!nome) {
         this.showNotification('Digite um nome para a query favorita', 'warning');
@@ -2380,43 +2186,17 @@ class PeritoApp {
       // Verificar se já existe favorita com mesmo nome
       const existeIndex = favoritas.findIndex(f => f.nome === nome && f.grau === grau);
 
-      const tagsArray = tags ? tags.split(',').map(t => t.trim()).filter(t => t) : [];
-
       if (existeIndex >= 0) {
-        // Atualizar existente - preservar métricas
-        const existing = favoritas[existeIndex];
-        favoritas[existeIndex] = {
-          id: existing.id || this.gerarUUID(),
-          nome,
-          query,
-          grau,
-          categoria,
-          descricao,
-          tags: tagsArray,
-          favorito: existing.favorito || false,
-          contador_execucoes: existing.contador_execucoes || 0,
-          tempo_medio_execucao: existing.tempo_medio_execucao || 0,
-          ultima_execucao: existing.ultima_execucao || null,
-          dataCriacao: existing.dataCriacao || new Date().toISOString(),
-          dataModificacao: new Date().toISOString()
-        };
+        // Atualizar existente
+        favoritas[existeIndex] = { nome, query, grau, dataCriacao: new Date().toISOString() };
         this.showNotification(`✅ Query "${nome}" atualizada!`, 'success');
       } else {
         // Adicionar nova
         favoritas.push({
-          id: this.gerarUUID(),
           nome,
           query,
           grau,
-          categoria,
-          descricao,
-          tags: tagsArray,
-          favorito: false,
-          contador_execucoes: 0,
-          tempo_medio_execucao: 0,
-          ultima_execucao: null,
-          dataCriacao: new Date().toISOString(),
-          dataModificacao: new Date().toISOString()
+          dataCriacao: new Date().toISOString()
         });
         this.showNotification(`✅ Query "${nome}" salva como favorita!`, 'success');
       }
@@ -2424,18 +2204,9 @@ class PeritoApp {
       // Salvar
       await window.electronAPI.saveData('queries-favoritas', favoritas);
 
-      // Limpar campos
+      // Limpar campo nome
       if (document.getElementById('nomeFavorita')) {
         document.getElementById('nomeFavorita').value = '';
-      }
-      if (document.getElementById('categoriaFavorita')) {
-        document.getElementById('categoriaFavorita').value = 'Geral';
-      }
-      if (document.getElementById('descricaoFavorita')) {
-        document.getElementById('descricaoFavorita').value = '';
-      }
-      if (document.getElementById('tagsFavorita')) {
-        document.getElementById('tagsFavorita').value = '';
       }
 
       // Recarregar lista
@@ -2444,17 +2215,6 @@ class PeritoApp {
       console.error('Erro ao salvar favorita:', error);
       this.showNotification('❌ Erro ao salvar query favorita', 'error');
     }
-  }
-
-  /**
-   * Gera UUID v4 simples
-   */
-  gerarUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0;
-      const v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
   }
 
   async carregarQueryFavorita() {
@@ -2535,102 +2295,6 @@ class PeritoApp {
     }
   }
 
-  /**
-   * Registra execução de uma query favorita (atualiza métricas)
-   */
-  async registrarExecucaoQuery(query, grau, executionTime, rowCount) {
-    try {
-      const favoritas = await window.electronAPI.loadData('queries-favoritas') || [];
-
-      // Normalizar query para comparação (remover espaços extras)
-      const queryNormalizada = query.replace(/\s+/g, ' ').trim();
-
-      const index = favoritas.findIndex(f => {
-        const fQueryNormalizada = f.query.replace(/\s+/g, ' ').trim();
-        return fQueryNormalizada === queryNormalizada && f.grau === grau;
-      });
-
-      if (index >= 0) {
-        const fav = favoritas[index];
-
-        // Atualizar contador
-        fav.contador_execucoes = (fav.contador_execucoes || 0) + 1;
-
-        // Calcular média móvel do tempo de execução
-        const totalExecucoes = fav.contador_execucoes;
-        const tempoAnterior = fav.tempo_medio_execucao || 0;
-        fav.tempo_medio_execucao = ((tempoAnterior * (totalExecucoes - 1)) + executionTime) / totalExecucoes;
-
-        // Atualizar última execução
-        fav.ultima_execucao = new Date().toISOString();
-
-        // Salvar
-        await window.electronAPI.saveData('queries-favoritas', favoritas);
-
-        console.log(`📊 Query "${fav.nome}" executada ${fav.contador_execucoes}x (média: ${fav.tempo_medio_execucao.toFixed(2)}s)`);
-      }
-    } catch (error) {
-      console.error('Erro ao registrar execução:', error);
-    }
-  }
-
-  /**
-   * Busca queries favoritas por nome, categoria ou tags
-   */
-  async buscarQuerysFavoritas(termo) {
-    try {
-      const favoritas = await window.electronAPI.loadData('queries-favoritas') || [];
-
-      if (!termo || termo.trim() === '') {
-        return favoritas;
-      }
-
-      const termoLower = termo.toLowerCase().trim();
-
-      return favoritas.filter(fav => {
-        // Buscar no nome
-        if (fav.nome.toLowerCase().includes(termoLower)) return true;
-
-        // Buscar na categoria
-        if (fav.categoria && fav.categoria.toLowerCase().includes(termoLower)) return true;
-
-        // Buscar nas tags
-        if (fav.tags && Array.isArray(fav.tags)) {
-          if (fav.tags.some(tag => tag.toLowerCase().includes(termoLower))) return true;
-        }
-
-        // Buscar na descrição
-        if (fav.descricao && fav.descricao.toLowerCase().includes(termoLower)) return true;
-
-        return false;
-      });
-    } catch (error) {
-      console.error('Erro ao buscar favoritas:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Alterna status de favorito de uma query
-   */
-  async toggleFavoritoQuery(index) {
-    try {
-      const favoritas = await window.electronAPI.loadData('queries-favoritas') || [];
-
-      if (index >= 0 && index < favoritas.length) {
-        favoritas[index].favorito = !favoritas[index].favorito;
-        await window.electronAPI.saveData('queries-favoritas', favoritas);
-        await this.carregarListaFavoritas();
-
-        const status = favoritas[index].favorito ? 'favoritada' : 'desfavoritada';
-        this.showNotification(`✅ Query "${favoritas[index].nome}" ${status}!`, 'success');
-      }
-    } catch (error) {
-      console.error('Erro ao alternar favorito:', error);
-      this.showNotification('❌ Erro ao alterar favorito', 'error');
-    }
-  }
-
   abrirDialogoFavoritar() {
     const query = document.getElementById('sqlQueryInput')?.value?.trim();
 
@@ -2639,18 +2303,16 @@ class PeritoApp {
       return;
     }
 
-    // Mostrar painel de favoritar
-    const panel = document.getElementById('sqlFavoritePanel');
-    if (panel) {
-      panel.style.display = 'block';
+    // Focar no campo de nome
+    const nomeInput = document.getElementById('nomeFavorita');
+    if (nomeInput) {
+      nomeInput.focus();
+      nomeInput.select();
 
-      // Focar no campo de nome
-      const nomeInput = document.getElementById('nomeFavorita');
-      if (nomeInput) {
-        setTimeout(() => {
-          nomeInput.focus();
-          nomeInput.select();
-        }, 100);
+      // Scroll suave para a seção de favoritos
+      const favoritasSection = nomeInput.closest('.config-section');
+      if (favoritasSection) {
+        favoritasSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
 
@@ -2659,100 +2321,40 @@ class PeritoApp {
 
   async importarQuerysExemplo() {
     try {
-      if (!confirm('Deseja importar queries de exemplo para diagnóstico? Isso adicionará queries úteis aos seus favoritos.')) {
+      if (!confirm('Deseja importar queries de exemplo para diagnóstico? Isso adicionará 6 queries úteis aos seus favoritos.')) {
         return;
       }
 
       const exemplos = [
         {
-          id: this.gerarUUID(),
-          nome: "Verificar Search Path Atual",
+          nome: "1️⃣ Verificar Search Path Atual",
           query: "SHOW search_path;",
-          grau: "1",
-          categoria: "Diagnóstico",
-          descricao: "Mostra o search_path atual do PostgreSQL",
-          tags: ["diagnostico", "schema"],
-          favorito: false,
-          contador_execucoes: 0,
-          tempo_medio_execucao: 0,
-          ultima_execucao: null,
-          dataCriacao: new Date().toISOString(),
-          dataModificacao: new Date().toISOString()
+          grau: "1"
         },
         {
-          id: this.gerarUUID(),
-          nome: "Listar Todos os Schemas",
+          nome: "2️⃣ Listar Todos os Schemas",
           query: "SELECT schema_name FROM information_schema.schemata ORDER BY schema_name;",
-          grau: "1",
-          categoria: "Diagnóstico",
-          descricao: "Lista todos os schemas disponíveis no banco",
-          tags: ["diagnostico", "schema"],
-          favorito: false,
-          contador_execucoes: 0,
-          tempo_medio_execucao: 0,
-          ultima_execucao: null,
-          dataCriacao: new Date().toISOString(),
-          dataModificacao: new Date().toISOString()
+          grau: "1"
         },
         {
-          id: this.gerarUUID(),
-          nome: "Listar Tabelas do Schema TRT15",
+          nome: "3️⃣ Listar Tabelas do Schema TRT15",
           query: "SELECT table_name FROM information_schema.tables WHERE table_schema = 'trt15' ORDER BY table_name;",
-          grau: "1",
-          categoria: "Diagnóstico",
-          descricao: "Lista todas as tabelas do schema trt15",
-          tags: ["diagnostico", "tabelas", "trt15"],
-          favorito: false,
-          contador_execucoes: 0,
-          tempo_medio_execucao: 0,
-          ultima_execucao: null,
-          dataCriacao: new Date().toISOString(),
-          dataModificacao: new Date().toISOString()
+          grau: "1"
         },
         {
-          id: this.gerarUUID(),
-          nome: "Listar Tabelas do Schema PJE",
+          nome: "4️⃣ Listar Tabelas do Schema PJE",
           query: "SELECT table_name FROM information_schema.tables WHERE table_schema = 'pje' ORDER BY table_name;",
-          grau: "1",
-          categoria: "Diagnóstico",
-          descricao: "Lista todas as tabelas do schema pje",
-          tags: ["diagnostico", "tabelas", "pje"],
-          favorito: false,
-          contador_execucoes: 0,
-          tempo_medio_execucao: 0,
-          ultima_execucao: null,
-          dataCriacao: new Date().toISOString(),
-          dataModificacao: new Date().toISOString()
+          grau: "1"
         },
         {
-          id: this.gerarUUID(),
-          nome: "Processos por Número",
-          query: "SELECT DISTINCT *\nFROM pje.tb_processo p\nLEFT JOIN pje.tb_processo_trf pt ON pt.id_processo_trf = p.id_processo\nWHERE p.nr_processo IN (\n  '0011147-21.2017.5.15.0087'\n)\nLIMIT 100;",
-          grau: "1",
-          categoria: "Processos",
-          descricao: "Busca processos por número (exemplo)",
-          tags: ["processo", "busca"],
-          favorito: true,
-          contador_execucoes: 0,
-          tempo_medio_execucao: 0,
-          ultima_execucao: null,
-          dataCriacao: new Date().toISOString(),
-          dataModificacao: new Date().toISOString()
+          nome: "5️⃣ Ver Estrutura Controle Hash",
+          query: "SELECT column_name, data_type, character_maximum_length, is_nullable \nFROM information_schema.columns \nWHERE table_schema = 'trt15' AND table_name = 'controle_atualizacao_hash' \nORDER BY ordinal_position;",
+          grau: "1"
         },
         {
-          id: this.gerarUUID(),
-          nome: "Audiências de Hoje",
-          query: "SELECT \n  a.dt_audiencia,\n  a.hr_audiencia,\n  p.nr_processo,\n  oj.ds_orgao_julgador\nFROM pje.tb_audiencia a\nJOIN pje.tb_processo p ON a.id_processo = p.id_processo\nJOIN pje.tb_orgao_julgador oj ON p.id_orgao_julgador = oj.id_orgao_julgador\nWHERE a.dt_audiencia = CURRENT_DATE\nORDER BY a.hr_audiencia\nLIMIT 100;",
-          grau: "1",
-          categoria: "Audiências",
-          descricao: "Lista audiências agendadas para hoje",
-          tags: ["audiencia", "hoje", "agenda"],
-          favorito: true,
-          contador_execucoes: 0,
-          tempo_medio_execucao: 0,
-          ultima_execucao: null,
-          dataCriacao: new Date().toISOString(),
-          dataModificacao: new Date().toISOString()
+          nome: "6️⃣ Teste Controle Hash (TRT15)",
+          query: "SELECT * FROM trt15.controle_atualizacao_hash LIMIT 10;",
+          grau: "1"
         }
       ];
 
@@ -2764,7 +2366,10 @@ class PeritoApp {
       exemplos.forEach(exemplo => {
         const existe = favoritas.some(f => f.nome === exemplo.nome);
         if (!existe) {
-          favoritas.push(exemplo);
+          favoritas.push({
+            ...exemplo,
+            dataCriacao: new Date().toISOString()
+          });
           adicionados++;
         }
       });
@@ -4685,21 +4290,9 @@ class PeritoApp {
           `Processando: ${this.currentAutomationStats.servidorAtual} → ${this.currentAutomationStats.ojAtual}`
         );
       } else if (this.currentAutomationStats.servidorAtual) {
-        // Verificar se já começou a processar OJs
-        const totalOjs = this.currentAutomationStats.totalOjs || 0;
-        const ojsProcessados = this.currentAutomationStats.ojsProcessados || 0;
-
-        if (totalOjs > 0 && ojsProcessados === 0) {
-          // Servidor iniciado mas ainda não começou a processar OJs
-          this.setAutomationRunning('servidor',
-            `Iniciando: ${this.currentAutomationStats.servidorAtual} (${totalOjs} OJ${totalOjs !== 1 ? 's' : ''})`
-          );
-        } else {
-          // Processando OJs
-          this.setAutomationRunning('servidor',
-            `Servidor: ${this.currentAutomationStats.servidorAtual} - ${ojsProcessados}/${totalOjs} OJs`
-          );
-        }
+        this.setAutomationRunning('servidor',
+          `Servidor: ${this.currentAutomationStats.servidorAtual} - ${this.currentAutomationStats.ojsProcessados}/${this.currentAutomationStats.totalOjs} OJs`
+        );
       }
     }
 
@@ -9386,72 +8979,29 @@ class PeritoApp {
     const ojsEquivalentes = (oj1, oj2) => {
       const norm1 = normalizarNome(oj1);
       const norm2 = normalizarNome(oj2);
-
-      console.log(`🔍 Comparando: "${oj1}" ⟷ "${oj2}"`);
-      console.log(`   Normalizado: "${norm1}" ⟷ "${norm2}"`);
-
+      
       // Comparação exata primeiro
-      if (norm1 === norm2) {
-        console.log(`   ✅ Match exato!`);
-        return true;
-      }
-
-      // 🔥 NOVO: Comparação por palavras-chave principais
-      // Para OJs como "Órgão Centralizador de Leilões Judiciais de Piracicaba"
-      // Extrair palavras-chave significativas (ignorar conectores)
-      const extrairPalavrasChave = (texto) => {
-        return texto
-          .split(/\s+/)
-          .filter(palavra =>
-            palavra.length > 2 && // Ignorar palavras muito curtas
-            !['de', 'da', 'do', 'dos', 'das', 'e', 'a', 'o', 'os', 'as'].includes(palavra)
-          );
-      };
-
-      const palavras1 = extrairPalavrasChave(norm1);
-      const palavras2 = extrairPalavrasChave(norm2);
-
-      console.log(`   Palavras-chave 1: [${palavras1.join(', ')}]`);
-      console.log(`   Palavras-chave 2: [${palavras2.join(', ')}]`);
-
-      // Calcular similaridade: quantas palavras em comum
-      const palavrasComuns = palavras1.filter(p1 =>
-        palavras2.some(p2 => p1 === p2 || p1.includes(p2) || p2.includes(p1))
-      );
-
-      const minPalavras = Math.min(palavras1.length, palavras2.length);
-      const percentualSimilaridade = minPalavras > 0 ? (palavrasComuns.length / minPalavras) * 100 : 0;
-
-      console.log(`   Similaridade: ${percentualSimilaridade.toFixed(1)}% (${palavrasComuns.length}/${minPalavras} palavras comuns)`);
-
-      // Considerar equivalente se tiver alta similaridade (>= 80%)
-      if (percentualSimilaridade >= 80) {
-        console.log(`   ✅ Match por similaridade!`);
-        return true;
-      }
-
+      if (norm1 === norm2) return true;
+      
       // Verificar se um tem numeração e outro não (ex: "1ª Vara" vs "Vara")
       // Para casos onde há apenas uma vara na cidade
       const semNumero1 = norm1.replace(/^\d+[aª°]?\s*/, '');
       const semNumero2 = norm2.replace(/^\d+[aª°]?\s*/, '');
-
-      // Se removendo números ficam iguais, verificar se é caso de vara única
+      
+      // Se removendo números ficam iguais, verificar se é caso de vara/con/liq/exe/dam única
       if (semNumero1 === semNumero2) {
-        // Verificar se um não tem número (vara única) e outro tem "1ª"
-        const temNumero1 = /^\d+[aª°]?\s+vara/.test(norm1);
-        const temNumero2 = /^\d+[aª°]?\s+vara/.test(norm2);
+        // Verificar se um não tem número e outro tem "1ª" (para todos os tipos)
+        const temNumero1 = /^\d+[aª°]?\s+(vara|con|liq|exe|dam|cejusc)/.test(norm1);
+        const temNumero2 = /^\d+[aª°]?\s+(vara|con|liq|exe|dam|cejusc)/.test(norm2);
 
         if (!temNumero1 && temNumero2 && norm2.startsWith('1')) {
-          console.log(`   ✅ Match por vara única!`);
-          return true; // "Vara do Trabalho" equivale a "1ª Vara do Trabalho"
+          return true; // "Vara" ≈ "1ª Vara", "CON" ≈ "CON1", "EXE" ≈ "EXE1", etc.
         }
         if (!temNumero2 && temNumero1 && norm1.startsWith('1')) {
-          console.log(`   ✅ Match por vara única!`);
-          return true; // "1ª Vara do Trabalho" equivale a "Vara do Trabalho"
+          return true; // "1ª Vara" ≈ "Vara", "CON1" ≈ "CON", "EXE1" ≈ "EXE", etc.
         }
       }
-
-      console.log(`   ❌ Sem match`);
+      
       return false;
     };
 
@@ -10751,96 +10301,24 @@ class PeritoApp {
         return;
       }
 
-      // 🎯 VALIDAÇÕES E NORMALIZAÇÕES
-      const errosValidacao = [];
-      const perfisInvalidos = [];
-      const perfisValidos = [
-        'Diretor de Secretaria',
-        'Estagiário Conhecimento',
-        'Assessor',
-        'Secretário de Audiência',
-        'Técnico Judiciário',
-        'Analista Judiciário',
-        'Servidor'
-      ];
-
       // Validar campos obrigatórios do novo formato
       for (let i = 0; i < servidores.length; i++) {
         const servidor = servidores[i];
-
+        
         // Validar campos obrigatórios: nome, cpf, perfil, ojs
         if (!servidor.nome || typeof servidor.nome !== 'string' || servidor.nome.trim() === '') {
           this.showNotification(`Servidor ${i + 1}: Campo 'nome' é obrigatório e deve ser uma string não vazia`, 'error');
           return;
         }
-
+        
         if (!servidor.cpf || typeof servidor.cpf !== 'string' || servidor.cpf.trim() === '') {
           this.showNotification(`Servidor ${i + 1}: Campo 'cpf' é obrigatório e deve ser uma string não vazia`, 'error');
           return;
         }
-
-        // 🎯 VALIDAR CPF
-        const cpfLimpo = servidor.cpf.replace(/\D/g, '');
-        console.log(`🔍 [VALIDAÇÃO CPF] Servidor: ${servidor.nome}, CPF: ${servidor.cpf}, CPF Limpo: ${cpfLimpo}`);
-
-        if (cpfLimpo.length !== 11) {
-          console.log(`❌ [VALIDAÇÃO CPF] CPF com tamanho inválido: ${cpfLimpo.length} dígitos`);
-          errosValidacao.push({
-            servidor: servidor.nome,
-            linha: i + 1,
-            campo: 'cpf',
-            valor: servidor.cpf,
-            erro: 'CPF deve ter 11 dígitos'
-          });
-        } else if (!this.validarCPF(cpfLimpo)) {
-          console.log(`❌ [VALIDAÇÃO CPF] CPF com dígitos verificadores incorretos`);
-          errosValidacao.push({
-            servidor: servidor.nome,
-            linha: i + 1,
-            campo: 'cpf',
-            valor: servidor.cpf,
-            erro: 'CPF inválido (dígitos verificadores incorretos)'
-          });
-        } else {
-          console.log(`✅ [VALIDAÇÃO CPF] CPF válido`);
-        }
-
+        
         if (!servidor.perfil || typeof servidor.perfil !== 'string' || servidor.perfil.trim() === '') {
           this.showNotification(`Servidor ${i + 1}: Campo 'perfil' é obrigatório e deve ser uma string não vazia`, 'error');
           return;
-        }
-
-        // 🎯 NORMALIZAR PERFIS
-        const perfilOriginal = servidor.perfil;
-        console.log(`🔍 [VALIDAÇÃO PERFIL] Servidor: ${servidor.nome}, Perfil original: "${perfilOriginal}"`);
-
-        if (servidor.perfil === 'Diretor' || servidor.perfil === 'DIRETOR') {
-          servidor.perfil = 'Diretor de Secretaria';
-          console.log(`✅ [NORMALIZAÇÃO] Perfil normalizado: "${perfilOriginal}" → "${servidor.perfil}"`);
-        } else if (servidor.perfil === 'Estagiário' || servidor.perfil === 'ESTAGIÁRIO' || servidor.perfil === 'Estagiario') {
-          servidor.perfil = 'Estagiário Conhecimento';
-          console.log(`✅ [NORMALIZAÇÃO] Perfil normalizado: "${perfilOriginal}" → "${servidor.perfil}"`);
-        }
-
-        // 🎯 VERIFICAR SE PERFIL É VÁLIDO
-        const perfilNormalizado = servidor.perfil.trim();
-        const perfilValido = perfisValidos.some(p =>
-          p.toLowerCase() === perfilNormalizado.toLowerCase()
-        );
-
-        console.log(`🔍 [VALIDAÇÃO PERFIL] Perfil após normalização: "${perfilNormalizado}"`);
-        console.log(`🔍 [VALIDAÇÃO PERFIL] Perfil válido? ${perfilValido}`);
-
-        if (!perfilValido) {
-          console.log(`❌ [VALIDAÇÃO PERFIL] Perfil inválido: "${servidor.perfil}"`);
-          perfisInvalidos.push({
-            servidor: servidor.nome,
-            linha: i + 1,
-            perfil: servidor.perfil,
-            perfisValidos: perfisValidos
-          });
-        } else {
-          console.log(`✅ [VALIDAÇÃO PERFIL] Perfil válido`);
         }
         
         // Aceitar tanto 'ojs' quanto 'localizacoes' para compatibilidade
@@ -10871,18 +10349,6 @@ class PeritoApp {
           delete servidor.cidade;
         }
       }
-
-      // 🎯 MOSTRAR ERROS DE VALIDAÇÃO EM MODAL
-      console.log(`🔍 [VALIDAÇÃO] Total de erros de CPF: ${errosValidacao.length}`);
-      console.log(`🔍 [VALIDAÇÃO] Total de perfis inválidos: ${perfisInvalidos.length}`);
-
-      if (errosValidacao.length > 0 || perfisInvalidos.length > 0) {
-        console.log('⚠️ [VALIDAÇÃO] Mostrando modal de erros de validação...');
-        this.mostrarModalErrosValidacao(errosValidacao, perfisInvalidos);
-        return;
-      }
-
-      console.log('✅ [VALIDAÇÃO] Todas as validações passaram com sucesso!');
 
       // Mostrar seção de progresso
       progressContainer.style.display = 'block';
@@ -11147,161 +10613,6 @@ class PeritoApp {
     return [];
   }
 
-  /**
-   * Valida CPF usando algoritmo de dígitos verificadores
-   */
-  validarCPF(cpf) {
-    // CPF deve ter 11 dígitos
-    if (cpf.length !== 11) return false;
-
-    // Verificar se todos os dígitos são iguais (CPF inválido)
-    if (/^(\d)\1{10}$/.test(cpf)) return false;
-
-    // Validar primeiro dígito verificador
-    let soma = 0;
-    for (let i = 0; i < 9; i++) {
-      soma += parseInt(cpf.charAt(i)) * (10 - i);
-    }
-    let resto = 11 - (soma % 11);
-    let digitoVerificador1 = resto === 10 || resto === 11 ? 0 : resto;
-
-    if (digitoVerificador1 !== parseInt(cpf.charAt(9))) return false;
-
-    // Validar segundo dígito verificador
-    soma = 0;
-    for (let i = 0; i < 10; i++) {
-      soma += parseInt(cpf.charAt(i)) * (11 - i);
-    }
-    resto = 11 - (soma % 11);
-    let digitoVerificador2 = resto === 10 || resto === 11 ? 0 : resto;
-
-    if (digitoVerificador2 !== parseInt(cpf.charAt(10))) return false;
-
-    return true;
-  }
-
-  /**
-   * Mostra modal com erros de validação de CPF e perfis
-   */
-  mostrarModalErrosValidacao(errosValidacao, perfisInvalidos) {
-    let html = `
-      <div class="modal-overlay" id="modalErrosValidacao" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-      ">
-        <div style="
-          background: #2d2d30;
-          border: 2px solid #d4c4a8;
-          border-radius: 12px;
-          padding: 30px;
-          max-width: 800px;
-          max-height: 80vh;
-          overflow-y: auto;
-          color: #cccccc;
-        ">
-          <h2 style="color: #d4c4a8; margin-top: 0; display: flex; align-items: center; gap: 10px;">
-            <i class="fas fa-exclamation-triangle" style="color: #f48771;"></i>
-            Erros de Validação Encontrados
-          </h2>
-    `;
-
-    // Erros de CPF
-    if (errosValidacao.length > 0) {
-      html += `
-        <div style="margin: 20px 0;">
-          <h3 style="color: #f48771; margin-bottom: 15px;">
-            <i class="fas fa-id-card"></i> CPFs Inválidos (${errosValidacao.length})
-          </h3>
-          <div style="background: #1e1e1e; padding: 15px; border-radius: 8px; border-left: 4px solid #f48771;">
-      `;
-
-      errosValidacao.forEach(erro => {
-        html += `
-          <div style="margin: 10px 0; padding: 10px; background: #252526; border-radius: 4px;">
-            <strong style="color: #569cd6;">Linha ${erro.linha}:</strong> ${erro.servidor}<br>
-            <span style="color: #f48771;">CPF: ${erro.valor}</span><br>
-            <span style="color: #ce9178;">Erro: ${erro.erro}</span>
-          </div>
-        `;
-      });
-
-      html += `
-          </div>
-        </div>
-      `;
-    }
-
-    // Perfis inválidos
-    if (perfisInvalidos.length > 0) {
-      html += `
-        <div style="margin: 20px 0;">
-          <h3 style="color: #f48771; margin-bottom: 15px;">
-            <i class="fas fa-user-tag"></i> Perfis Inválidos (${perfisInvalidos.length})
-          </h3>
-          <div style="background: #1e1e1e; padding: 15px; border-radius: 8px; border-left: 4px solid #f48771;">
-      `;
-
-      perfisInvalidos.forEach(erro => {
-        html += `
-          <div style="margin: 10px 0; padding: 10px; background: #252526; border-radius: 4px;">
-            <strong style="color: #569cd6;">Linha ${erro.linha}:</strong> ${erro.servidor}<br>
-            <span style="color: #f48771;">Perfil informado: "${erro.perfil}"</span><br>
-            <br>
-            <strong style="color: #4ec9b0;">Perfis válidos:</strong>
-            <ul style="margin: 5px 0; padding-left: 20px; color: #ce9178;">
-              ${erro.perfisValidos.map(p => `<li>${p}</li>`).join('')}
-            </ul>
-          </div>
-        `;
-      });
-
-      html += `
-          </div>
-        </div>
-      `;
-    }
-
-    html += `
-          <div style="margin-top: 30px; text-align: center;">
-            <button onclick="document.getElementById('modalErrosValidacao').remove()" style="
-              background: #d4c4a8;
-              color: #1e1e1e;
-              border: none;
-              padding: 12px 30px;
-              border-radius: 6px;
-              font-size: 16px;
-              font-weight: bold;
-              cursor: pointer;
-              transition: all 0.3s;
-            " onmouseover="this.style.background='#e5d4b8'" onmouseout="this.style.background='#d4c4a8'">
-              <i class="fas fa-check"></i> Entendi, vou corrigir
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-
-    // Adicionar modal ao body
-    const modalDiv = document.createElement('div');
-    modalDiv.innerHTML = html;
-    document.body.appendChild(modalDiv);
-
-    // Fechar ao clicar fora do modal
-    document.getElementById('modalErrosValidacao').addEventListener('click', (e) => {
-      if (e.target.id === 'modalErrosValidacao') {
-        e.target.remove();
-      }
-    });
-  }
-
   async verificarServidor(servidor) {
     try {
       // Carregar lista completa de órgãos julgadores do sistema
@@ -11399,63 +10710,17 @@ class PeritoApp {
 
       // Função auxiliar para verificar se os OJs são equivalentes (VERSÃO CORRIGIDA)
       const ojsEquivalentes = (oj1, oj2) => {
-        console.log(`🔍 Comparando OJs: "${oj1}" vs "${oj2}"`);
-
-        // 🔥 EXTRAÇÃO DE PREFIXO: Para OJs do banco que têm descrição longa após " - JT" ou " - CENTRO"
-        // Exemplo: "CEJUSC JUNDIAÍ - JT Centro Judiciário..." -> "CEJUSC JUNDIAÍ"
-        // Exemplo: "CON1 - Jundiaí - Centro de Conciliação..." -> "CON1 - Jundiaí"
-        const extrairPrefixo = (texto) => {
-          // Se tem " - JT ", " - CENTRO ", " - DIVISAO ", etc., pegar apenas a parte antes
-          const match = texto.match(/^(.+?)\s*-\s*(jt\s|centro\s|divisao\s|assessoria\s|liquidacao|conciliacao|execucao\s)/i);
-          if (match) {
-            return match[1].trim();
-          }
-          return texto;
-        };
-
-        const prefixoOj1 = extrairPrefixo(oj1);
-        const prefixoOj2 = extrairPrefixo(oj2);
-
-        console.log(`   Prefixos extraídos: "${prefixoOj1}" vs "${prefixoOj2}"`);
-
-        // Normalizar ambos os nomes (usar prefixos)
-        let norm1 = normalizarNome(prefixoOj1);
-        let norm2 = normalizarNome(prefixoOj2);
-
-        console.log(`   Normalizado: "${norm1}" vs "${norm2}"`);
-
+        // Normalizar ambos os nomes
+        let norm1 = normalizarNome(oj1);
+        let norm2 = normalizarNome(oj2);
+        
         // Converter números por extenso
         norm1 = converterNumeroExtenso(norm1);
         norm2 = converterNumeroExtenso(norm2);
-
+        
         // Comparação exata primeiro
-        if (norm1 === norm2) {
-          console.log(`   ✅ Match exato!`);
-          return true;
-        }
-
-        // 🔥 CORREÇÃO: Detectar códigos especiais (CON1, LIQ1, EXE1, DAM, DIVEX, CEJUSC, etc.)
-        // Aceitar formato com e sem hífen: "con1 - jundiai", "con1 jundiai", "cejusc jundiai", "cejusc - jundiai"
-        const codigoEspecialRegex = /^(con\d+|liq\d+|exe\d+|dam|divex|cejusc|ccp)\s*-?\s*(.+)$/i;
-        const match1 = norm1.match(codigoEspecialRegex);
-        const match2 = norm2.match(codigoEspecialRegex);
-
-        // Se ambos são códigos especiais, comparar código e cidade
-        if (match1 && match2) {
-          const codigo1 = match1[1].toLowerCase();
-          const cidade1 = match1[2].toLowerCase().replace(/\s+/g, ' ').trim();
-          const codigo2 = match2[1].toLowerCase();
-          const cidade2 = match2[2].toLowerCase().replace(/\s+/g, ' ').trim();
-
-          console.log(`🔍 Comparando códigos especiais: [${codigo1}] + [${cidade1}] vs [${codigo2}] + [${cidade2}]`);
-
-          // Comparar código e cidade (cidade pode ter variações)
-          if (codigo1 === codigo2 && (cidade1 === cidade2 || cidade1.includes(cidade2) || cidade2.includes(cidade1))) {
-            console.log(`✅ Match encontrado!`);
-            return true;
-          }
-        }
-
+        if (norm1 === norm2) return true;
+        
         // Padronizar variações comuns
         const padronizarVariacoes = (texto) => {
           return texto
@@ -11472,71 +10737,47 @@ class PeritoApp {
             .replace(/\s+/g, ' ')
             .trim();
         };
-
+        
         const norm1Padronizado = padronizarVariacoes(norm1);
         const norm2Padronizado = padronizarVariacoes(norm2);
-
+        
         // Comparação após padronização
         if (norm1Padronizado === norm2Padronizado) return true;
-
-        // 🔥 SEGUNDA VERIFICAÇÃO: Após padronização, verificar códigos especiais novamente
-        const match1Pad = norm1Padronizado.match(codigoEspecialRegex);
-        const match2Pad = norm2Padronizado.match(codigoEspecialRegex);
-
-        if (match1Pad && match2Pad) {
-          const codigo1 = match1Pad[1].toLowerCase();
-          const cidade1 = match1Pad[2].toLowerCase().replace(/\s+/g, ' ').trim();
-          const codigo2 = match2Pad[1].toLowerCase();
-          const cidade2 = match2Pad[2].toLowerCase().replace(/\s+/g, ' ').trim();
-
-          console.log(`🔍 Comparando códigos especiais (após padronização): [${codigo1}] + [${cidade1}] vs [${codigo2}] + [${cidade2}]`);
-
-          if (codigo1 === codigo2 && (cidade1 === cidade2 || cidade1.includes(cidade2) || cidade2.includes(cidade1))) {
-            console.log(`✅ Match encontrado após padronização!`);
-            return true;
-          }
-        }
-
+        
         // Extrair componentes principais para comparação mais flexível
         const extrairComponentes = (texto) => {
           const componentes = {
             tipo: '', // vara, juizado, divisao, etc.
-            codigo: '', // CON1, LIQ1, EXE1, DAM, DIVEX, CEJUSC, etc.
             numero: '', // 1, 2, 3, etc.
             especialidade: '', // trabalho, infancia, execucao, etc.
             cidade: '' // franca, sao jose dos campos, limeira, etc.
           };
-
-          // 🔥 PRIMEIRO: Verificar se é um código especial (aceitar com e sem hífen)
-          // Regex: "con1 - jundiai", "con1 jundiai", "cejusc jundiai", "cejusc - jundiai"
-          const codigoMatch = texto.match(/^(con\d+|liq\d+|exe\d+|dam|divex|cejusc|ccp)\s*-?\s*(.+)$/i);
-          if (codigoMatch) {
-            componentes.codigo = codigoMatch[1].toLowerCase();
-            componentes.cidade = codigoMatch[2].replace(/\s+/g, ' ').trim();
-            console.log(`   🔍 Código especial detectado: [${componentes.codigo}] + [${componentes.cidade}]`);
-            return componentes; // Retornar imediatamente para códigos especiais
-          }
-
+          
           // Extrair número
           const matchNumero = texto.match(/\b(\d+)\b/);
           if (matchNumero) {
             componentes.numero = matchNumero[1];
           }
-
-          // Extrair tipo
-          if (texto.includes('vara')) componentes.tipo = 'vara';
+          
+          // Extrair tipo (ordem específica para evitar falsos positivos)
+          if (texto.includes('con')) componentes.tipo = 'con';
+          else if (texto.includes('liq')) componentes.tipo = 'liq';
+          else if (texto.includes('exe')) componentes.tipo = 'exe';
+          else if (texto.includes('dam')) componentes.tipo = 'dam';
+          else if (texto.includes('cejusc')) componentes.tipo = 'cejusc';
+          else if (texto.includes('vara')) componentes.tipo = 'vara';
           else if (texto.includes('juizado')) componentes.tipo = 'juizado';
           else if (texto.includes('divisao')) componentes.tipo = 'divisao';
           else if (texto.includes('tribunal')) componentes.tipo = 'tribunal';
           else if (texto.includes('foro')) componentes.tipo = 'foro';
-
+          
           // Extrair especialidade
           if (texto.includes('trabalho')) componentes.especialidade = 'trabalho';
           else if (texto.includes('infancia')) componentes.especialidade = 'infancia';
           else if (texto.includes('execucao')) componentes.especialidade = 'execucao';
           else if (texto.includes('civel')) componentes.especialidade = 'civel';
           else if (texto.includes('criminal')) componentes.especialidade = 'criminal';
-
+          
           // Extrair cidade (capturar após o último "de")
           // Para padrões como "vara de trabalho de sao jose de campos"
           // Precisamos pegar tudo após o "de" que vem depois da especialidade
@@ -11564,95 +10805,78 @@ class PeritoApp {
               componentes.cidade = texto.trim();
             }
           }
-
+          
           return componentes;
         };
-
+        
         const comp1 = extrairComponentes(norm1Padronizado);
         const comp2 = extrairComponentes(norm2Padronizado);
 
-        // 🔥 PRIORIDADE: Se ambos têm código especial, comparar código e cidade
-        if (comp1.codigo && comp2.codigo) {
-          const codigoMatch = comp1.codigo === comp2.codigo;
-          const cidadeMatch = comp1.cidade === comp2.cidade ||
-                             comp1.cidade.includes(comp2.cidade) ||
-                             comp2.cidade.includes(comp1.cidade);
-          return codigoMatch && cidadeMatch;
+        // Normalizar cidades para comparação mais flexível
+        const normalizarCidade = (cidade) => {
+          return cidade
+            .replace(/\s+de\s+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+        };
+
+        const cidade1 = normalizarCidade(comp1.cidade);
+        const cidade2 = normalizarCidade(comp2.cidade);
+
+        // Comparar componentes
+        const tipoMatch = comp1.tipo === comp2.tipo;
+        const especialidadeMatch = !comp1.especialidade || !comp2.especialidade || comp1.especialidade === comp2.especialidade;
+
+        // Comparação de cidade mais rigorosa
+        const cidadeMatch = cidade1 === cidade2 ||
+                           (cidade1 && cidade2 && (cidade1.includes(cidade2) || cidade2.includes(cidade1)));
+
+        // IMPORTANTE: Match de número deve ser EXATO quando ambos têm número
+        // Apenas permitir match quando UM não tem número (vara única)
+        const numeroMatch = comp1.numero === comp2.numero ||
+                           (!comp1.numero && !comp2.numero) ||
+                           (!comp1.numero && comp2.numero === '1') ||
+                           (!comp2.numero && comp1.numero === '1');
+
+        // Lógica de match rigorosa para prevenir falsos positivos
+
+        // Varas: SEMPRE exigir match exato de tipo, especialidade E cidade
+        if (comp1.tipo === 'vara' && comp2.tipo === 'vara') {
+          // Se ambas têm número, os números DEVEM ser iguais
+          if (comp1.numero && comp2.numero) {
+            return comp1.numero === comp2.numero && especialidadeMatch && cidadeMatch;
+          }
+          // Se apenas uma tem número e é "1", pode ser vara única
+          if ((comp1.numero === '1' && !comp2.numero) || (comp2.numero === '1' && !comp1.numero)) {
+            return especialidadeMatch && cidadeMatch;
+          }
+          // Ambas sem número
+          return especialidadeMatch && cidadeMatch && !comp1.numero && !comp2.numero;
         }
 
-        // Se um tem código e outro não, não podem ser equivalentes
-        if (comp1.codigo || comp2.codigo) {
-          return false;
-        }
-
-        // 🔥 NOVA LÓGICA: Verificar se ambos os OJs têm componentes estruturados
-        // Se um OJ não tem tipo, número ou especialidade, não devemos fazer comparação por componentes
-        const oj1Estruturado = comp1.tipo || comp1.numero || comp1.especialidade;
-        const oj2Estruturado = comp2.tipo || comp2.numero || comp2.especialidade;
-
-        // Se ambos NÃO são estruturados (não têm tipo/número/especialidade), fazer comparação por similaridade de palavras
-        if (!oj1Estruturado && !oj2Estruturado) {
-          console.log('   🔍 Ambos os OJs não têm estrutura clara. Usando comparação por palavras-chave...');
-
-          const extrairPalavrasChave = (texto) => {
-            return texto
-              .split(/\s+/)
-              .filter(palavra =>
-                palavra.length > 2 &&
-                !['de', 'da', 'do', 'dos', 'das', 'e', 'a', 'o', 'os', 'as', 'para'].includes(palavra)
-              );
-          };
-
-          const palavras1 = extrairPalavrasChave(norm1Padronizado);
-          const palavras2 = extrairPalavrasChave(norm2Padronizado);
-
-          const palavrasComuns = palavras1.filter(p1 =>
-            palavras2.some(p2 => p1 === p2 || p1.includes(p2) || p2.includes(p1))
-          );
-
-          const minPalavras = Math.min(palavras1.length, palavras2.length);
-          const percentualSimilaridade = minPalavras > 0 ? (palavrasComuns.length / minPalavras) * 100 : 0;
-
-          console.log(`   Palavras1 (${palavras1.length}):`, palavras1);
-          console.log(`   Palavras2 (${palavras2.length}):`, palavras2);
-          console.log(`   Palavras comuns (${palavrasComuns.length}):`, palavrasComuns);
-          console.log(`   Similaridade: ${percentualSimilaridade.toFixed(0)}%`);
-
-          // Exigir 80% de similaridade para OJs não estruturados
-          if (percentualSimilaridade >= 80) {
-            console.log(`   ✅ Match por similaridade!`);
-            return true;
-          } else {
-            console.log(`   ❌ Não são equivalentes (similaridade < 80%)`);
+        // CON, LIQ, EXE, DAM: exigir tipo, número E cidade iguais
+        if (['con', 'liq', 'exe', 'dam'].includes(comp1.tipo) && comp1.tipo === comp2.tipo) {
+          // Número é OBRIGATÓRIO e deve ser EXATO
+          if (!comp1.numero || !comp2.numero || comp1.numero !== comp2.numero) {
             return false;
           }
+          return cidadeMatch;
         }
 
-        // Se apenas um é estruturado, não podem ser equivalentes
-        if (oj1Estruturado !== oj2Estruturado) {
-          console.log('   ❌ Um OJ é estruturado e outro não - não são equivalentes');
+        // CEJUSC: exigir tipo e cidade (podem não ter número)
+        if (comp1.tipo === 'cejusc' && comp2.tipo === 'cejusc') {
+          return cidadeMatch;
+        }
+
+        // Para outros tipos: exigir tipo, especialidade, cidade e número (se aplicável)
+        // NUNCA permitir match entre tipos diferentes ou cidades diferentes
+        if (!tipoMatch || !cidadeMatch) {
           return false;
         }
 
-        // Comparar componentes tradicionais (ambos são estruturados)
-        const tipoMatch = comp1.tipo === comp2.tipo;
-        const numeroMatch = !comp1.numero || !comp2.numero || comp1.numero === comp2.numero;
-        const especialidadeMatch = !comp1.especialidade || !comp2.especialidade || comp1.especialidade === comp2.especialidade;
-        const cidadeMatch = comp1.cidade === comp2.cidade ||
-                           comp1.cidade.includes(comp2.cidade) ||
-                           comp2.cidade.includes(comp1.cidade);
-
-        // Se ambos têm cidade definida e são diferentes, não pode ser match
-        if (comp1.cidade && comp2.cidade && !cidadeMatch) {
-          return false;
-        }
-
-        // Considerar match se a maioria dos componentes coincidirem
-        const matches = [tipoMatch, numeroMatch, especialidadeMatch, cidadeMatch];
-        const matchCount = matches.filter(Boolean).length;
-
-        // Exigir pelo menos 3 de 4 componentes para considerar match
-        return matchCount >= 3;
+        // Se chegou aqui, tipo e cidade são iguais
+        // Verificar especialidade e número
+        return especialidadeMatch && numeroMatch;
       };
       
       // Identificar OJs faltantes (esperados mas não cadastrados)
