@@ -5529,12 +5529,100 @@ class PeritoApp {
 
   clearStatusLog() {
     document.getElementById('status-log').innerHTML = '';
+    this.clearLiveProgressPanel();
   }
 
-  // Detailed visual status management (removido - elementos não existem mais)
+  // Live progress panel management
   updateDetailedStatus(data) {
-    // Elementos de status detalhado foram removidos da interface
-    return;
+    const panel = document.getElementById('live-progress-panel');
+    const serverName = document.getElementById('current-server-name');
+    const progressCount = document.getElementById('progress-count');
+    const progressPercentage = document.getElementById('progress-percentage');
+    const progressBar = document.getElementById('live-progress-bar');
+    const ojList = document.getElementById('live-oj-list');
+
+    if (!panel) return;
+
+    // Mostrar painel quando automação iniciar
+    if (data.servidor || data.message?.includes('Processando servidor')) {
+      panel.style.display = 'block';
+    }
+
+    // Atualizar nome do servidor
+    if (data.servidor) {
+      serverName.textContent = data.servidor;
+      serverName.style.fontWeight = '700';
+    }
+
+    // Atualizar contadores e barra de progresso
+    if (data.ojProcessed !== null && data.ojProcessed !== undefined && data.totalOjs) {
+      const processed = data.ojProcessed;
+      const total = data.totalOjs;
+      const percentage = total > 0 ? Math.round((processed / total) * 100) : 0;
+
+      progressCount.textContent = `${processed}/${total}`;
+      progressPercentage.textContent = `${percentage}%`;
+      progressBar.style.width = `${percentage}%`;
+
+      // Cor da barra baseada no progresso
+      if (percentage < 33) {
+        progressBar.style.background = 'linear-gradient(90deg, #3498db, #2980b9)';
+      } else if (percentage < 66) {
+        progressBar.style.background = 'linear-gradient(90deg, #f39c12, #e67e22)';
+      } else {
+        progressBar.style.background = 'linear-gradient(90deg, #27ae60, #229954)';
+      }
+    }
+
+    // Adicionar OJ à lista quando processada
+    if (data.orgao && data.type) {
+      const listItem = document.createElement('li');
+      listItem.className = `oj-item ${data.type}`;
+
+      const icon = document.createElement('i');
+      if (data.type === 'success') {
+        icon.className = 'fas fa-check-circle';
+        icon.style.color = 'var(--success-color)';
+      } else if (data.type === 'error') {
+        icon.className = 'fas fa-times-circle';
+        icon.style.color = 'var(--error-color)';
+      } else {
+        icon.className = 'fas fa-info-circle';
+        icon.style.color = 'var(--info-color)';
+      }
+
+      const text = document.createElement('span');
+      text.textContent = data.orgao;
+
+      listItem.appendChild(icon);
+      listItem.appendChild(text);
+      ojList.appendChild(listItem);
+
+      // Auto-scroll para o último item
+      ojList.scrollTop = ojList.scrollHeight;
+
+      // Limitar a 50 itens para performance
+      while (ojList.children.length > 50) {
+        ojList.removeChild(ojList.firstChild);
+      }
+    }
+  }
+
+  // Limpar painel de progresso
+  clearLiveProgressPanel() {
+    const panel = document.getElementById('live-progress-panel');
+    const serverName = document.getElementById('current-server-name');
+    const progressCount = document.getElementById('progress-count');
+    const progressPercentage = document.getElementById('progress-percentage');
+    const progressBar = document.getElementById('live-progress-bar');
+    const ojList = document.getElementById('live-oj-list');
+
+    if (panel) panel.style.display = 'none';
+    if (serverName) serverName.textContent = 'Aguardando...';
+    if (progressCount) progressCount.textContent = '0/0';
+    if (progressPercentage) progressPercentage.textContent = '0%';
+    if (progressBar) progressBar.style.width = '0%';
+    if (ojList) ojList.innerHTML = '';
   }
 
   startDetailedTimer() {

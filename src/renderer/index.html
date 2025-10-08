@@ -612,6 +612,33 @@
             </div>
 
                 <div class="status-panel">
+                    <!-- Painel de Progresso em Tempo Real -->
+                    <div id="live-progress-panel" class="live-progress-panel" style="display: none;">
+                        <div class="live-progress-header">
+                            <div class="server-info">
+                                <i class="fas fa-user-circle"></i>
+                                <span id="current-server-name">Aguardando...</span>
+                            </div>
+                            <div class="progress-stats">
+                                <span id="progress-count">0/0</span>
+                                <span id="progress-percentage">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar-bg">
+                                <div id="live-progress-bar" class="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="oj-list-container">
+                            <h4><i class="fas fa-list-check"></i> OJs Processadas</h4>
+                            <ul id="live-oj-list" class="live-oj-list">
+                                <!-- OJs will be added dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+
                     <!-- Log de status -->
                     <div id="status-log" class="status-log">
                         <!-- Status messages will be added dynamically -->

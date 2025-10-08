@@ -11921,6 +11921,216 @@ input:-webkit-autofill + .floating-label {
     font-style: italic;
 }
 
+/* Painel de Progresso em Tempo Real */
+.live-progress-panel {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 2px solid var(--primary-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.live-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.server-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.server-info i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.server-info span {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.progress-stats {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.progress-stats span {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    padding: 0.4rem 1rem;
+    background: var(--background-secondary);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.progress-bar-wrapper {
+    margin-bottom: 1.5rem;
+}
+
+.progress-bar-bg {
+    background: var(--background-secondary);
+    border-radius: 20px;
+    height: 24px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.5s ease, background 0.3s ease;
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.oj-list-container {
+    background: var(--background-secondary);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.oj-list-container h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.oj-list-container h4 i {
+    color: var(--primary-color);
+}
+
+.live-oj-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.live-oj-list .oj-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.6rem;
+    margin-bottom: 0.5rem;
+    background: var(--background-primary);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
+    animation: fadeInItem 0.3s ease;
+}
+
+@keyframes fadeInItem {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.live-oj-list .oj-item.success {
+    border-left-color: var(--success-color);
+    background: var(--success-bg);
+}
+
+.live-oj-list .oj-item.error {
+    border-left-color: var(--error-color);
+    background: var(--error-bg);
+}
+
+.live-oj-list .oj-item.info {
+    border-left-color: var(--info-color);
+    background: var(--info-bg);
+}
+
+.live-oj-list .oj-item i {
+    font-size: 1.1rem;
+    min-width: 20px;
+}
+
+.live-oj-list .oj-item span {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.live-oj-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.live-oj-list::-webkit-scrollbar-track {
+    background: var(--background-secondary);
+    border-radius: 4px;
+}
+
+.live-oj-list::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.live-oj-list::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
 /* Painel de status ativo melhorado */
 .active-processing-panel {
     background: linear-gradient(135deg, #fff5e6 0%, #fffaf0 100%);
