@@ -13968,8 +13968,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateDateTime() {
     const now = new Date();
 
-    // Data fixa: quarta-feira, 8 de outubro de 2025
-    const dateStr = 'quarta-feira, 8 de outubro de 2025';
+    // Formatar data dinâmica em português
+    const diasSemana = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+    const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+    const diaSemana = diasSemana[now.getDay()];
+    const dia = now.getDate();
+    const mes = meses[now.getMonth()];
+    const ano = now.getFullYear();
+
+    const dateStr = `${diaSemana}, ${dia} de ${mes} de ${ano}`;
     const dateElement = document.getElementById('current-date');
     if (dateElement) {
       dateElement.textContent = dateStr;
