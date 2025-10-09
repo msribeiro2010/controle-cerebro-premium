@@ -1,0 +1,352 @@
+/* ============================================
+   MINI-PLAYER FLUTUANTE DE AUTOMAÇÃO
+   Versão: 1.0 - 2025-10-09
+   ============================================ */
+
+/* Container principal */
+.mini-player {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mini-player.hidden {
+  display: none;
+}
+
+/* ===== VERSÃO MINIMIZADA ===== */
+.mini-player-minimized {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  border-radius: 50px;
+  padding: 12px 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mini-player-minimized:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.mini-minimized-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mini-minimized-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-minimized-icon i {
+  color: white;
+  font-size: 16px;
+}
+
+.mini-minimized-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mini-minimized-title {
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.mini-minimized-progress {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.mini-btn-expand {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+}
+
+.mini-btn-expand:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
+}
+
+/* ===== VERSÃO EXPANDIDA ===== */
+.mini-player-expanded {
+  background: white;
+  border-radius: 16px;
+  width: 360px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mini-player-expanded.hidden {
+  display: none;
+}
+
+/* Header */
+.mini-player-header {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mini-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mini-header-left i {
+  font-size: 18px;
+}
+
+.mini-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.mini-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.mini-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+/* Body */
+.mini-player-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mini-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.mini-info-row > i {
+  color: #3b82f6;
+  font-size: 16px;
+  margin-top: 2px;
+  min-width: 16px;
+}
+
+.mini-info-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mini-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mini-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  word-break: break-word;
+}
+
+/* Progress */
+.mini-progress-container {
+  background: #f3f4f6;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.mini-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.mini-progress-bar-bg {
+  background: #e5e7eb;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mini-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+/* Stats */
+.mini-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.mini-stat i {
+  font-size: 20px;
+}
+
+.mini-stat span {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.mini-stat.success i {
+  color: #10b981;
+}
+
+.mini-stat.success span {
+  color: #059669;
+}
+
+.mini-stat.error i {
+  color: #ef4444;
+}
+
+.mini-stat.error span {
+  color: #dc2626;
+}
+
+.mini-stat.skip i {
+  color: #f59e0b;
+}
+
+.mini-stat.skip span {
+  color: #d97706;
+}
+
+/* Footer */
+.mini-player-footer {
+  padding: 16px 20px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 12px;
+}
+
+.mini-btn-action {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.mini-btn-action.pause {
+  background: #fbbf24;
+  color: #78350f;
+}
+
+.mini-btn-action.pause:hover {
+  background: #f59e0b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.mini-btn-action.stop {
+  background: #ef4444;
+  color: white;
+}
+
+.mini-btn-action.stop:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* Animações */
+@keyframes slideInUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.mini-player:not(.hidden) {
+  animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .mini-player {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+  }
+
+  .mini-player-expanded {
+    width: auto;
+  }
+}

@@ -60,22 +60,26 @@ class CejuscMapper {
    */
   normalizar(nome) {
     if (!nome) return '';
-    
-    // Converter para minúsculas para comparação
-    const nomeLower = nome.toLowerCase().trim();
-    
+
+    // Converter para minúsculas e remover hífens para comparação
+    const nomeLower = nome.toLowerCase()
+      .trim()
+      .replace(/[-–—−]/g, ' ') // Remove hífens e travessões
+      .replace(/\s+/g, ' '); // Normaliza espaços múltiplos
+
     // Verificar mapeamento direto
     if (this.mapeamentos.has(nomeLower)) {
       return this.mapeamentos.get(nomeLower);
     }
-    
+
     // Tentar encontrar correspondência parcial
     for (const [chave, valor] of this.mapeamentos) {
-      if (nomeLower.includes(chave) || chave.includes(nomeLower)) {
+      const chaveNorm = chave.replace(/[-–—−]/g, ' ').replace(/\s+/g, ' ');
+      if (nomeLower.includes(chaveNorm) || chaveNorm.includes(nomeLower)) {
         return valor;
       }
     }
-    
+
     // Se contém CEJUSC ou CCP, normalizar para CEJUSC
     if (nomeLower.includes('cejusc') || nomeLower.includes('ccp')) {
       // Extrair cidade
@@ -83,14 +87,16 @@ class CejuscMapper {
         .replace('cejusc', '')
         .replace('ccp', '')
         .replace('centro de conciliação', '')
+        .replace('centro de conciliacao', '')
         .replace('centro judiciário', '')
+        .replace('centro judiciario', '')
         .trim();
-      
+
       if (cidade) {
         return `CEJUSC ${cidade.toUpperCase()}`;
       }
     }
-    
+
     // Retornar original se não houver mapeamento
     return nome;
   }
@@ -105,15 +111,21 @@ class CejuscMapper {
     if (!busca || !opcoes || opcoes.length === 0) {
       return { encontrado: false, opcao: null, indice: -1 };
     }
-    
-    // Normalizar busca
+
+    // Normalizar busca removendo hífens
     const buscaNormalizada = this.normalizar(busca);
-    const buscaLower = busca.toLowerCase().trim();
+    const buscaLower = busca.toLowerCase()
+      .trim()
+      .replace(/[-–—−]/g, ' ')
+      .replace(/\s+/g, ' ');
     
     // 1. Buscar correspondência exata após normalização
     for (let i = 0; i < opcoes.length; i++) {
       const opcao = opcoes[i];
-      const opcaoLower = opcao.toLowerCase().trim();
+      const opcaoLower = opcao.toLowerCase()
+        .trim()
+        .replace(/[-–—−]/g, ' ')
+        .replace(/\s+/g, ' ');
       
       // Correspondência exata com normalização
       if (opcao.includes(buscaNormalizada)) {
@@ -129,7 +141,10 @@ class CejuscMapper {
     // 2. Buscar correspondência parcial
     for (let i = 0; i < opcoes.length; i++) {
       const opcao = opcoes[i];
-      const opcaoLower = opcao.toLowerCase().trim();
+      const opcaoLower = opcao.toLowerCase()
+        .trim()
+        .replace(/[-–—−]/g, ' ')
+        .replace(/\s+/g, ' ');
       
       // Se a busca contém a opção ou vice-versa
       if (opcaoLower.includes(buscaLower) || buscaLower.includes(opcaoLower)) {

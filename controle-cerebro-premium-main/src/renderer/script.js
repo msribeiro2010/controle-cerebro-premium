@@ -9,10 +9,24 @@ class PeritoApp {
     this.isAutomationRunning = false;
     this.currentProgress = 0;
     this.totalSteps = 0;
-    
+
+    // 🔥 Controle de salvamento para processamento paralelo
+    this.pendingSave = false;
+    this.saveTimeout = null;
+
     // Timer de automação
     this.automationStartTime = null;
     this.automationTimer = null;
+
+    // 🎬 Mini-Player de Automação
+    this.miniPlayerVisible = false;
+    this.miniPlayerExpanded = false;
+    this.miniPlayerStats = {
+      success: 0,
+      error: 0,
+      skip: 0
+    };
+    this.miniPlayerTimerInterval = null;
     
     // Visual status tracking
     this.currentDetailedStatus = {
@@ -156,6 +170,7 @@ class PeritoApp {
     this.setupServidorAutomationListeners();
     this.setupServidorV2Listeners();
     this.setupAutocomplete(); // Configurar autocomplete
+    this.carregarPreferenciasEditor(); // Carregar preferências do editor SQL
     this.loadServidorV2Config();
     this.updateV2StatusIndicator();
 
@@ -229,15 +244,42 @@ class PeritoApp {
     window.electronAPI.onAutomationProgress((data) => {
       this.updateLoadingProgress(data);
       this.updateDetailedStatus(data);
+
+      // 🎬 Atualizar Mini-Player
+      this.updateMiniPlayer(data);
+
+      // 🔥 REMOÇÃO AUTOMÁTICA: Quando OJ é cadastrado com sucesso, remover da lista
+      if (data.type === 'success' && data.servidor && (data.orgaoJulgador || data.orgao)) {
+        const ojNome = data.orgaoJulgador || data.orgao;
+        this.removerOJDoServidorEmTempoReal(data.servidor, ojNome);
+      }
     });
     
     // Listen for automation reports
     window.electronAPI.onAutomationReport((data) => {
       if (data.type === 'final-report') {
         console.log('📊 Relatório final recebido, exibindo modal...', data.relatorio);
+
+        // 🚀 Forçar salvamento imediato de alterações pendentes
+        this.salvarServidoresImediatamente();
+
+        // 🎬 Esconder mini-player
+        this.hideMiniPlayer();
+
+        // 🔔 Enviar notificação do sistema
+        const stats = this.miniPlayerStats;
+        this.sendSystemNotification(
+          'Automação Concluída',
+          `✅ ${stats.success} sucesso | ❌ ${stats.error} erros | ⏭️ ${stats.skip} pulados`,
+          'success'
+        );
+
         this.showAutomationReportModal(data.relatorio);
       } else if (data.type === 'error') {
         this.showAutomationError(data.error, data.context);
+
+        // 🎬 Esconder mini-player em caso de erro
+        this.hideMiniPlayer();
       }
     });
     
@@ -2098,6 +2140,269 @@ class PeritoApp {
     this.lastCustomQueryResults = null;
   }
 
+  ajustarFonteEditor(acao) {
+    const editor = document.getElementById('sqlQueryInput');
+    const label = document.getElementById('fontSizeLabel');
+
+    if (!editor) return;
+
+    // Obter tamanho atual ou padrão
+    let tamanhoAtual = parseInt(localStorage.getItem('sqlEditorFontSize')) || 14;
+
+    // Ajustar tamanho
+    switch(acao) {
+      case 'aumentar':
+        tamanhoAtual = Math.min(tamanhoAtual + 2, 32); // Máximo 32px
+        break;
+      case 'diminuir':
+        tamanhoAtual = Math.max(tamanhoAtual - 2, 10); // Mínimo 10px
+        break;
+      case 'resetar':
+        tamanhoAtual = 14; // Padrão
+        break;
+    }
+
+    // Aplicar novo tamanho
+    editor.style.fontSize = `${tamanhoAtual}px`;
+    if (label) {
+      label.textContent = `${tamanhoAtual}px`;
+    }
+
+    // Salvar preferência
+    localStorage.setItem('sqlEditorFontSize', tamanhoAtual);
+
+    // Feedback visual
+    this.showNotification(`Fonte ajustada para ${tamanhoAtual}px`, 'success', 1000);
+  }
+
+  carregarPreferenciasEditor() {
+    const editor = document.getElementById('sqlQueryInput');
+    const label = document.getElementById('fontSizeLabel');
+
+    if (!editor) return;
+
+    // Carregar tamanho salvo
+    const tamanhoSalvo = parseInt(localStorage.getItem('sqlEditorFontSize')) || 14;
+    editor.style.fontSize = `${tamanhoSalvo}px`;
+
+    if (label) {
+      label.textContent = `${tamanhoSalvo}px`;
+    }
+
+    // Adicionar atalhos de teclado
+    editor.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === '+') {
+        e.preventDefault();
+        this.ajustarFonteEditor('aumentar');
+      } else if (e.ctrlKey && e.key === '-') {
+        e.preventDefault();
+        this.ajustarFonteEditor('diminuir');
+      } else if (e.ctrlKey && e.key === '0') {
+        e.preventDefault();
+        this.ajustarFonteEditor('resetar');
+      }
+    });
+  }
+
+  obterSugestoesAI() {
+    const sugestoes = [
+      {
+        titulo: '📊 Listar Processos Recentes',
+        descricao: 'Últimos 100 processos cadastrados no sistema',
+        query: `SELECT
+  p.nr_processo,
+  p.dt_autuacao,
+  oj.ds_orgao_julgador,
+  c.ds_classe_judicial
+FROM pje.tb_processo p
+JOIN pje.tb_processo_trf pt ON pt.id_processo_trf = p.id_processo
+JOIN pje.tb_orgao_julgador oj ON oj.id_orgao_julgador = pt.id_orgao_julgador
+LEFT JOIN pje.tb_classe_judicial c ON c.id_classe_judicial = p.id_classe_judicial
+ORDER BY p.dt_autuacao DESC
+LIMIT 100;`
+      },
+      {
+        titulo: '👥 Usuários por Órgão Julgador',
+        descricao: 'Lista de usuários vinculados a cada órgão julgador',
+        query: `SELECT
+  oj.ds_orgao_julgador,
+  p.ds_nome as nome_usuario,
+  pp.ds_papel_pessoa as papel,
+  COUNT(*) OVER (PARTITION BY oj.id_orgao_julgador) as total_usuarios
+FROM pje.tb_orgao_julgador oj
+JOIN pje.tb_usuario_comarca uc ON uc.id_orgao_julgador = oj.id_orgao_julgador
+JOIN pje.tb_pessoa p ON p.id_pessoa = uc.id_pessoa
+LEFT JOIN pje.tb_papel_pessoa pp ON pp.id_papel_pessoa = uc.id_papel
+ORDER BY oj.ds_orgao_julgador, p.ds_nome
+LIMIT 500;`
+      },
+      {
+        titulo: '⚖️ Processos por Classe Judicial',
+        descricao: 'Estatísticas de processos agrupados por classe',
+        query: `SELECT
+  c.ds_classe_judicial,
+  COUNT(*) as total_processos,
+  MIN(p.dt_autuacao) as primeira_autuacao,
+  MAX(p.dt_autuacao) as ultima_autuacao
+FROM pje.tb_processo p
+JOIN pje.tb_classe_judicial c ON c.id_classe_judicial = p.id_classe_judicial
+GROUP BY c.ds_classe_judicial
+ORDER BY total_processos DESC
+LIMIT 50;`
+      },
+      {
+        titulo: '🏛️ Órgãos Julgadores Ativos',
+        descricao: 'Lista completa de órgãos julgadores do sistema',
+        query: `SELECT
+  oj.id_orgao_julgador,
+  oj.ds_orgao_julgador,
+  oj.ds_sigla_orgao,
+  oj.cd_orgao_julgador,
+  COUNT(DISTINCT uc.id_pessoa) as total_usuarios
+FROM pje.tb_orgao_julgador oj
+LEFT JOIN pje.tb_usuario_comarca uc ON uc.id_orgao_julgador = oj.id_orgao_julgador
+GROUP BY oj.id_orgao_julgador, oj.ds_orgao_julgador, oj.ds_sigla_orgao, oj.cd_orgao_julgador
+ORDER BY oj.ds_orgao_julgador
+LIMIT 500;`
+      },
+      {
+        titulo: '🔍 Buscar Processos por Número',
+        descricao: 'Pesquisa processo específico (substitua XXXX)',
+        query: `SELECT
+  p.nr_processo,
+  p.dt_autuacao,
+  oj.ds_orgao_julgador,
+  c.ds_classe_judicial,
+  ass.ds_assunto_pje
+FROM pje.tb_processo p
+JOIN pje.tb_processo_trf pt ON pt.id_processo_trf = p.id_processo
+JOIN pje.tb_orgao_julgador oj ON oj.id_orgao_julgador = pt.id_orgao_julgador
+LEFT JOIN pje.tb_classe_judicial c ON c.id_classe_judicial = p.id_classe_judicial
+LEFT JOIN pje.tb_processo_assunto pa ON pa.id_processo = p.id_processo
+LEFT JOIN pje.tb_assunto_pje ass ON ass.id_assunto_pje = pa.id_assunto_pje
+WHERE p.nr_processo LIKE '%XXXX%'
+LIMIT 100;`
+      },
+      {
+        titulo: '📅 Processos por Período',
+        descricao: 'Processos autuados em período específico',
+        query: `SELECT
+  DATE(p.dt_autuacao) as data_autuacao,
+  COUNT(*) as total_processos,
+  oj.ds_orgao_julgador
+FROM pje.tb_processo p
+JOIN pje.tb_processo_trf pt ON pt.id_processo_trf = p.id_processo
+JOIN pje.tb_orgao_julgador oj ON oj.id_orgao_julgador = pt.id_orgao_julgador
+WHERE p.dt_autuacao >= CURRENT_DATE - INTERVAL '30 days'
+GROUP BY DATE(p.dt_autuacao), oj.ds_orgao_julgador
+ORDER BY data_autuacao DESC
+LIMIT 200;`
+      },
+      {
+        titulo: '👤 Buscar Usuário por CPF/Nome',
+        descricao: 'Informações detalhadas de usuário (substitua XXXX)',
+        query: `SELECT
+  p.ds_nome,
+  p.nr_cpf,
+  pp.ds_papel_pessoa,
+  oj.ds_orgao_julgador,
+  uc.in_ativo
+FROM pje.tb_pessoa p
+LEFT JOIN pje.tb_usuario_comarca uc ON uc.id_pessoa = p.id_pessoa
+LEFT JOIN pje.tb_papel_pessoa pp ON pp.id_papel_pessoa = uc.id_papel
+LEFT JOIN pje.tb_orgao_julgador oj ON oj.id_orgao_julgador = uc.id_orgao_julgador
+WHERE p.nr_cpf LIKE '%XXXX%'
+   OR UPPER(p.ds_nome) LIKE '%XXXX%'
+ORDER BY p.ds_nome
+LIMIT 100;`
+      },
+      {
+        titulo: '📊 Estatísticas Gerais do Sistema',
+        descricao: 'Visão geral com totais de processos, usuários e OJs',
+        query: `SELECT
+  'Total de Processos' as metrica,
+  COUNT(*) as valor
+FROM pje.tb_processo
+UNION ALL
+SELECT
+  'Total de Órgãos Julgadores',
+  COUNT(*)
+FROM pje.tb_orgao_julgador
+UNION ALL
+SELECT
+  'Total de Usuários',
+  COUNT(DISTINCT id_pessoa)
+FROM pje.tb_usuario_comarca
+UNION ALL
+SELECT
+  'Total de Classes Judiciais',
+  COUNT(*)
+FROM pje.tb_classe_judicial;`
+      }
+    ];
+
+    // Criar modal com sugestões
+    const modalHTML = `
+      <div class="modal-overlay" id="modalSugestoesAI" onclick="if(event.target === this) this.remove()">
+        <div class="modal-content modal-large" onclick="event.stopPropagation()">
+          <div class="modal-header">
+            <h3><i class="fas fa-wand-magic-sparkles"></i> Sugestões de Queries SQL</h3>
+            <button class="btn-close" onclick="document.getElementById('modalSugestoesAI').remove()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="modal-subtitle">Selecione uma query para inserir no editor:</p>
+            <div class="sugestoes-grid">
+              ${sugestoes.map((sug, index) => `
+                <div class="sugestao-card" onclick="app.aplicarSugestao(${index})">
+                  <div class="sugestao-header">
+                    <h4>${sug.titulo}</h4>
+                  </div>
+                  <p class="sugestao-descricao">${sug.descricao}</p>
+                  <div class="sugestao-preview">
+                    <code>${sug.query.split('\n')[0].substring(0, 60)}...</code>
+                  </div>
+                  <button class="btn-usar-query">
+                    <i class="fas fa-arrow-right"></i> Usar esta query
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Remover modal anterior se existir
+    const modalAnterior = document.getElementById('modalSugestoesAI');
+    if (modalAnterior) modalAnterior.remove();
+
+    // Adicionar modal ao DOM
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Armazenar sugestões para uso posterior
+    this.sugestoesAI = sugestoes;
+  }
+
+  aplicarSugestao(index) {
+    if (!this.sugestoesAI || !this.sugestoesAI[index]) return;
+
+    const sugestao = this.sugestoesAI[index];
+    const editor = document.getElementById('sqlQueryInput');
+
+    if (editor) {
+      editor.value = sugestao.query;
+      editor.focus();
+
+      // Fechar modal
+      const modal = document.getElementById('modalSugestoesAI');
+      if (modal) modal.remove();
+
+      this.showNotification(`✨ Query "${sugestao.titulo}" inserida no editor`, 'success');
+    }
+  }
+
   async exportarResultadosSQL() {
     if (!this.lastCustomQueryResults || !this.lastCustomQueryResults.data || this.lastCustomQueryResults.data.length === 0) {
       this.showNotification('Nenhum resultado para exportar', 'warning');
@@ -2673,6 +2978,314 @@ class PeritoApp {
     } catch (error) {
       console.error('Erro ao salvar servidores:', error);
       this.showNotification('Erro ao salvar servidores', 'error');
+    }
+  }
+
+  /**
+   * 🔥 Remove um OJ da lista de um servidor em tempo real durante automação
+   * @param {string} servidorNome - Nome do servidor
+   * @param {string} ojNome - Nome do OJ cadastrado com sucesso
+   */
+  async removerOJDoServidorEmTempoReal(servidorNome, ojNome) {
+    try {
+      console.log(`🗑️ [REMOÇÃO AUTO] Tentando remover OJ "${ojNome}" do servidor "${servidorNome}"`);
+
+      // Normalizar nomes para comparação
+      const normalizarNome = (nome) => {
+        if (!nome) return '';
+        return nome.toLowerCase().trim()
+          .replace(/\s+/g, ' ')
+          .replace(/[-–—−]/g, ' ');
+      };
+
+      const servidorNomeNorm = normalizarNome(servidorNome);
+      const ojNomeNorm = normalizarNome(ojNome);
+
+      // Encontrar servidor pelo nome
+      const servidorIndex = this.servidores.findIndex(s =>
+        normalizarNome(s.nome) === servidorNomeNorm
+      );
+
+      if (servidorIndex === -1) {
+        console.warn(`⚠️ [REMOÇÃO AUTO] Servidor "${servidorNome}" não encontrado na lista`);
+        return;
+      }
+
+      const servidor = this.servidores[servidorIndex];
+
+      // Determinar qual campo de OJs usar (ojs ou localizacoes)
+      const campoOJs = servidor.ojs ? 'ojs' : servidor.localizacoes ? 'localizacoes' : null;
+
+      if (!campoOJs) {
+        console.warn(`⚠️ [REMOÇÃO AUTO] Servidor "${servidorNome}" não possui campo de OJs`);
+        return;
+      }
+
+      const ojsAnteriores = [...servidor[campoOJs]];
+
+      // Encontrar e remover OJ da lista
+      const ojIndexToRemove = servidor[campoOJs].findIndex(oj =>
+        normalizarNome(oj) === ojNomeNorm
+      );
+
+      if (ojIndexToRemove === -1) {
+        console.warn(`⚠️ [REMOÇÃO AUTO] OJ "${ojNome}" não encontrado na lista do servidor "${servidorNome}"`);
+        console.log(`   OJs disponíveis:`, servidor[campoOJs]);
+        return;
+      }
+
+      // Remover OJ da lista
+      const ojRemovido = servidor[campoOJs].splice(ojIndexToRemove, 1)[0];
+
+      console.log(`✅ [REMOÇÃO AUTO] OJ removido com sucesso!`);
+      console.log(`   Servidor: ${servidorNome}`);
+      console.log(`   OJ removido: ${ojRemovido}`);
+      console.log(`   OJs restantes: ${servidor[campoOJs].length} (${servidor[campoOJs].join(', ')})`);
+
+      // 🚀 Atualizar UI imediatamente (sem recarregar toda tabela para melhor performance)
+      this.renderServidoresTable();
+
+      // 🚀 Salvar com debounce (aguarda 2s de inatividade antes de salvar)
+      // Isso evita múltiplas escritas simultâneas no modo paralelo
+      this.agendarSalvamentoServidores();
+
+    } catch (error) {
+      console.error('❌ [REMOÇÃO AUTO] Erro ao remover OJ:', error);
+    }
+  }
+
+  /**
+   * 🚀 Agenda salvamento dos servidores com debounce
+   * Evita múltiplas escritas simultâneas no processamento paralelo
+   */
+  agendarSalvamentoServidores() {
+    // Limpar timeout anterior se existir
+    if (this.saveTimeout) {
+      clearTimeout(this.saveTimeout);
+    }
+
+    // Marcar que há salvamento pendente
+    this.pendingSave = true;
+
+    // Agendar salvamento para daqui a 2 segundos
+    this.saveTimeout = setTimeout(async () => {
+      if (this.pendingSave) {
+        console.log('💾 [REMOÇÃO AUTO] Salvando alterações acumuladas...');
+        try {
+          const result = await window.electronAPI.saveData('servidores.json', this.servidores);
+          if (result.success) {
+            console.log('✅ [REMOÇÃO AUTO] Dados salvos com sucesso!');
+            this.pendingSave = false;
+          }
+        } catch (error) {
+          console.error('❌ [REMOÇÃO AUTO] Erro ao salvar:', error);
+        }
+      }
+    }, 2000); // 2 segundos de debounce
+  }
+
+  /**
+   * 🚀 Força salvamento imediato (cancela debounce)
+   * Usado quando automação termina para garantir que nada se perca
+   */
+  async salvarServidoresImediatamente() {
+    // Cancelar timeout se existir
+    if (this.saveTimeout) {
+      clearTimeout(this.saveTimeout);
+      this.saveTimeout = null;
+    }
+
+    // Salvar imediatamente se há alterações pendentes
+    if (this.pendingSave) {
+      console.log('💾 [REMOÇÃO AUTO] Salvamento forçado (automação finalizada)...');
+      try {
+        const result = await window.electronAPI.saveData('servidores.json', this.servidores);
+        if (result.success) {
+          console.log('✅ [REMOÇÃO AUTO] Dados salvos imediatamente!');
+          this.pendingSave = false;
+        }
+      } catch (error) {
+        console.error('❌ [REMOÇÃO AUTO] Erro ao salvar imediatamente:', error);
+      }
+    }
+  }
+
+  // ============================================
+  // 🎬 MINI-PLAYER DE AUTOMAÇÃO
+  // ============================================
+
+  /**
+   * Mostra o mini-player quando automação inicia
+   */
+  showMiniPlayer() {
+    const miniPlayer = document.getElementById('automation-mini-player');
+    if (miniPlayer) {
+      miniPlayer.classList.remove('hidden');
+      this.miniPlayerVisible = true;
+      this.miniPlayerExpanded = false;
+
+      // Mostrar versão minimizada
+      document.getElementById('mini-player-minimized').classList.remove('hidden');
+      document.getElementById('mini-player-expanded').classList.add('hidden');
+
+      // Resetar estatísticas
+      this.miniPlayerStats = { success: 0, error: 0, skip: 0 };
+      this.updateMiniPlayerStats();
+
+      // Iniciar timer
+      this.startMiniPlayerTimer();
+
+      console.log('🎬 [MINI-PLAYER] Exibido');
+    }
+  }
+
+  /**
+   * Esconde o mini-player
+   */
+  hideMiniPlayer() {
+    const miniPlayer = document.getElementById('automation-mini-player');
+    if (miniPlayer) {
+      miniPlayer.classList.add('hidden');
+      this.miniPlayerVisible = false;
+      this.stopMiniPlayerTimer();
+      console.log('🎬 [MINI-PLAYER] Ocultado');
+    }
+  }
+
+  /**
+   * Expande o mini-player
+   */
+  expandMiniPlayer() {
+    document.getElementById('mini-player-minimized').classList.add('hidden');
+    document.getElementById('mini-player-expanded').classList.remove('hidden');
+    this.miniPlayerExpanded = true;
+    console.log('🎬 [MINI-PLAYER] Expandido');
+  }
+
+  /**
+   * Minimiza o mini-player
+   */
+  minimizeMiniPlayer() {
+    document.getElementById('mini-player-minimized').classList.remove('hidden');
+    document.getElementById('mini-player-expanded').classList.add('hidden');
+    this.miniPlayerExpanded = false;
+    console.log('🎬 [MINI-PLAYER] Minimizado');
+  }
+
+  /**
+   * Fecha o mini-player (mas mantém automação rodando)
+   */
+  closeMiniPlayer() {
+    this.hideMiniPlayer();
+    this.showNotification('Mini-player fechado. Automação continua em andamento.', 'info', 3000);
+  }
+
+  /**
+   * Atualiza dados do mini-player
+   */
+  updateMiniPlayer(data) {
+    if (!this.miniPlayerVisible) return;
+
+    // Atualizar servidor
+    if (data.servidor) {
+      const servidorEl = document.getElementById('mini-servidor-nome');
+      if (servidorEl) {
+        servidorEl.textContent = data.servidor;
+      }
+    }
+
+    // Atualizar OJ atual
+    if (data.orgaoJulgador || data.orgao) {
+      const ojEl = document.getElementById('mini-oj-atual');
+      if (ojEl) {
+        ojEl.textContent = data.orgaoJulgador || data.orgao;
+      }
+    }
+
+    // Atualizar progresso
+    if (data.ojProcessed !== undefined && data.totalOjs !== undefined) {
+      const countEl = document.getElementById('mini-progress-count');
+      const percentEl = document.getElementById('mini-progress-percentage');
+      const barEl = document.getElementById('mini-progress-bar');
+      const textEl = document.getElementById('mini-progress-text');
+
+      const processed = data.ojProcessed || 0;
+      const total = data.totalOjs || 0;
+      const percentage = total > 0 ? Math.round((processed / total) * 100) : 0;
+
+      if (countEl) countEl.textContent = `${processed}/${total}`;
+      if (percentEl) percentEl.textContent = `${percentage}%`;
+      if (textEl) textEl.textContent = `${percentage}%`;
+      if (barEl) barEl.style.width = `${percentage}%`;
+    }
+
+    // Atualizar estatísticas
+    if (data.type === 'success') {
+      this.miniPlayerStats.success++;
+      this.updateMiniPlayerStats();
+    } else if (data.type === 'error') {
+      this.miniPlayerStats.error++;
+      this.updateMiniPlayerStats();
+    } else if (data.type === 'skip' || data.type === 'skipped') {
+      this.miniPlayerStats.skip++;
+      this.updateMiniPlayerStats();
+    }
+  }
+
+  /**
+   * Atualiza estatísticas visuais
+   */
+  updateMiniPlayerStats() {
+    const successEl = document.getElementById('mini-stat-success');
+    const errorEl = document.getElementById('mini-stat-error');
+    const skipEl = document.getElementById('mini-stat-skip');
+
+    if (successEl) successEl.textContent = this.miniPlayerStats.success;
+    if (errorEl) errorEl.textContent = this.miniPlayerStats.error;
+    if (skipEl) skipEl.textContent = this.miniPlayerStats.skip;
+  }
+
+  /**
+   * Inicia timer do mini-player
+   */
+  startMiniPlayerTimer() {
+    const startTime = Date.now();
+
+    this.miniPlayerTimerInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const hours = Math.floor(elapsed / 3600000);
+      const minutes = Math.floor((elapsed % 3600000) / 60000);
+      const seconds = Math.floor((elapsed % 60000) / 1000);
+
+      const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      const timerEl = document.getElementById('mini-tempo-decorrido');
+      if (timerEl) {
+        timerEl.textContent = timeString;
+      }
+    }, 1000);
+  }
+
+  /**
+   * Para timer do mini-player
+   */
+  stopMiniPlayerTimer() {
+    if (this.miniPlayerTimerInterval) {
+      clearInterval(this.miniPlayerTimerInterval);
+      this.miniPlayerTimerInterval = null;
+    }
+  }
+
+  /**
+   * Envia notificação do sistema
+   */
+  sendSystemNotification(title, body, type = 'info') {
+    if (window.electronAPI && window.electronAPI.sendNotification) {
+      window.electronAPI.sendNotification({
+        title,
+        body,
+        type
+      });
     }
   }
 
@@ -4677,6 +5290,16 @@ class PeritoApp {
     const isParallelMode = selectedMode && selectedMode.value === 'parallel';
     const modeText = isParallelMode ? 'paralela' : 'sequencial';
     this.setAutomationRunning('servidor', `Automação ${modeText} - ${this.selectedServidores.length} servidor(es)`);
+
+    // 🎬 Mostrar mini-player
+    this.showMiniPlayer();
+
+    // 🔔 Enviar notificação do sistema
+    this.sendSystemNotification(
+      'Automação Iniciada',
+      `Processando ${this.selectedServidores.length} servidor(es) em modo ${modeText}`,
+      'info'
+    );
 
     // Iniciar automação imediatamente sem verificação prévia
     this.addStatusMessage('info', '🚀 Iniciando automação imediatamente...');
@@ -10960,13 +11583,23 @@ class PeritoApp {
     try {
       // Carregar lista completa de órgãos julgadores do sistema
       const orgaosCompletos = await this.carregarOrgaosPJE();
-      
+
       // OJs que o servidor deveria ter (vindos do JSON importado)
       // Aceitar tanto 'ojs' quanto 'localizacoes' para compatibilidade
-      const ojsEsperados = servidor.ojs || servidor.localizacoes || [];
-      
+      let ojsEsperados = servidor.ojs || servidor.localizacoes || [];
+
+      // 🔧 NORMALIZAÇÃO AUTOMÁTICA DE CEJUSCs - Remove hífens
+      ojsEsperados = ojsEsperados.map(oj => {
+        if (typeof oj === 'string' && /cejusc\s*[-–—−]\s*/i.test(oj)) {
+          const normalizado = oj.replace(/\s*[-–—−]\s*/g, ' ').replace(/\s+/g, ' ').trim();
+          console.log(`✏️ CEJUSC normalizado: "${oj}" → "${normalizado}"`);
+          return normalizado;
+        }
+        return oj;
+      });
+
       console.log('🔍 Verificando servidor:', servidor.nome, 'CPF:', servidor.cpf);
-      console.log('📋 OJs esperados (do JSON importado):', ojsEsperados);
+      console.log('📋 OJs esperados (do JSON importado - normalizados):', ojsEsperados);
       
       // Buscar servidor no banco de dados PJE real
       let ojsCadastrados = [];
@@ -11253,6 +11886,13 @@ class PeritoApp {
         status = 'nao_cadastrado';
       }
       
+      // Atualizar o servidor com os OJs normalizados
+      if (servidor.ojs) {
+        servidor.ojs = ojsEsperados;
+      } else if (servidor.localizacoes) {
+        servidor.localizacoes = ojsEsperados;
+      }
+
       return {
         servidor,
         status,
@@ -11271,8 +11911,8 @@ class PeritoApp {
           totalCorreto: ojsCorretos.length,
           totalFaltante: ojsFaltantes.length,
           totalExtra: ojsExtras.length,
-          percentualCompleto: ojsEsperados.length > 0 
-            ? Math.round((ojsCorretos.length / ojsEsperados.length) * 100) 
+          percentualCompleto: ojsEsperados.length > 0
+            ? Math.round((ojsCorretos.length / ojsEsperados.length) * 100)
             : 0,
           encontradoNoBanco: !!servidorBanco
         }

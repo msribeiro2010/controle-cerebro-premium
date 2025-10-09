@@ -1,68 +1,80 @@
 /* ============================================
    SQL WORKSPACE - LAYOUT COMPACTO E MODERNO
+   Versão: 2.3 - 2025-10-09 15:20
+   + Controles de tamanho de fonte no editor
+   + Sistema de sugestões IA - design minimalista
    ============================================ */
 
 .sql-workspace {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
+  display: flex !important;
+  gap: 20px !important;
+  margin-top: 20px !important;
+  flex-direction: row !important;
 }
 
 /* ===== SIDEBAR ESQUERDA ===== */
 .sql-sidebar {
-  width: 180px;
-  min-width: 180px;
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+  background: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 8px !important;
+  padding: 18px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  flex-shrink: 0 !important;
 }
 
 .sql-sidebar-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #495057;
+  gap: 10px;
+  color: #212529;
   font-weight: 700;
-  font-size: 14px;
-  padding-bottom: 10px;
+  font-size: 15px;
+  padding-bottom: 12px;
   border-bottom: 2px solid #dee2e6;
+  margin-bottom: 4px;
 }
 
 .sql-sidebar-header i {
-  font-size: 16px;
+  font-size: 18px;
+  color: #007acc;
 }
 
 /* Botões de Ação Verticais */
 .sql-actions-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
 }
 
 .btn-action {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: white;
-  background: #6c757d;
-  border: 1px solid transparent;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding: 12px 14px !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+  color: white !important;
+  background: #6c757d !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  width: 100% !important;
 }
 
 .btn-action i {
-  font-size: 14px;
+  font-size: 15px !important;
+  min-width: 16px !important;
+  text-align: center !important;
 }
 
 .btn-action:hover {
@@ -71,58 +83,58 @@
 }
 
 .btn-action-primary {
-  background: linear-gradient(135deg, #007acc, #005a9e);
-  border-color: #007acc;
+  background: linear-gradient(135deg, #007acc, #005a9e) !important;
+  border-color: #007acc !important;
 }
 
 .btn-action-primary:hover {
-  background: linear-gradient(135deg, #005a9e, #004578);
+  background: linear-gradient(135deg, #005a9e, #004578) !important;
 }
 
 .btn-action-success {
-  background: linear-gradient(135deg, #28a745, #1e7e34);
-  border-color: #28a745;
+  background: linear-gradient(135deg, #28a745, #1e7e34) !important;
+  border-color: #28a745 !important;
 }
 
 .btn-action-success:hover {
-  background: linear-gradient(135deg, #1e7e34, #155724);
+  background: linear-gradient(135deg, #1e7e34, #155724) !important;
 }
 
 .btn-action-warning {
-  background: linear-gradient(135deg, #ffc107, #e0a800);
-  border-color: #ffc107;
-  color: #1e1e1e;
+  background: linear-gradient(135deg, #ffc107, #e0a800) !important;
+  border-color: #ffc107 !important;
+  color: #1e1e1e !important;
 }
 
 .btn-action-warning:hover {
-  background: linear-gradient(135deg, #e0a800, #c69500);
+  background: linear-gradient(135deg, #e0a800, #c69500) !important;
 }
 
 .btn-action-secondary {
-  background: #6c757d;
-  border-color: #5a6268;
+  background: #6c757d !important;
+  border-color: #5a6268 !important;
 }
 
 .btn-action-secondary:hover {
-  background: #5a6268;
+  background: #5a6268 !important;
 }
 
 .btn-action-info {
-  background: linear-gradient(135deg, #17a2b8, #138496);
-  border-color: #17a2b8;
+  background: linear-gradient(135deg, #17a2b8, #138496) !important;
+  border-color: #17a2b8 !important;
 }
 
 .btn-action-info:hover {
-  background: linear-gradient(135deg, #138496, #0f6674);
+  background: linear-gradient(135deg, #138496, #0f6674) !important;
 }
 
 .btn-action-dark {
-  background: #343a40;
-  border-color: #23272b;
+  background: #343a40 !important;
+  border-color: #23272b !important;
 }
 
 .btn-action-dark:hover {
-  background: #23272b;
+  background: #23272b !important;
 }
 
 /* Seções da Sidebar */
@@ -133,24 +145,30 @@
 }
 
 .sidebar-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  color: #495057;
+  color: #212529;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.sidebar-label i {
+  color: #007acc;
+  font-size: 13px;
 }
 
 .form-control-compact {
   width: 100%;
-  padding: 6px 8px;
+  padding: 8px 10px;
   background: white;
   border: 1px solid #ced4da;
   border-radius: 4px;
   color: #212529;
-  font-size: 12px;
+  font-size: 13px;
   outline: none;
   transition: all 0.2s;
 }
@@ -169,21 +187,21 @@
 .sql-sidebar-footer {
   margin-top: auto;
   display: flex;
-  gap: 6px;
-  padding-top: 10px;
-  border-top: 1px solid #3c3c3c;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 2px solid #dee2e6;
 }
 
 .btn-sidebar-action {
   flex: 1;
-  padding: 8px;
+  padding: 10px;
   background: white;
   border: 1px solid #ced4da;
   border-radius: 4px;
   color: #495057;
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .btn-sidebar-action:hover {
@@ -275,6 +293,56 @@
   font-weight: 600;
 }
 
+/* Controles de Tamanho da Fonte */
+.font-size-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  margin-right: 12px;
+}
+
+.btn-font-size {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 3px;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 11px;
+}
+
+.btn-font-size:hover {
+  background: #007acc;
+  color: white;
+  border-color: #007acc;
+  transform: scale(1.1);
+}
+
+.btn-font-reset {
+  margin-left: 4px;
+  border-left: 1px solid #dee2e6;
+  padding-left: 4px;
+}
+
+.font-size-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #495057;
+  min-width: 32px;
+  text-align: center;
+  user-select: none;
+}
+
 /* Editor SQL */
 .sql-editor-wrapper {
   flex: 1;
@@ -284,7 +352,7 @@
 
 .sql-editor {
   width: 100%;
-  height: 180px;
+  height: 220px;
   padding: 15px;
   background: #f8f9fa;
   border: 2px solid #dee2e6;
@@ -424,6 +492,100 @@
   padding: 0 20px;
 }
 
+/* Modal de Sugestões IA - Minimalista */
+.sugestoes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.sugestao-card {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sugestao-card:hover {
+  background: white;
+  border-color: #007acc;
+  box-shadow: 0 2px 8px rgba(0, 122, 204, 0.15);
+}
+
+.sugestao-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #212529;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sugestao-descricao {
+  margin: 0;
+  font-size: 12px;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.sugestao-preview {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 8px;
+  margin-top: 4px;
+}
+
+.sugestao-preview code {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #495057;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-usar-query {
+  margin-top: 4px;
+  padding: 8px 12px;
+  background: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-usar-query:hover {
+  background: #005a9e;
+}
+
+.btn-usar-query i {
+  font-size: 11px;
+}
+
+.modal-subtitle {
+  font-size: 13px;
+  color: #6c757d;
+  margin: 0 0 8px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dee2e6;
+}
+
 /* Responsividade */
 @media (max-width: 1200px) {
   .sql-workspace {
@@ -460,5 +622,16 @@
 
   .form-group-inline.form-group-small {
     flex: 1;
+  }
+
+  .sugestoes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .font-size-controls {
+    width: 100%;
+    justify-content: center;
+    margin-right: 0;
+    margin-bottom: 8px;
   }
 }

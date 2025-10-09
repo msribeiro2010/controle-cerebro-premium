@@ -129,7 +129,8 @@ class NormalizadorTexto {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '') // Remove acentos
       .replace(/[–—−]/g, '-') // Normaliza travessões (–, —, −) para hífen (-)
-      .replace(/[^a-z0-9\s-]/g, ' ') // Remove caracteres especiais, mantém espaços e hífens
+      .replace(/[-]/g, ' ') // Converte hífens em espaços para padronização
+      .replace(/[^a-z0-9\s]/g, ' ') // Remove caracteres especiais, mantém apenas letras, números e espaços
       .replace(/\s+/g, ' ') // Normaliza espaços múltiplos
       .trim();
     
@@ -450,7 +451,7 @@ class NormalizadorTexto {
   static limparCaches() {
     this._cacheNormalizacao.clear();
     this._cacheTokens.clear();
-    console.log('Caches de normalização limpos');
+    console.log('✅ Caches de normalização limpos - Versão atualizada para tratar hífens');
   }
   
   /**
@@ -525,6 +526,9 @@ function verificarAmbiguidade(opcoes, textoAlvo, melhorOpcao, limiarAmbiguidade 
     throw new Error(`Múltiplas opções encontradas para "${textoAlvo}". Especifique melhor. Opções: ${lista}`);
   }
 }
+
+// Limpar caches ao carregar o módulo para garantir que a nova normalização seja aplicada
+NormalizadorTexto.limparCaches();
 
 module.exports = {
   NormalizadorTexto,
