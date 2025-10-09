@@ -10906,136 +10906,54 @@ class PeritoApp {
   }
 
   /**
-   * Formatar lista de OJs faltantes com agrupamento visual por tipo
+   * Formatar lista de OJs faltantes com visualização simples
    */
   formatarOJsFaltantes(ojsFaltantes) {
     if (!ojsFaltantes || ojsFaltantes.length === 0) {
       return '<p style="color: var(--text-secondary); font-style: italic; margin: 10px 0;">Nenhuma OJ faltante</p>';
     }
 
-    // Agrupar OJs por tipo
-    const grupos = {
-      varas: [],
-      exe: [],
-      liq: [],
-      con: [],
-      dam: [],
-      cejusc: [],
-      outros: []
-    };
-
-    ojsFaltantes.forEach(oj => {
-      const ojUpper = oj.toUpperCase();
-      if (ojUpper.includes('EXE')) {
-        grupos.exe.push(oj);
-      } else if (ojUpper.includes('LIQ')) {
-        grupos.liq.push(oj);
-      } else if (ojUpper.includes('CON')) {
-        grupos.con.push(oj);
-      } else if (ojUpper.includes('DAM')) {
-        grupos.dam.push(oj);
-      } else if (ojUpper.includes('CEJUSC')) {
-        grupos.cejusc.push(oj);
-      } else if (ojUpper.includes('VARA')) {
-        grupos.varas.push(oj);
-      } else {
-        grupos.outros.push(oj);
-      }
-    });
-
-    // Configuração de cada tipo
-    const tiposConfig = {
-      varas: {
-        titulo: 'Varas do Trabalho',
-        icon: 'fa-gavel',
-        color: '#3498db',
-        bgColor: 'rgba(52, 152, 219, 0.1)'
-      },
-      exe: {
-        titulo: 'Execução (EXE)',
-        icon: 'fa-file-invoice-dollar',
-        color: '#e74c3c',
-        bgColor: 'rgba(231, 76, 60, 0.1)'
-      },
-      liq: {
-        titulo: 'Liquidação (LIQ)',
-        icon: 'fa-calculator',
-        color: '#f39c12',
-        bgColor: 'rgba(243, 156, 18, 0.1)'
-      },
-      con: {
-        titulo: 'Concentração (CON)',
-        icon: 'fa-sitemap',
-        color: '#9b59b6',
-        bgColor: 'rgba(155, 89, 182, 0.1)'
-      },
-      dam: {
-        titulo: 'DAM',
-        icon: 'fa-file-contract',
-        color: '#1abc9c',
-        bgColor: 'rgba(26, 188, 156, 0.1)'
-      },
-      cejusc: {
-        titulo: 'CEJUSC',
-        icon: 'fa-handshake',
-        color: '#34495e',
-        bgColor: 'rgba(52, 73, 94, 0.1)'
-      },
-      outros: {
-        titulo: 'Outros',
-        icon: 'fa-folder',
-        color: '#95a5a6',
-        bgColor: 'rgba(149, 165, 166, 0.1)'
-      }
-    };
-
-    // Construir HTML para cada grupo não-vazio
-    let html = '<div class="ojs-faltantes-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; margin-top: 15px;">';
-
-    Object.keys(grupos).forEach(tipo => {
-      if (grupos[tipo].length > 0) {
-        const config = tiposConfig[tipo];
-        html += `
-          <div class="oj-type-card" style="
-            border: 2px solid ${config.color};
-            border-radius: 8px;
-            padding: 12px;
-            background: ${config.bgColor};
-            transition: all 0.3s ease;
-          ">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; border-bottom: 2px solid ${config.color}; padding-bottom: 8px;">
-              <i class="fas ${config.icon}" style="color: ${config.color}; font-size: 1.3em;"></i>
-              <strong style="color: ${config.color}; font-size: 1.1em;">${config.titulo}</strong>
-              <span style="
-                background: ${config.color};
-                color: white;
-                padding: 2px 8px;
-                border-radius: 12px;
-                font-size: 0.85em;
-                font-weight: bold;
-                margin-left: auto;
-              ">${grupos[tipo].length}</span>
-            </div>
-            <ul style="margin: 0; padding-left: 20px; list-style: none;">
-              ${grupos[tipo].map(oj => `
-                <li style="
-                  padding: 6px 0;
-                  border-bottom: 1px solid rgba(0,0,0,0.1);
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
-                ">
-                  <i class="fas fa-circle" style="font-size: 6px; color: ${config.color};"></i>
-                  <span style="color: var(--text-primary); font-size: 0.95em;">${oj}</span>
-                </li>
-              `).join('')}
-            </ul>
+    // Construir HTML simples com lista
+    let html = `
+      <div class="ojs-faltantes-simples" style="margin-top: 15px;">
+        <div style="
+          border: 2px solid #dc3545;
+          border-radius: 8px;
+          padding: 15px;
+          background: rgba(220, 53, 69, 0.05);
+        ">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; border-bottom: 2px solid #dc3545; padding-bottom: 8px;">
+            <i class="fas fa-exclamation-triangle" style="color: #dc3545; font-size: 1.3em;"></i>
+            <strong style="color: #dc3545; font-size: 1.1em;">OJs Faltantes</strong>
+            <span style="
+              background: #dc3545;
+              color: white;
+              padding: 2px 10px;
+              border-radius: 12px;
+              font-size: 0.9em;
+              font-weight: bold;
+              margin-left: auto;
+            ">${ojsFaltantes.length}</span>
           </div>
-        `;
-      }
-    });
+          <ul style="margin: 0; padding-left: 20px; list-style: none; columns: 2; column-gap: 20px;">
+            ${ojsFaltantes.map(oj => `
+              <li style="
+                padding: 6px 0;
+                border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                break-inside: avoid;
+              ">
+                <i class="fas fa-circle" style="font-size: 6px; color: #dc3545;"></i>
+                <span style="color: #333; font-size: 0.95em;">${oj}</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      </div>
+    `;
 
-    html += '</div>';
     return html;
   }
 
