@@ -1,20 +1,20 @@
 {
-  "timestamp": "2025-10-08T21:00:33.405Z",
+  "timestamp": "2025-10-07T17:26:00.546Z",
   "summary": {
-    "totalOperations": 1,
+    "totalOperations": 7,
     "successRate": "100.00%",
-    "averageTime": "954ms",
-    "peakTime": "954ms",
-    "bestTime": "954ms",
+    "averageTime": "1614ms",
+    "peakTime": "2184ms",
+    "bestTime": "224ms",
     "cacheHitRate": "0%",
     "errorRecoveryRate": "N/A"
   },
   "improvements": {
     "clickEditIcon": {
       "baseline": "2381ms",
-      "current": "954ms",
+      "current": "1674ms",
       "target": "500ms",
-      "improvement": "59.9%",
+      "improvement": "29.7%",
       "status": "⚠️"
     }
   },

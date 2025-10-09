@@ -662,15 +662,19 @@ class ParallelServerManager {
     
     try {
       while (this.serverQueue.length > 0 && this.isRunning) {
+        const servidoresRestantes = this.serverQueue.length;
+        console.log(`\n🔄 [Instância ${instance.id}] 📋 FILA: ${servidoresRestantes} servidor(es) restante(s)`);
+        console.log(`   [Instância ${instance.id}] ⬇️ Pegando próximo servidor da fila...`);
+
         const server = this.serverQueue.shift();
         if (!server) {
-          console.log('[ParallelServerManager] Servidor vazio encontrado na fila, continuando...');
+          console.log(`   [Instância ${instance.id}] ⚠️ Servidor vazio encontrado na fila, finalizando...`);
           break;
         }
-        
+
         // Validar dados do servidor
         if (!server.nome && !server.cpf) {
-          console.warn('[ParallelServerManager] Servidor sem nome ou CPF:', server);
+          console.warn(`   [Instância ${instance.id}] ❌ Servidor sem nome ou CPF:`, server);
           const errorResult = {
             servidor: server,
             instancia: instance.id,
@@ -681,9 +685,10 @@ class ParallelServerManager {
           instance.errors.push(errorResult);
           continue;
         }
-        
+
         const serverIdentifier = server.nome || server.cpf;
-        console.log(`[ParallelServerManager] Instância ${instance.id} processando servidor: ${serverIdentifier}`);
+        console.log(`   [Instância ${instance.id}] 🎯 INICIANDO processamento: ${serverIdentifier}`);
+        console.log(`   [Instância ${instance.id}] 📊 Status: ${servidoresProcessedByInstance} servidor(es) já processado(s) por esta instância`);
         
         // Verificar saúde da instância antes do processamento
         const healthCheck = await this.checkInstanceHealth(instance);
@@ -733,8 +738,10 @@ class ParallelServerManager {
             instance.totalProcessed++;
             instance.totalSuccesses += (result.sucessos || 0);
             serversProcessedByInstance++;
-            
-            console.log(`[ParallelServerManager] Instância ${instance.id} processou ${serverIdentifier} com sucesso (${result.sucessos || 0} sucessos)`);
+
+            const tempoProcessamento = ((Date.now() - instance.startTime) / 1000).toFixed(1);
+            console.log(`   [Instância ${instance.id}] ✅ CONCLUÍDO: ${serverIdentifier} em ${tempoProcessamento}s (${result.sucessos || 0} sucessos)`);
+            console.log(`   [Instância ${instance.id}] 🔁 Voltando ao loop para pegar próximo servidor da fila...`);
           } else {
             console.warn(`[ParallelServerManager] ⚠️ Resultado inválido para servidor ${serverIdentifier}:`, result);
             const errorResult = {
@@ -763,8 +770,10 @@ class ParallelServerManager {
           this.sendProgressUpdate();
           
         } catch (error) {
-          console.error(`[ParallelServerManager] ❌ Erro na instância ${instance.id} processando ${serverIdentifier}:`, error);
-          
+          const tempoProcessamento = ((Date.now() - instance.startTime) / 1000).toFixed(1);
+          console.error(`   [Instância ${instance.id}] ❌ ERRO processando ${serverIdentifier} após ${tempoProcessamento}s:`, error.message);
+          console.log(`   [Instância ${instance.id}] 🔁 Voltando ao loop para pegar próximo servidor da fila...`);
+
           const errorResult = {
             servidor: server,
             instancia: instance.id,
@@ -775,13 +784,13 @@ class ParallelServerManager {
             stack: error.stack,
             tipo: 'processing_error'
           };
-           
+
           instance.errors.push(errorResult);
           instance.totalProcessed++;
           if (typeof instance.totalErrors !== 'number') instance.totalErrors = 0;
           instance.totalErrors++;
           this.completedServers++;
-           
+
           this.sendStatusUpdate({
             type: 'instance-error',
             instanceId: instance.id,
@@ -806,7 +815,12 @@ class ParallelServerManager {
         stack: instanceError.stack
       });
     } finally {
-      console.log(`[ParallelServerManager] Instância ${instance.id} finalizou processamento. Servidores processados: ${serversProcessedByInstance}`);
+      console.log(`\n🏁 [Instância ${instance.id}] ══════════════════════════════════════`);
+      console.log(`   [Instância ${instance.id}] FINALIZOU processamento`);
+      console.log(`   [Instância ${instance.id}] 📊 Total processado por esta instância: ${serversProcessedByInstance} servidor(es)`);
+      console.log(`   [Instância ${instance.id}] ✅ Sucessos: ${instance.totalSuccesses || 0}`);
+      console.log(`   [Instância ${instance.id}] ❌ Erros: ${instance.errors?.length || 0}`);
+      console.log(`   [Instância ${instance.id}] ══════════════════════════════════════\n`);
       instance.busy = false;
       instance.currentServer = null;
     }
