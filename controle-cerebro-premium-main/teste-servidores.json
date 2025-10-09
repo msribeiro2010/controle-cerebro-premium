@@ -1,0 +1,30 @@
+[
+  {
+    "nome": "João Silva",
+    "cpf": "123.456.789-00",
+    "perfil": "Analista",
+    "ojs": [
+      "1ª Vara Cível de São Paulo",
+      "2ª Vara Cível de São Paulo",
+      "3ª Vara Criminal de São Paulo"
+    ]
+  },
+  {
+    "nome": "Maria Santos",
+    "cpf": "987.654.321-00", 
+    "perfil": "Técnico",
+    "ojs": [
+      "1ª Vara de Família de Rio de Janeiro",
+      "2ª Vara de Família de Rio de Janeiro"
+    ]
+  },
+  {
+    "nome": "Pedro Oliveira",
+    "cpf": "456.789.123-00",
+    "perfil": "Analista",
+    "ojs": [
+      "1ª Vara Cível de Belo Horizonte",
+      "Vara de Execuções Fiscais de Belo Horizonte"
+    ]
+  }
+]

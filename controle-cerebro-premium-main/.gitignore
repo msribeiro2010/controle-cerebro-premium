@@ -1,0 +1,297 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# nyc test coverage
+.nyc_output
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript v1 declaration files
+typings/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# next.js build output
+.next
+
+# nuxt.js build output
+.nuxt
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# Electron build output
+dist/
+build/
+out/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+*.tmp
+*.temp
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# Package files
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.exe
+*.msi
+*.zip
+*.tar.gz
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Test coverage
+coverage/
+.nyc_output/
+jest-coverage/
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# Lock files (keep package-lock.json for consistency)
+# yarn.lock
+
+# Local configuration
+config/local.json
+config/development.json
+config/production.json
+
+# Electron specific
+app/node_modules/
+release/
+releases/
+
+# Build artifacts
+*.app
+*.dmg
+*.deb
+*.rpm
+*.snap
+*.AppImage
+*.exe
+*.msi
+*.nsis
+*.portable.exe
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Local data and user files
+data/local/
+data/temp/
+data/cache/
+data/relatorio-*.json
+data/relatorio-*.csv
+
+# Screenshots and recordings  
+screenshots/
+recordings/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.mov
+*.avi
+
+# Exclude specific large files that might be accidentally added
+*.bin
+*.so
+*.dylib
+*.dll
+
+# Security and sensitive files
+*.env*
+.env.*
+credentials.json
+secrets.json
+auth.json
+config.json
+private.json
+
+# User data files that might contain sensitive info (CRITICAL)
+data/perito.json
+data/servidores.json
+data/*.json
+data/*.csv
+data/*.txt
+!data/example.json
+!data/readme.md
+
+# SENSITIVE FILES - NEVER COMMIT
+.env
+.env.*
+database.config.js
+database-credentials.json
+*credentials*
+*password*
+*secret*
+
+# Debug and test files - DEVELOPMENT ONLY
+debug-*.html
+test-*.html
+*-debug.html
+*-test.html
+*.debug.js
+*.test.js.tmp
+
+# Development and test scripts (keep out of production)
+test-*.js
+teste-*.js
+debug-*.js
+solucao-*.js
+exemplo-*.js
+diagnostico-*.js
+correcao-*.js
+integracao-*.js
+funcoes-*.js
+analise-*.js
+codigo-*.js
+fix-*.js
+
+# User-specific configuration files
+config-busca-*.json
+*-sao-jose*.json
+*-limeira*.json
+*-botucatu*.json
+CORRECAO-*.json
+SOLUCAO-*.json
+
+# Electron app data
+userData/
+appData/
+localStorage/
+
+# Browser automation artifacts
+.playwright/
+playwright-report/
+test-results/
+
+# Temporary automation files
+automation-*.json
+selenium-*.log
+chromedriver*.log
+
+# macOS specific
+.AppleDouble
+.LSOverride
+Icon?
+
+# Windows specific  
+Desktop.ini
+ehthumbs_vista.db
+
+# Editor specific
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/extensions.json
+
+# Git specific
+.git/
+.gitattributes
+
+# Backup and temporary
+*~
+*.swp
+*.swo
+*.orig
+.tmp/
+.temp/
+pje-credentials.json
