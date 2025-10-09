@@ -48,6 +48,25 @@
             </div>
         </header>
 
+        <!-- Banner de Aviso de Banco Desconectado -->
+        <div id="database-warning-banner" class="database-warning-banner" style="display: none;">
+            <div class="banner-content">
+                <div class="banner-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="banner-text">
+                    <strong>Banco de Dados Desconectado</strong>
+                    <p>Não foi possível conectar ao banco de dados. Verifique se a VPN está ativa ou se as configurações de conexão estão corretas.</p>
+                </div>
+                <button class="banner-action" onclick="app.openConfigTab()">
+                    <i class="fas fa-cog"></i> Configurar
+                </button>
+                <button class="banner-close" onclick="app.closeDatabaseBanner()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
         <nav class="tabs">
             <button class="tab-button active" data-tab="inicio">
                 <i class="fas fa-home tab-icon"></i>

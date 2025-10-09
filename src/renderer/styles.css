@@ -233,28 +233,137 @@ header p {
 
 /* Constellation Icon */
 .constellation-icon {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #000000;
     display: inline-block;
     margin-right: 8px;
-    filter: drop-shadow(0 2px 6px rgba(102, 126, 234, 0.4));
+    font-weight: 300;
+    transform: rotate(-15deg);
+    opacity: 0.8;
 }
 
 /* Version Badge */
 .version-badge {
     display: inline-block;
-    background: #3498db;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
     color: white;
-    padding: 5px 14px;
+    padding: 6px 16px;
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-style: italic;
+    font-family: 'Georgia', serif;
+    letter-spacing: 0.3px;
     margin-left: 12px;
-    box-shadow: 0 2px 6px rgba(52, 152, 219, 0.25);
+    box-shadow: 0 2px 6px rgba(139, 115, 85, 0.25);
     border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Database Warning Banner */
+.database-warning-banner {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+    border: 2px solid #ffc107;
+    border-left: 6px solid #ff9800;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.banner-icon {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 152, 0, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-icon i {
+    color: #ff9800;
+    font-size: 1.5rem;
+}
+
+.banner-text {
+    flex: 1;
+}
+
+.banner-text strong {
+    display: block;
+    color: #856404;
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.banner-text p {
+    margin: 0;
+    color: #856404;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.banner-action {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    background: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
+}
+
+.banner-action:hover {
+    background: #f57c00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 152, 0, 0.4);
+}
+
+.banner-close {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 2px solid #ffc107;
+    border-radius: 50%;
+    color: #856404;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.banner-close:hover {
+    background: #ffc107;
+    color: white;
+    transform: rotate(90deg);
 }
 
 /* DateTime Widget Modern */

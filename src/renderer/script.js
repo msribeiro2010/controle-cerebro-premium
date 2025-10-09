@@ -168,6 +168,9 @@ class PeritoApp {
     // Definir status de conexão do banco como desconectado por padrão
     this.updateConnectionIndicator(false);
 
+    // Verificar conexão com banco de dados e mostrar banner se necessário
+    await this.checkDatabaseConnectionOnStartup();
+
     // Toggle "Mostrar todas as seções"
     const toggleShowAll = document.getElementById('toggleShowAll');
     if (toggleShowAll) {
@@ -6066,10 +6069,103 @@ class PeritoApp {
     }
   }
 
+  /**
+   * Verifica conexão com banco de dados ao iniciar aplicação
+   * Mostra banner de aviso se não conseguir conectar
+   */
+  async checkDatabaseConnectionOnStartup() {
+    try {
+      console.log('🔍 Verificando conexão com banco de dados na inicialização...');
+
+      // Carregar credenciais salvas
+      const configResult = await window.electronAPI.loadDatabaseCredentials();
+
+      // Se não há credenciais configuradas, não mostrar banner (primeira vez)
+      if (!configResult.success || !configResult.credentials) {
+        console.log('ℹ️ Credenciais do banco ainda não configuradas');
+        return;
+      }
+
+      const creds = configResult.credentials;
+
+      // Se user ou password vazios, não tentar conectar
+      if (!creds.user || !creds.password) {
+        console.log('ℹ️ Credenciais do banco incompletas');
+        return;
+      }
+
+      const credentials = {
+        host: creds.host || 'localhost',
+        port: parseInt(creds.port) || 5432,
+        user: creds.user,
+        password: creds.password,
+        database1Grau: creds.database1Grau || 'pje_1grau_bugfix',
+        database2Grau: creds.database2Grau || 'pje_2grau_bugfix',
+        host1Grau: creds.host1Grau || '172.21.1.21',
+        host2Grau: creds.host2Grau || '172.21.1.22'
+      };
+
+      // Testar conexão silenciosamente
+      const result = await window.electronAPI.testDatabaseCredentials(credentials);
+
+      if (result.success) {
+        console.log('✅ Banco de dados conectado com sucesso');
+        this.updateConnectionIndicator(true);
+        // Ocultar banner se estava visível
+        this.closeDatabaseBanner();
+      } else {
+        console.warn('⚠️ Falha ao conectar com banco de dados:', result.error);
+        this.updateConnectionIndicator(false);
+        // Mostrar banner de aviso
+        this.showDatabaseBanner();
+      }
+    } catch (error) {
+      console.error('❌ Erro ao verificar conexão com banco de dados:', error);
+      this.updateConnectionIndicator(false);
+      // Mostrar banner em caso de erro
+      this.showDatabaseBanner();
+    }
+  }
+
+  /**
+   * Mostra o banner de aviso de banco de dados desconectado
+   */
+  showDatabaseBanner() {
+    const banner = document.getElementById('database-warning-banner');
+    if (banner) {
+      banner.style.display = 'block';
+      console.log('ℹ️ Banner de aviso do banco de dados exibido');
+    }
+  }
+
+  /**
+   * Fecha/oculta o banner de aviso de banco de dados
+   */
+  closeDatabaseBanner() {
+    const banner = document.getElementById('database-warning-banner');
+    if (banner) {
+      banner.style.display = 'none';
+      console.log('ℹ️ Banner de aviso do banco de dados ocultado');
+    }
+  }
+
+  /**
+   * Abre a aba de configurações e foca na seção de banco de dados
+   */
+  openConfigTab() {
+    // Primeiro, mudar para a aba principal de configurações
+    this.switchTab('config');
+
+    // Depois, mudar para a sub-aba de sistema (onde está o banco de dados)
+    this.switchConfigTab('sistema');
+
+    console.log('ℹ️ Aba de configurações aberta');
+  }
+
   async testDatabaseConnection() {
     try {
       console.log('🔍 Iniciando teste de conexão com banco de dados...');
-      
+
       const credentials = {
         host: document.getElementById('dbHost')?.value || 'localhost',
         port: parseInt(document.getElementById('dbPort')?.value) || 5432,
@@ -6103,19 +6199,19 @@ class PeritoApp {
 
       // Mostrar feedback de carregamento
       this.showDatabaseStatus('🔍 Testando conexão com o banco de dados...', 'info');
-      
+
       // Desabilitar botão durante o teste
       const testButton = document.getElementById('testDbConnection');
       const originalText = testButton.innerHTML;
       testButton.disabled = true;
       testButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Testando...</span>';
-      
+
       const result = await window.electronAPI.testDatabaseCredentials(credentials);
-      
+
       // Reabilitar botão
       testButton.disabled = false;
       testButton.innerHTML = originalText;
-      
+
       if (result.success) {
         let successMessage = '✅ ' + result.message;
         if (result.details) {
@@ -6126,10 +6222,13 @@ class PeritoApp {
           successMessage += `• Base 2º Grau: ${result.details.database2Grau}`;
         }
         this.showDatabaseStatus(successMessage, 'success');
-        
+
         // Atualizar indicador de status na interface
         this.updateConnectionIndicator(true);
-        
+
+        // Ocultar banner se estava visível
+        this.closeDatabaseBanner();
+
         // Mostrar notificação de sucesso
         this.showNotification('Conexão com banco de dados estabelecida com sucesso!', 'success');
       } else {
