@@ -625,7 +625,17 @@ class ServidorAutomationV2 {
       
       // Parar monitoramento contínuo
       this.performanceDashboard.stopContinuousMonitoring();
-      
+
+      // Enviar relatório final para o frontend
+      if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+        const relatorio = this.getRelatorio();
+        console.log('📊 Enviando relatório final para o frontend:', relatorio);
+        this.mainWindow.webContents.send('automation-report', {
+          type: 'final-report',
+          relatorio: relatorio
+        });
+      }
+
       await this.cleanup();
       this.isRunning = false;
     }
@@ -5572,18 +5582,53 @@ Sucessos por Servidor:
   }
 
   getRelatorio() {
-    // Usar resultados otimizados para o relatório da interface
+    // Verificar se há múltiplos servidores processados
+    if (this.servidorResults && Object.keys(this.servidorResults).length > 0) {
+      // Formato para múltiplos servidores
+      const resultados = Object.values(this.servidorResults).map(resultado => ({
+        servidor: {
+          nome: resultado.nome,
+          cpf: resultado.cpf,
+          perfil: resultado.perfil
+        },
+        sucessos: resultado.sucessos || 0,
+        erros: resultado.erros || 0,
+        jaIncluidos: resultado.jaIncluidos || 0,
+        detalhesOJs: (resultado.detalhes || []).map(d => ({
+          orgao: d.orgao || d.oj,
+          status: d.status,
+          observacoes: d.observacoes || d.mensagem || '-'
+        }))
+      }));
+
+      const totalSucessos = resultados.reduce((sum, r) => sum + r.sucessos, 0);
+      const totalErros = resultados.reduce((sum, r) => sum + r.erros, 0);
+      const totalJaIncluidos = resultados.reduce((sum, r) => sum + r.jaIncluidos, 0);
+      const totalValidos = totalSucessos + totalErros;
+
+      return {
+        timestamp: new Date().toISOString(),
+        resultados: resultados,
+        servidoresProcessados: this.processedServidores || resultados.length,
+        sucessos: totalSucessos,
+        erros: totalErros,
+        jaIncluidos: totalJaIncluidos,
+        validacao: {
+          taxaSucesso: totalValidos > 0 ? parseFloat(((totalSucessos / totalValidos) * 100).toFixed(1)) : 0,
+          taxaErros: totalValidos > 0 ? parseFloat(((totalErros / totalValidos) * 100).toFixed(1)) : 0
+        }
+      };
+    }
+
+    // Formato para servidor único (compatibilidade)
     const resultadosOtimizados = this.otimizarResultados();
-    
-    // Calcular estatísticas baseadas nos resultados otimizados
-    // CORREÇÃO: Incluir também "Incluído com Sucesso (Ultra-Fast)" e outras variações
+
     const sucessos = resultadosOtimizados.filter(r =>
       r.status && (r.status.includes('Incluído com Sucesso') || r.status.includes('Já Incluído'))
     ).length;
     const erros = resultadosOtimizados.filter(r => r.status === 'Erro').length;
     const totalValidos = sucessos + erros;
-        
-    // Retornar relatório otimizado no formato esperado pelo frontend
+
     return {
       timestamp: new Date().toISOString(),
       config: {

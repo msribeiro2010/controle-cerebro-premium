@@ -233,11 +233,10 @@ class PeritoApp {
     
     // Listen for automation reports
     window.electronAPI.onAutomationReport((data) => {
-      // Comentado para evitar modal automático na inicialização
-      // if (data.type === 'final-report') {
-      //   this.showFinalReport(data.relatorio);
-      // } else 
-      if (data.type === 'error') {
+      if (data.type === 'final-report') {
+        console.log('📊 Relatório final recebido, exibindo modal...', data.relatorio);
+        this.showAutomationReportModal(data.relatorio);
+      } else if (data.type === 'error') {
         this.showAutomationError(data.error, data.context);
       }
     });
