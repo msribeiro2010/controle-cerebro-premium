@@ -233,55 +233,25 @@ header p {
 
 /* Constellation Icon */
 .constellation-icon {
-    background: linear-gradient(135deg,
-        #667eea 0%,
-        #764ba2 50%,
-        #f093fb 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.5));
-    animation: constellation-pulse 4s ease-in-out infinite;
+    color: #667eea;
     display: inline-block;
     margin-right: 8px;
-}
-
-@keyframes constellation-pulse {
-    0%, 100% {
-        filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.5));
-        transform: scale(1);
-    }
-    50% {
-        filter: drop-shadow(0 0 16px rgba(118, 75, 162, 0.8))
-                drop-shadow(0 0 24px rgba(240, 147, 251, 0.4));
-        transform: scale(1.05);
-    }
+    text-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
 }
 
 /* Version Badge */
 .version-badge {
     display: inline-block;
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    background: #3498db;
     color: white;
-    padding: 4px 12px;
+    padding: 5px 14px;
     border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 700;
     letter-spacing: 0.5px;
     margin-left: 12px;
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
-    animation: pulse-badge 3s ease-in-out infinite;
-}
-
-@keyframes pulse-badge {
-    0%, 100% {
-        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
-        transform: scale(1);
-    }
-    50% {
-        box-shadow: 0 4px 16px rgba(52, 152, 219, 0.5);
-        transform: scale(1.05);
-    }
+    box-shadow: 0 2px 6px rgba(52, 152, 219, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 /* DateTime Widget Modern */
