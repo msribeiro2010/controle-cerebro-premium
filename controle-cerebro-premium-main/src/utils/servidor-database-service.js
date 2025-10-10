@@ -482,7 +482,9 @@ class ServidorDatabaseService {
           console.log(`   ⚠️ Problema: Usuário não tem OJs ativos OU o filtro está muito restritivo`);
         } else {
           console.log(`   ❌ Usuário NÃO EXISTE com este CPF no banco`);
-          console.log(`   ⚠️ CPF recebido: "${cpf}" (${cpf.length} caracteres)`);
+          console.log(`   ⚠️ CPF recebido: "${cpf}" (${cpf ? cpf.length : 0} caracteres)`);
+          console.log(`   ⚠️ CPF tipo: ${typeof cpf}`);
+          console.log(`   ⚠️ CPF valor: ${JSON.stringify(cpf)}`);
         }
       }
 

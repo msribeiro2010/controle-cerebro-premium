@@ -5,7 +5,8 @@
       "Bash(timeout:*)",
       "Bash(node:*)",
       "Bash(tasklist)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
