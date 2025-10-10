@@ -1,0 +1,754 @@
+<!-- Componente de Agendamento de Automações -->
+<div class="scheduler-section" style="margin-top: 30px;">
+    <div class="section-header" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border: 2px solid #0ea5e9; border-radius: 12px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="color: #0c4a6e; margin: 0; font-size: 1.3rem;">
+                    <i class="fas fa-clock"></i> Automações Programadas
+                </h3>
+                <p style="color: #475569; margin: 8px 0 0 0; font-size: 0.9rem;">
+                    Agende execuções automáticas para datas e horários específicos
+                </p>
+            </div>
+            <button id="add-scheduled-task-btn" class="btn btn-primary" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); border: none;">
+                <i class="fas fa-plus-circle"></i> Nova Automação Programada
+            </button>
+        </div>
+    </div>
+
+    <!-- Lista de Tarefas Agendadas -->
+    <div id="scheduled-tasks-list" class="scheduled-tasks-container" style="margin-top: 20px;">
+        <!-- Será populado dinamicamente -->
+    </div>
+</div>
+
+<!-- Modal de Agendamento -->
+<div id="scheduler-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-container" style="max-width: 700px;">
+        <div class="modal-header">
+            <h3>
+                <i class="fas fa-calendar-plus"></i> Agendar Automação
+            </h3>
+            <button class="modal-close" onclick="closeSchedulerModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <form id="scheduler-form">
+                <!-- Nome da Tarefa -->
+                <div class="form-group">
+                    <label for="task-name">
+                        <i class="fas fa-tag"></i> Nome da Automação *
+                    </label>
+                    <input
+                        type="text"
+                        id="task-name"
+                        class="form-control"
+                        placeholder="Ex: Vincular servidores da manhã"
+                        required
+                    >
+                    <small>Nome descritivo para identificar esta automação</small>
+                </div>
+
+                <!-- Tipo de Automação -->
+                <div class="form-group">
+                    <label for="task-type">
+                        <i class="fas fa-cogs"></i> Tipo de Automação *
+                    </label>
+                    <select id="task-type" class="form-control" required>
+                        <option value="">Selecione...</option>
+                        <option value="servidor">Servidores</option>
+                        <option value="perito">Peritos</option>
+                    </select>
+                </div>
+
+                <!-- Seleção de Dados (Servidores ou Peritos) -->
+                <div class="form-group" id="task-data-container">
+                    <label>
+                        <i class="fas fa-users"></i> Itens para Processar
+                    </label>
+                    <div id="task-data-selector">
+                        <p style="color: #64748b; font-size: 0.9rem;">
+                            Selecione o tipo de automação primeiro
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Data e Hora -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label for="task-date">
+                            <i class="fas fa-calendar"></i> Data *
+                        </label>
+                        <input
+                            type="date"
+                            id="task-date"
+                            class="form-control"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-time">
+                            <i class="fas fa-clock"></i> Horário *
+                        </label>
+                        <input
+                            type="time"
+                            id="task-time"
+                            class="form-control"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Recorrência -->
+                <div class="form-group">
+                    <label for="task-recurrence">
+                        <i class="fas fa-repeat"></i> Recorrência
+                    </label>
+                    <select id="task-recurrence" class="form-control">
+                        <option value="once">Executar apenas uma vez</option>
+                        <option value="daily">Executar diariamente</option>
+                        <option value="weekly">Executar semanalmente</option>
+                    </select>
+                    <small>Escolha se a automação deve repetir automaticamente</small>
+                </div>
+
+                <!-- Opções Adicionais -->
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-sliders-h"></i> Opções
+                    </label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="task-notify" checked>
+                            <span>Notificar quando executar</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="task-enabled" checked>
+                            <span>Tarefa habilitada (ativa)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Resumo da Programação -->
+                <div class="scheduler-preview" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-top: 20px;">
+                    <div style="font-weight: 600; color: #334155; margin-bottom: 10px;">
+                        <i class="fas fa-info-circle"></i> Resumo da Programação
+                    </div>
+                    <div id="scheduler-preview-text" style="color: #64748b; font-size: 0.9rem;">
+                        Preencha os campos acima para ver o resumo
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeSchedulerModal()">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="submit" form="scheduler-form" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                <i class="fas fa-check"></i> Agendar Automação
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Template para Card de Tarefa Agendada -->
+<template id="scheduled-task-card-template">
+    <div class="scheduled-task-card" data-task-id="">
+        <div class="task-card-header">
+            <div class="task-card-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="task-card-info">
+                <h4 class="task-card-title"></h4>
+                <span class="task-card-type-badge"></span>
+            </div>
+            <div class="task-card-actions">
+                <button class="btn-icon" title="Editar" onclick="editScheduledTask(this)">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-icon" title="Ativar/Desativar" onclick="toggleScheduledTask(this)">
+                    <i class="fas fa-toggle-on"></i>
+                </button>
+                <button class="btn-icon btn-danger" title="Excluir" onclick="deleteScheduledTask(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="task-card-body">
+            <div class="task-card-schedule">
+                <div class="schedule-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="schedule-date"></span>
+                </div>
+                <div class="schedule-item">
+                    <i class="fas fa-clock"></i>
+                    <span class="schedule-time"></span>
+                </div>
+                <div class="schedule-item">
+                    <i class="fas fa-repeat"></i>
+                    <span class="schedule-recurrence"></span>
+                </div>
+            </div>
+
+            <div class="task-card-status">
+                <span class="status-badge"></span>
+                <span class="next-run-info"></span>
+            </div>
+
+            <div class="task-card-stats">
+                <div class="stat-item">
+                    <i class="fas fa-play-circle"></i>
+                    <span class="stat-label">Execuções:</span>
+                    <span class="stat-value execution-count">0</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="stat-label">Última execução:</span>
+                    <span class="stat-value last-run">Nunca</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style>
+/* ========== ESTILOS DO MODAL ========== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+    width: 100%;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+    padding: 24px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 16px 16px 0 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.modal-body {
+    padding: 30px;
+}
+
+.modal-footer {
+    background: #f8fafc;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-radius: 0 0 16px 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* ========== ESTILOS DOS FORM GROUPS ========== */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.form-group label i {
+    color: #0ea5e9;
+    margin-right: 6px;
+}
+
+.form-group small {
+    display: block;
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #1e293b;
+    background: white;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
+}
+
+select.form-control {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230ea5e9' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+    appearance: none;
+}
+
+input[type="date"].form-control,
+input[type="time"].form-control {
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #0ea5e9;
+}
+
+/* ========== ESTILOS DOS BOTÕES ========== */
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+}
+
+/* ========== PREVIEW DA PROGRAMAÇÃO ========== */
+.scheduler-preview {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 2px solid #0ea5e9;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 24px;
+}
+
+.scheduler-preview > div:first-child {
+    font-weight: 600;
+    color: #0c4a6e;
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.scheduler-preview > div:first-child i {
+    color: #0ea5e9;
+    margin-right: 6px;
+}
+
+#scheduler-preview-text {
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ========== ESTILOS DO SELETOR DE ITENS ========== */
+#task-data-selector {
+    background: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 16px;
+    min-height: 80px;
+}
+
+#task-data-selector > div {
+    max-height: 240px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+#task-data-selector label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: normal;
+}
+
+#task-data-selector label:hover {
+    background: #f1f5f9;
+}
+
+#task-data-selector label strong {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+#task-data-selector small {
+    color: #64748b;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ========== SCROLLBAR CUSTOMIZADA ========== */
+.modal-container::-webkit-scrollbar,
+#task-data-selector > div::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-container::-webkit-scrollbar-track,
+#task-data-selector > div::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.modal-container::-webkit-scrollbar-thumb,
+#task-data-selector > div::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.modal-container::-webkit-scrollbar-thumb:hover,
+#task-data-selector > div::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ========== ESTILOS DO SCHEDULER ========== */
+.scheduled-tasks-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.scheduled-task-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.scheduled-task-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.scheduled-task-card.disabled {
+    opacity: 0.6;
+    filter: grayscale(50%);
+}
+
+.task-card-header {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #cbd5e1;
+}
+
+.task-card-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.task-card-info {
+    flex: 1;
+}
+
+.task-card-title {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.task-card-type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.task-card-type-badge.servidor {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.task-card-type-badge.perito {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.task-card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: #64748b;
+}
+
+.btn-icon:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    transform: scale(1.1);
+}
+
+.btn-icon.btn-danger:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.task-card-body {
+    padding: 20px;
+}
+
+.task-card-schedule {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.schedule-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.schedule-item i {
+    color: #0ea5e9;
+}
+
+.task-card-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.pending {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-badge.running {
+    background: #fef3c7;
+    color: #92400e;
+    animation: pulse 2s infinite;
+}
+
+.status-badge.completed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.next-run-info {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.task-card-stats {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+}
+
+.stat-item i {
+    color: #0ea5e9;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    color: #64748b;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.scheduler-preview {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Empty state */
+.tasks-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+}
+
+.tasks-empty-state i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: #cbd5e1;
+}
+
+.tasks-empty-state h3 {
+    color: #64748b;
+    margin-bottom: 10px;
+}
+
+.tasks-empty-state p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+</style>

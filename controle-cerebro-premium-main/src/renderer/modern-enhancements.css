@@ -1,0 +1,428 @@
+/**
+ * Modern Enhancements - Central IA NAPJe
+ * Melhorias visuais modernas mantendo a paleta de cores original
+ */
+
+/* ========== VARIÁVEIS DE CORES (Paleta Original) ========== */
+:root {
+  /* Cores principais - marrom/âmbar */
+  --primary-brown: #8b7355;
+  --primary-brown-light: #a08770;
+  --primary-brown-dark: #6b5440;
+
+  /* Backgrounds gradientes */
+  --bg-cream: #fefcf9;
+  --bg-cream-dark: #f5f1e8;
+
+  /* Bordas */
+  --border-beige: #d4c4a8;
+
+  /* Sombras suaves */
+  --shadow-soft: 0 8px 20px rgba(139, 115, 85, 0.15), 0 4px 10px rgba(107, 84, 64, 0.1);
+  --shadow-hover: 0 12px 30px rgba(139, 115, 85, 0.25), 0 6px 15px rgba(107, 84, 64, 0.15);
+
+  /* Transições */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s ease;
+}
+
+/* ========== GLASS MORPHISM (Efeito Vidro Moderno) ========== */
+.glass-effect {
+  background: rgba(254, 252, 249, 0.85) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 196, 168, 0.3) !important;
+}
+
+/* ========== MELHORIAS NOS CARDS DO DASHBOARD ========== */
+.dashboard-card {
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth) !important;
+}
+
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.dashboard-card:hover::before {
+  opacity: 1;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: var(--shadow-hover) !important;
+}
+
+.dashboard-card:active {
+  transform: translateY(-4px) scale(1.01) !important;
+}
+
+/* ========== BOTÕES MODERNIZADOS ========== */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 115, 85, 0.3) !important;
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Botão com animação de pulso */
+.btn-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(139, 115, 85, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(139, 115, 85, 0);
+  }
+}
+
+/* ========== SECTION HEADERS MODERNIZADOS ========== */
+.section-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg,
+    var(--primary-brown) 0%,
+    var(--primary-brown-light) 50%,
+    transparent 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s ease;
+}
+
+.section-header:hover::after {
+  transform: scaleX(1);
+}
+
+/* ========== INPUTS E FORMS MODERNIZADOS ========== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+  transition: var(--transition-smooth) !important;
+  border-radius: 8px !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.2) !important;
+}
+
+/* ========== TABELAS MODERNIZADAS ========== */
+table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+table thead th {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-cream-dark) 100%) !important;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+table tbody tr {
+  transition: var(--transition-fast) !important;
+}
+
+table tbody tr:hover {
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.15);
+  z-index: 1;
+}
+
+/* ========== SCROLLBAR CUSTOMIZADA ========== */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-cream);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--primary-brown) 0%, var(--primary-brown-light) 100%);
+  border-radius: 10px;
+  border: 2px solid var(--bg-cream);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--primary-brown-dark) 0%, var(--primary-brown) 100%);
+}
+
+/* ========== BADGES E TAGS ========== */
+.badge, .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+
+.badge:hover, .tag:hover {
+  transform: scale(1.05);
+}
+
+/* ========== LOADING SPINNER MODERNO ========== */
+.spinner-modern {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(139, 115, 85, 0.2);
+  border-top-color: var(--primary-brown);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========== TOOLTIPS MODERNOS ========== */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  padding: 8px 12px;
+  background: rgba(107, 84, 64, 0.95);
+  color: white;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition-fast);
+  z-index: 1000;
+}
+
+[data-tooltip]:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-12px);
+}
+
+/* ========== SKELETON LOADING (Efeito de Carregamento) ========== */
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(212, 196, 168, 0.2) 0%,
+    rgba(212, 196, 168, 0.4) 50%,
+    rgba(212, 196, 168, 0.2) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ========== TABS MODERNIZADAS ========== */
+.tab-button {
+  position: relative;
+  transition: var(--transition-smooth) !important;
+}
+
+.tab-button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-brown), var(--primary-brown-light));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.tab-button.active::after {
+  transform: scaleX(1);
+}
+
+.tab-button:hover:not(.active) {
+  background: rgba(139, 115, 85, 0.05);
+}
+
+/* ========== CARDS DE ESTATÍSTICAS ========== */
+.stat-card {
+  transition: var(--transition-smooth);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px) rotate(-1deg);
+}
+
+/* ========== ANIMAÇÕES DE ENTRADA ========== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-in {
+  animation: fadeInUp 0.6s ease;
+}
+
+/* Delay progressivo para múltiplos elementos */
+.animate-in:nth-child(1) { animation-delay: 0.1s; }
+.animate-in:nth-child(2) { animation-delay: 0.2s; }
+.animate-in:nth-child(3) { animation-delay: 0.3s; }
+.animate-in:nth-child(4) { animation-delay: 0.4s; }
+.animate-in:nth-child(5) { animation-delay: 0.5s; }
+.animate-in:nth-child(6) { animation-delay: 0.6s; }
+
+/* ========== MICROINTERAÇÕES ========== */
+.clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-fast);
+}
+
+.clickable:active {
+  transform: scale(0.95);
+}
+
+/* ========== ALERTS E NOTIFICATIONS MODERNAS ========== */
+.alert-modern {
+  border-left: 4px solid var(--primary-brown);
+  background: rgba(254, 252, 249, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  animation: slideInRight 0.4s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ========== MODO ESCURO (OPCIONAL - COMENTADO) ========== */
+/*
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-cream: #2c2416;
+    --bg-cream-dark: #1f1a10;
+    --border-beige: #4a3f2e;
+  }
+}
+*/
+
+/* ========== RESPONSIVIDADE ========== */
+@media (max-width: 768px) {
+  .dashboard-card:hover {
+    transform: translateY(-4px) scale(1.01) !important;
+  }
+
+  .btn:hover {
+    transform: none;
+  }
+}
+
+/* ========== ACESSIBILIDADE ========== */
+*:focus-visible {
+  outline: 2px solid var(--primary-brown);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove outline para mouse, mantém para teclado */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ========== IMPRESSÃO ========== */
+@media print {
+  .btn, .dashboard-card::before, .section-header::after {
+    display: none !important;
+  }
+
+  .dashboard-card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+}
