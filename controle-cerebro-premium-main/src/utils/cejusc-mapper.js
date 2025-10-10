@@ -50,6 +50,9 @@ class CejuscMapper {
       ['divex presidente prudente', 'DIVEX - Presidente Prudente'],
       ['divisão de execução presidente prudente', 'DIVEX - Presidente Prudente'],
       ['divisão de execução de presidente prudente', 'DIVEX - Presidente Prudente'],
+      ['divex piracicaba', 'DIVEX - Piracicaba'],
+      ['divisão de execução piracicaba', 'DIVEX - Piracicaba'],
+      ['divisão de execução de piracicaba', 'DIVEX - Piracicaba'],
     ]);
   }
 

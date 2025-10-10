@@ -10,11 +10,17 @@
   right: 20px;
   z-index: 9999;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
+  /* Remover transição de posição para arrastar ser suave */
 }
 
 .mini-player.hidden {
   display: none;
+}
+
+/* Indicação visual de que pode ser arrastado */
+.mini-player:active {
+  cursor: grabbing !important;
 }
 
 /* ===== VERSÃO MINIMIZADA ===== */
@@ -23,8 +29,8 @@
   border-radius: 50px;
   padding: 12px 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
   transition: all 0.3s ease;
+  user-select: none; /* Prevenir seleção de texto durante drag */
 }
 
 .mini-player-minimized:hover {
@@ -32,10 +38,22 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
+/* Efeito quando está sendo arrastado */
+.mini-player-minimized:active {
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.5);
+  transform: scale(1.02);
+}
+
 .mini-minimized-header {
   display: flex;
   align-items: center;
   gap: 12px;
+  cursor: grab; /* Indicar que pode arrastar */
+  user-select: none; /* Prevenir seleção de texto */
+}
+
+.mini-minimized-header:active {
+  cursor: grabbing;
 }
 
 .mini-minimized-icon {
@@ -100,10 +118,17 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  user-select: none; /* Prevenir seleção de texto durante drag */
 }
 
 .mini-player-expanded.hidden {
   display: none;
+}
+
+/* Efeito quando está sendo arrastado */
+.mini-player-expanded:active {
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.35);
+  transform: scale(1.01);
 }
 
 /* Header */
@@ -113,6 +138,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: grab; /* Indicar que pode arrastar */
+  user-select: none; /* Prevenir seleção de texto */
+}
+
+.mini-player-header:active {
+  cursor: grabbing;
 }
 
 .mini-header-left {

@@ -347,7 +347,11 @@ class ServidorDatabaseService {
   async buscarOJsDoServidor(cpf, grau = '1') {
     let pool = null;
     try {
-      console.log(`🔍 Buscando OJs do servidor CPF: ${cpf} no ${grau}º grau`);
+      console.log(`\n${'='.repeat(80)}`);
+      console.log(`🔍 [DEBUG] Buscando OJs do servidor`);
+      console.log(`📋 CPF: ${cpf}`);
+      console.log(`📋 Grau: ${grau}º`);
+      console.log(`${'='.repeat(80)}\n`);
 
       // Carregar credenciais salvas
       const fs = require('fs');
@@ -358,6 +362,8 @@ class ServidorDatabaseService {
       if (fs.existsSync(credentialsPath)) {
         credentials = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
         console.log('✅ Credenciais carregadas de database-credentials.json');
+      } else {
+        console.log('⚠️ Arquivo database-credentials.json não encontrado');
       }
 
       // Determinar host e database baseado no grau
@@ -383,41 +389,102 @@ class ServidorDatabaseService {
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 5000,
       });
-      
-      // Query específica para buscar OJs do servidor (apenas vínculos ativos)
+
+      // Query específica para buscar OJs do servidor (TODOS OS VÍNCULOS - INCLUINDO INATIVOS)
+      // NOTA: Filtro dt_final IS NULL TEMPORARIAMENTE REMOVIDO PARA DEBUG
       const query = `
         SELECT DISTINCT
           o.ds_orgao_julgador as orgao_julgador,
           o.id_orgao_julgador,
           p.ds_nome as perfil,
-          us.dt_final
+          us.dt_final,
+          us.dt_inicio,
+          l.ds_nome as nome_servidor,
+          CASE
+            WHEN us.dt_final IS NULL THEN 'ATIVO'
+            ELSE 'INATIVO'
+          END as status_vinculo
         FROM
           pje.tb_usuario_login l
-        JOIN 
-          pje.tb_usuario_localizacao ul 
+        JOIN
+          pje.tb_usuario_localizacao ul
             ON l.id_usuario = ul.id_usuario
-        JOIN 
-          pje.tb_usu_local_mgtdo_servdor us 
+        JOIN
+          pje.tb_usu_local_mgtdo_servdor us
             ON ul.id_usuario_localizacao = us.id_usu_local_mgstrado_servidor
-        JOIN 
-          pje.tb_orgao_julgador o 
+        JOIN
+          pje.tb_orgao_julgador o
             ON us.id_orgao_julgador = o.id_orgao_julgador
-        JOIN 
-          pje.tb_papel p 
+        JOIN
+          pje.tb_papel p
             ON p.id_papel = ul.id_papel
-        WHERE 
+        WHERE
           l.ds_login = $1
-          AND us.dt_final IS NULL  -- Apenas vínculos ativos (sem data de fim)
+          -- TEMPORARIAMENTE SEM FILTRO: AND us.dt_final IS NULL
           AND o.in_ativo = 'S'     -- Apenas OJs ativos no sistema
-        ORDER BY 
+        ORDER BY
           o.ds_orgao_julgador
       `;
-      
+
+      console.log(`\n📝 [DEBUG] Query SQL:\n${query}\n`);
+      console.log(`📝 [DEBUG] Parâmetros: [${cpf}]\n`);
+
       const client = await pool.connect();
       const result = await client.query(query, [cpf]);
       client.release();
 
-      console.log(`✅ Encontrados ${result.rows.length} OJs para o servidor ${cpf}`);
+      console.log(`\n${'='.repeat(80)}`);
+      console.log(`✅ Query executada com sucesso`);
+      console.log(`📊 Total de OJs encontrados: ${result.rows.length}`);
+      console.log(`${'='.repeat(80)}\n`);
+
+      if (result.rows.length > 0) {
+        console.log(`📋 [DEBUG] OJs encontrados:\n`);
+        result.rows.forEach((row, index) => {
+          console.log(`  ${index + 1}. "${row.orgao_julgador}" ← NOME EXATO DO BANCO`);
+          console.log(`     - ID OJ: ${row.id_orgao_julgador}`);
+          console.log(`     - Perfil: ${row.perfil}`);
+          console.log(`     - Status: ${row.status_vinculo}`);
+          console.log(`     - Data Início: ${row.dt_inicio ? new Date(row.dt_inicio).toLocaleDateString('pt-BR') : 'N/A'}`);
+          console.log(`     - Data Final: ${row.dt_final ? new Date(row.dt_final).toLocaleDateString('pt-BR') : 'N/A (Ativo)'}`);
+
+          // ANÁLISE DETALHADA DO NOME DO OJ
+          if (row.orgao_julgador.includes('DIVEX') || row.orgao_julgador.includes('Piracicaba')) {
+            console.log(`     ⚠️ DIVEX/Piracicaba DETECTADO!`);
+            console.log(`     - Comprimento: ${row.orgao_julgador.length} caracteres`);
+            console.log(`     - Contém números? ${/\d/.test(row.orgao_julgador)}`);
+            console.log(`     - Padrão regex DIVEX: ${/divex\s*[-–—−]?\s*\d*/i.test(row.orgao_julgador)}`);
+          }
+          console.log(``);
+        });
+      } else {
+        console.log(`⚠️ [DEBUG] NENHUM OJ encontrado para o CPF ${cpf}`);
+        console.log(`⚠️ Verifique:`);
+        console.log(`   1. Se o CPF está correto no banco de dados`);
+        console.log(`   2. Se existem vínculos na tabela tb_usu_local_mgtdo_servdor`);
+        console.log(`   3. Se o banco de dados conectado é o correto (${database})`);
+        console.log(`\n⚠️ [DEBUG] Vou tentar buscar o usuário sem filtro de dt_final...`);
+
+        // Segunda tentativa: buscar QUALQUER vínculo (ativo ou inativo)
+        const queryTeste = `
+          SELECT COUNT(*) as total
+          FROM pje.tb_usuario_login l
+          WHERE l.ds_login = $1
+        `;
+        const clientTeste = await pool.connect();
+        const resultTeste = await clientTeste.query(queryTeste, [cpf]);
+        clientTeste.release();
+
+        console.log(`   - Usuários com CPF ${cpf}: ${resultTeste.rows[0].total}`);
+
+        if (resultTeste.rows[0].total > 0) {
+          console.log(`   ✅ Usuário EXISTE no banco!`);
+          console.log(`   ⚠️ Problema: Usuário não tem OJs ativos OU o filtro está muito restritivo`);
+        } else {
+          console.log(`   ❌ Usuário NÃO EXISTE com este CPF no banco`);
+          console.log(`   ⚠️ CPF recebido: "${cpf}" (${cpf.length} caracteres)`);
+        }
+      }
 
       // Fechar pool
       await pool.end();
@@ -426,11 +493,16 @@ class ServidorDatabaseService {
       return result.rows.map(row => ({
         orgaoJulgador: row.orgao_julgador,
         id: row.id_orgao_julgador,
-        perfil: row.perfil
+        perfil: row.perfil,
+        statusVinculo: row.status_vinculo,
+        dtInicio: row.dt_inicio,
+        dtFinal: row.dt_final
       }));
 
     } catch (error) {
-      console.error('❌ Erro ao buscar OJs do servidor:', error);
+      console.error('\n❌ [DEBUG] Erro ao buscar OJs do servidor:');
+      console.error('❌ Mensagem:', error.message);
+      console.error('❌ Stack:', error.stack);
       // Fechar pool em caso de erro
       if (pool) {
         try {

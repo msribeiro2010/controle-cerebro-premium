@@ -2548,21 +2548,46 @@ Sucessos por Servidor:
    */
   async processOrgaosJulgadoresBatch() {
     console.log('🚀 [BATCH] Iniciando processamento em lote de OJs');
-    this.sendStatus('info', 'Processamento em lote iniciado...', 60, 'Mantendo modal aberto para múltiplos OJs');
-    
+
+    // ✅ INICIALIZAR CONTADORES GLOBAIS
+    const totalOJs = this.config.orgaos ? this.config.orgaos.length : 0;
+    this.totalOjsGlobal = totalOJs;
+    this.ojsProcessadosGlobal = 0;
+
+    console.log(`📊 [BATCH] Total de OJs para processar: ${totalOJs}`);
+
+    this.sendStatus('info', 'Processamento em lote iniciado...', 60, 'Mantendo modal aberto para múltiplos OJs', null, this.currentServidor?.nome, 0, totalOJs);
+
     try {
       // Inicializar o processador em lote se não existir
       if (!this.batchOJProcessor) {
         this.batchOJProcessor = new BatchOJProcessor(
-          this.page, 
-          this.config, 
-          this.performanceMonitor, 
+          this.page,
+          this.config,
+          this.performanceMonitor,
           this.performanceDashboard
         );
       }
-      
-      // Processar todos os OJs em lote
-      const result = await this.batchOJProcessor.processBatchOJs(this.config.orgaos);
+
+      // ✅ Processar todos os OJs em lote COM CALLBACK DE PROGRESSO
+      const result = await this.batchOJProcessor.processBatchOJs(
+        this.config.orgaos,
+        (progress) => {
+          // Callback de progresso em tempo real
+          this.ojsProcessadosGlobal = progress.current;
+          console.log(`📊 [BATCH PROGRESS] ${progress.current}/${progress.total}: ${progress.orgao}`);
+          this.sendStatus(
+            'info',
+            `📋 Processando OJ ${progress.current}/${progress.total}: ${progress.orgao}`,
+            null,
+            'Processamento em lote',
+            progress.orgao,
+            this.currentServidor?.nome,
+            progress.current,
+            progress.total
+          );
+        }
+      );
       
       // Atualizar resultados
       if (result.results) {
@@ -2598,17 +2623,23 @@ Sucessos por Servidor:
     } catch (error) {
       console.error('❌ [BATCH] Erro no processamento em lote:', error);
       this.sendStatus('error', `Erro no processamento em lote: ${error.message}`, 100, 'Erro crítico');
-      
+
       // Fallback para processamento individual
       console.log('🔄 [BATCH] Tentando fallback para processamento individual...');
-      
-      // Processar cada OJ individualmente
+
+      // Processar cada OJ individualmente COM PROGRESSO
       for (let i = 0; i < this.config.orgaos.length; i++) {
         const orgao = this.config.orgaos[i];
+        this.ojsProcessadosGlobal = i; // ✅ Atualizar contador antes
+        this.sendStatus('info', `Processando OJ ${i + 1}/${this.config.orgaos.length}`, null, 'Fallback individual', orgao, this.currentServidor?.nome, i, this.config.orgaos.length);
         try {
           await this.processOrgaoJulgador(orgao);
+          this.ojsProcessadosGlobal++; // ✅ Incrementar após sucesso
+          this.sendStatus('success', `OJ processado: ${orgao}`, null, 'Fallback sucesso', orgao, this.currentServidor?.nome, i + 1, this.config.orgaos.length);
         } catch (individualError) {
           console.error(`❌ Erro processando ${orgao}:`, individualError.message);
+          this.ojsProcessadosGlobal++; // ✅ Incrementar mesmo em erro
+          this.sendStatus('error', `Erro: ${individualError.message}`, null, 'Fallback erro', orgao, this.currentServidor?.nome, i + 1, this.config.orgaos.length);
         }
       }
     }
@@ -2646,12 +2677,14 @@ Sucessos por Servidor:
     for (let i = 0; i < ojsToProcess.length; i++) {
       const orgao = ojsToProcess[i];
       const progress = 60 + (i / ojsToProcess.length) * 35;
-            
+
+      // 🔄 Enviar status ANTES de processar (mostrando progresso atual)
       this.sendStatus('info', `Processando OJ ${i + 1}/${ojsToProcess.length}`, progress, 'Vinculando órgão julgador', orgao, this.currentServidor?.nome, ojsProcessadasTotal, totalOjs);
-            
+
       try {
         await this.processOrgaoJulgador(orgao);
         ojsProcessadasTotal++; // Incrementar contador
+        this.ojsProcessadosGlobal++; // ✅ INCREMENTAR CONTADOR GLOBAL
         this.results.push({
           orgao,
           status: 'Incluído com Sucesso',
@@ -2660,10 +2693,12 @@ Sucessos por Servidor:
           cpf: this.config.cpf,
           timestamp: new Date().toISOString()
         });
+        // ✅ Enviar status com contador ATUALIZADO após sucesso
         this.sendStatus('success', 'OJ processado com sucesso', progress, 'Vinculação concluída', orgao, this.currentServidor?.nome, ojsProcessadasTotal, totalOjs);
       } catch (error) {
         console.error(`Erro ao processar OJ ${orgao}:`, error);
         ojsProcessadasTotal++; // Incrementar contador mesmo em caso de erro
+        this.ojsProcessadosGlobal++; // ✅ INCREMENTAR CONTADOR GLOBAL mesmo em erro
         this.results.push({
           orgao,
           status: 'Erro',
@@ -2671,6 +2706,7 @@ Sucessos por Servidor:
           cpf: this.config.cpf,
           timestamp: new Date().toISOString()
         });
+        // ✅ Enviar status com contador ATUALIZADO após erro
         this.sendStatus('error', `Erro ao processar OJ: ${error.message}`, progress, 'Erro na vinculação', orgao, this.currentServidor?.nome, ojsProcessadasTotal, totalOjs);
                 
         // Proteções após erro
@@ -4682,14 +4718,17 @@ Sucessos por Servidor:
         const batchResult = await this.batchOJProcessor.processBatchOJs(
           ojsToProcess,
           (progress) => {
-            // Callback de progresso
-            this.sendStatus('info', `📋 OJ ${progress.current}/${progress.total}: ${progress.orgao}`, null, 'Processamento em lote', progress.orgao, servidor.nome, progress.current - 1, ojsToProcess.length);
+            // Callback de progresso - incrementar ANTES de enviar status
+            this.ojsProcessadosGlobal = progress.current; // ✅ Atualizar contador global em tempo real
+            // ✅ Enviar progresso correto (current, não current-1)
+            this.sendStatus('info', `📋 OJ ${progress.current}/${progress.total}: ${progress.orgao}`, null, 'Processamento em lote', progress.orgao, servidor.nome, progress.current, ojsToProcess.length);
           }
         );
-        
+
         // Processar resultados do lote
         for (const resultado of batchResult.results) {
           ojsProcessadasTotal++;
+          // NÃO incrementar aqui - já foi incrementado no callback de progresso em tempo real
           serverResult.ojsProcessados++;
           
           if (resultado.status === 'success') {

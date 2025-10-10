@@ -1,21 +1,21 @@
 {
-  "timestamp": "2025-10-09T19:08:14.509Z",
+  "timestamp": "2025-10-10T16:17:55.038Z",
   "summary": {
-    "totalOperations": 1,
-    "successRate": "100.00%",
-    "averageTime": "434ms",
-    "peakTime": "434ms",
-    "bestTime": "434ms",
+    "totalOperations": 16,
+    "successRate": "62.50%",
+    "averageTime": "2216ms",
+    "peakTime": "2918ms",
+    "bestTime": "220ms",
     "cacheHitRate": "0%",
     "errorRecoveryRate": "N/A"
   },
   "improvements": {
     "clickEditIcon": {
       "baseline": "2381ms",
-      "current": "434ms",
+      "current": "2884ms",
       "target": "500ms",
-      "improvement": "81.8%",
-      "status": "✅"
+      "improvement": "-21.1%",
+      "status": "⚠️"
     }
   },
   "optimizers": {
@@ -27,5 +27,96 @@
     "smartRetryManager": true,
     "navigationOptimizer": true
   },
-  "alerts": []
+  "alerts": [
+    {
+      "timestamp": "2025-10-10T16:17:03.756Z",
+      "operation": "clickEditIcon",
+      "actual": 2917,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "483.4%",
+      "message": "⚠️ clickEditIcon está 2917ms (alvo: 500ms)"
+    },
+    {
+      "timestamp": "2025-10-10T16:17:03.757Z",
+      "operation": "clickEditIcon",
+      "actual": 2918,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "483.6%",
+      "message": "⚠️ clickEditIcon está 2918ms (alvo: 500ms)"
+    },
+    {
+      "timestamp": "2025-10-10T16:17:15.351Z",
+      "operation": "clickEditIcon",
+      "actual": 2866,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "473.2%",
+      "message": "⚠️ clickEditIcon está 2866ms (alvo: 500ms)"
+    },
+    {
+      "timestamp": "2025-10-10T16:17:15.352Z",
+      "operation": "clickEditIcon",
+      "actual": 2866,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "473.2%",
+      "message": "⚠️ clickEditIcon está 2866ms (alvo: 500ms)"
+    },
+    {
+      "timestamp": "2025-10-10T16:17:25.871Z",
+      "operation": "clickEditIcon",
+      "actual": 2840,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "468.0%",
+      "message": "⚠️ clickEditIcon está 2840ms (alvo: 500ms)"
+    },
+    {
+      "timestamp": "2025-10-10T16:17:25.871Z",
+      "operation": "clickEditIcon",
+      "actual": 2840,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "468.0%",
+      "message": "⚠️ clickEditIcon está 2840ms (alvo: 500ms)"
+    },
+    {
+      "timestamp": "2025-10-10T16:17:38.129Z",
+      "operation": "clickEditIcon",
+      "actual": 2769,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "453.8%",
+      "message": "⚠️ clickEditIcon está 2769ms (alvo: 500ms)"
+    },
+    {
+      "timestamp": "2025-10-10T16:17:38.130Z",
+      "operation": "clickEditIcon",
+      "actual": 2769,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "453.8%",
+      "message": "⚠️ clickEditIcon está 2769ms (alvo: 500ms)"
+    },
+    {
+      "timestamp": "2025-10-10T16:17:48.773Z",
+      "operation": "clickEditIcon",
+      "actual": 2884,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "476.8%",
+      "message": "⚠️ clickEditIcon está 2884ms (alvo: 500ms)"
+    },
+    {
+      "timestamp": "2025-10-10T16:17:48.773Z",
+      "operation": "clickEditIcon",
+      "actual": 2884,
+      "target": 500,
+      "baseline": 2381,
+      "degradation": "476.8%",
+      "message": "⚠️ clickEditIcon está 2884ms (alvo: 500ms)"
+    }
+  ]
 }

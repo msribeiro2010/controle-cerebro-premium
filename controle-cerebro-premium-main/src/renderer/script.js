@@ -3135,6 +3135,15 @@ FROM pje.tb_classe_judicial;`
       // Iniciar timer
       this.startMiniPlayerTimer();
 
+      // 🖱️ Inicializar funcionalidade de arrastar (apenas uma vez)
+      if (!this.miniPlayerDragInitialized) {
+        this.initMiniPlayerDrag();
+        this.miniPlayerDragInitialized = true;
+      }
+
+      // 📍 Restaurar posição salva
+      this.restoreMiniPlayerPosition();
+
       console.log('🎬 [MINI-PLAYER] Exibido');
     }
   }
@@ -3286,6 +3295,147 @@ FROM pje.tb_classe_judicial;`
         body,
         type
       });
+    }
+  }
+
+  /**
+   * 🖱️ Inicializa funcionalidade de arrastar o mini-player
+   */
+  initMiniPlayerDrag() {
+    const miniPlayer = document.getElementById('automation-mini-player');
+    if (!miniPlayer) return;
+
+    let isDragging = false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+
+    // Função para iniciar arrasto
+    const dragStart = (e) => {
+      // Permitir arrastar apenas clicando no header (minimizado ou expandido)
+      const minimizedHeader = document.querySelector('.mini-minimized-header');
+      const expandedHeader = document.querySelector('.mini-player-header');
+
+      if (!minimizedHeader?.contains(e.target) && !expandedHeader?.contains(e.target)) {
+        return;
+      }
+
+      // Prevenir seleção de texto durante drag
+      e.preventDefault();
+
+      initialX = e.clientX - miniPlayer.offsetLeft;
+      initialY = e.clientY - miniPlayer.offsetTop;
+
+      isDragging = true;
+      miniPlayer.style.cursor = 'grabbing';
+      console.log('🖱️ [DRAG] Iniciando arrasto do mini-player');
+    };
+
+    // Função para arrastar
+    const drag = (e) => {
+      if (!isDragging) return;
+
+      e.preventDefault();
+
+      currentX = e.clientX - initialX;
+      currentY = e.clientY - initialY;
+
+      // Limitar às bordas da janela
+      const maxX = window.innerWidth - miniPlayer.offsetWidth;
+      const maxY = window.innerHeight - miniPlayer.offsetHeight;
+
+      currentX = Math.max(0, Math.min(currentX, maxX));
+      currentY = Math.max(0, Math.min(currentY, maxY));
+
+      miniPlayer.style.left = `${currentX}px`;
+      miniPlayer.style.top = `${currentY}px`;
+      miniPlayer.style.right = 'auto';
+      miniPlayer.style.bottom = 'auto';
+    };
+
+    // Função para terminar arrasto
+    const dragEnd = () => {
+      if (!isDragging) return;
+
+      isDragging = false;
+      miniPlayer.style.cursor = '';
+
+      // Salvar posição no localStorage
+      this.saveMiniPlayerPosition({
+        x: miniPlayer.offsetLeft,
+        y: miniPlayer.offsetTop
+      });
+
+      console.log('🖱️ [DRAG] Arrasto finalizado - posição salva');
+    };
+
+    // Adicionar event listeners
+    miniPlayer.addEventListener('mousedown', dragStart);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', dragEnd);
+
+    // Adicionar cursor visual nos headers
+    const headers = [
+      document.querySelector('.mini-minimized-header'),
+      document.querySelector('.mini-player-header')
+    ];
+
+    headers.forEach(header => {
+      if (header) {
+        header.style.cursor = 'grab';
+        header.addEventListener('mousedown', () => {
+          header.style.cursor = 'grabbing';
+        });
+        header.addEventListener('mouseup', () => {
+          header.style.cursor = 'grab';
+        });
+      }
+    });
+
+    console.log('🖱️ [DRAG] Funcionalidade de arrastar inicializada');
+  }
+
+  /**
+   * 💾 Salva posição do mini-player no localStorage
+   */
+  saveMiniPlayerPosition(position) {
+    try {
+      localStorage.setItem('miniPlayerPosition', JSON.stringify(position));
+      console.log('💾 [DRAG] Posição salva:', position);
+    } catch (error) {
+      console.error('❌ [DRAG] Erro ao salvar posição:', error);
+    }
+  }
+
+  /**
+   * 📍 Restaura posição salva do mini-player
+   */
+  restoreMiniPlayerPosition() {
+    const miniPlayer = document.getElementById('automation-mini-player');
+    if (!miniPlayer) return;
+
+    try {
+      const savedPosition = localStorage.getItem('miniPlayerPosition');
+      if (savedPosition) {
+        const position = JSON.parse(savedPosition);
+
+        // Verificar se a posição ainda está dentro da tela
+        const maxX = window.innerWidth - miniPlayer.offsetWidth;
+        const maxY = window.innerHeight - miniPlayer.offsetHeight;
+
+        const x = Math.max(0, Math.min(position.x, maxX));
+        const y = Math.max(0, Math.min(position.y, maxY));
+
+        miniPlayer.style.left = `${x}px`;
+        miniPlayer.style.top = `${y}px`;
+        miniPlayer.style.right = 'auto';
+        miniPlayer.style.bottom = 'auto';
+
+        console.log('📍 [DRAG] Posição restaurada:', { x, y });
+      }
+    } catch (error) {
+      console.error('❌ [DRAG] Erro ao restaurar posição:', error);
     }
   }
 
@@ -11287,7 +11437,8 @@ FROM pje.tb_classe_judicial;`
           resultados.push(resultado);
 
           // Se o servidor tem OJs faltantes, adicionar à lista para automação
-          if (resultado.status === 'incompleto' || resultado.status === 'nao_cadastrado') {
+          // ⚠️ NÃO incluir servidores com CPF inválido
+          if ((resultado.status === 'incompleto' || resultado.status === 'nao_cadastrado') && resultado.status !== 'cpf_invalido') {
             // Para servidores não cadastrados, incluir todos os OJs
             // Para servidores cadastrados, incluir apenas os OJs faltantes
             const ojsParaAutomacao = resultado.status === 'nao_cadastrado' 
@@ -11579,8 +11730,95 @@ FROM pje.tb_classe_judicial;`
     return html;
   }
 
+  /**
+   * 🔢 Valida CPF usando algoritmo oficial
+   */
+  validarCPF(cpf) {
+    console.log('🔍 [VALIDAR CPF] Entrada recebida:', cpf, 'Tipo:', typeof cpf);
+
+    // Verificar se CPF existe
+    if (!cpf) {
+      console.error('❌ [VALIDAR CPF] CPF não fornecido ou vazio');
+      return { valido: false, erro: 'CPF não fornecido' };
+    }
+
+    // Converter para string se necessário
+    const cpfString = String(cpf);
+    console.log('🔍 [VALIDAR CPF] CPF como string:', cpfString);
+
+    // Remove caracteres não numéricos
+    const cpfLimpo = cpfString.replace(/\D/g, '');
+    console.log('🔍 [VALIDAR CPF] CPF limpo (somente números):', cpfLimpo);
+
+    // CPF deve ter 11 dígitos
+    if (cpfLimpo.length !== 11) {
+      console.error(`❌ [VALIDAR CPF] Tamanho incorreto: ${cpfLimpo.length} dígitos`);
+      return { valido: false, erro: `CPF deve ter 11 dígitos (encontrado: ${cpfLimpo.length})` };
+    }
+
+    // Verifica se todos os dígitos são iguais (CPF inválido)
+    if (/^(\d)\1{10}$/.test(cpfLimpo)) {
+      console.error('❌ [VALIDAR CPF] Todos os dígitos são iguais');
+      return { valido: false, erro: 'CPF não pode ter todos os dígitos iguais' };
+    }
+
+    // Validação do primeiro dígito verificador
+    let soma = 0;
+    for (let i = 0; i < 9; i++) {
+      soma += parseInt(cpfLimpo.charAt(i)) * (10 - i);
+    }
+    let resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpfLimpo.charAt(9))) {
+      console.error('❌ [VALIDAR CPF] Primeiro dígito verificador inválido');
+      return { valido: false, erro: 'Primeiro dígito verificador inválido' };
+    }
+
+    // Validação do segundo dígito verificador
+    soma = 0;
+    for (let i = 0; i < 10; i++) {
+      soma += parseInt(cpfLimpo.charAt(i)) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpfLimpo.charAt(10))) {
+      console.error('❌ [VALIDAR CPF] Segundo dígito verificador inválido');
+      return { valido: false, erro: 'Segundo dígito verificador inválido' };
+    }
+
+    console.log('✅ [VALIDAR CPF] CPF válido! Retornando:', { valido: true, cpfLimpo });
+    return { valido: true, cpfLimpo: cpfLimpo };
+  }
+
   async verificarServidor(servidor) {
     try {
+      console.log('\n🔍 ====== INICIANDO VERIFICAÇÃO DE SERVIDOR ======');
+      console.log('📋 Dados do servidor:', JSON.stringify(servidor, null, 2));
+
+      // ✅ VALIDAR CPF ANTES DE BUSCAR NO BANCO
+      console.log('🔍 Iniciando validação de CPF:', servidor.cpf);
+      const validacaoCPF = this.validarCPF(servidor.cpf);
+
+      console.log('🔍 Resultado da validação:', JSON.stringify(validacaoCPF, null, 2));
+
+      if (!validacaoCPF.valido) {
+        console.error(`❌ CPF INVÁLIDO: ${servidor.cpf} - ${validacaoCPF.erro}`);
+        return {
+          servidor: servidor.nome,
+          cpf: servidor.cpf,
+          perfil: servidor.perfil,
+          status: 'cpf_invalido',
+          mensagemErro: `CPF inválido: ${validacaoCPF.erro}`,
+          ojsEsperados: servidor.ojs || servidor.localizacoes || [],
+          ojsCadastrados: [],
+          ojsFaltantes: [],
+          ojsCorretos: [],
+          ojsExtras: []
+        };
+      }
+
+      console.log(`✅ CPF VÁLIDO! CPF limpo: ${validacaoCPF.cpfLimpo}`);
+
       // Carregar lista completa de órgãos julgadores do sistema
       const orgaosCompletos = await this.carregarOrgaosPJE();
 
@@ -11600,14 +11838,14 @@ FROM pje.tb_classe_judicial;`
 
       console.log('🔍 Verificando servidor:', servidor.nome, 'CPF:', servidor.cpf);
       console.log('📋 OJs esperados (do JSON importado - normalizados):', ojsEsperados);
-      
+
       // Buscar servidor no banco de dados PJE real
       let ojsCadastrados = [];
       let servidorBanco = null;
-      
+
       try {
-        // Limpar CPF para busca
-        const cpfLimpo = servidor.cpf.replace(/\D/g, '');
+        // Usar CPF já validado e limpo
+        const cpfLimpo = validacaoCPF.cpfLimpo;
         
         console.log('🔍 Iniciando busca no banco PJE para CPF:', cpfLimpo);
         
@@ -11686,10 +11924,52 @@ FROM pje.tb_classe_judicial;`
 
       // Função auxiliar para verificar se os OJs são equivalentes (VERSÃO CORRIGIDA)
       const ojsEquivalentes = (oj1, oj2) => {
+        // TRATAMENTO ESPECIAL PARA CEJUSC E DIVEX: extrair formato padrão
+        // Remover texto adicional como "- JT Centro Judiciário de Métodos..."
+        const simplificarOJ = (texto) => {
+          if (!texto) return texto;
+
+          // Se contém CEJUSC, extrair apenas CEJUSC + cidade
+          if (/cejusc/i.test(texto)) {
+            // Padrão: "CEJUSC ARAÇATUBA - JT Centro Judiciário..."
+            // Extrair apenas "CEJUSC ARAÇATUBA"
+            const match = texto.match(/cejusc\s+([a-záàâãéèêíïóôõöúçñ\s]+?)(?:\s*[-–—−]\s*|$)/i);
+            if (match && match[1]) {
+              return `CEJUSC ${match[1].trim()}`;
+            }
+          }
+
+          // Se contém DIVEX, extrair apenas DIVEX + cidade
+          if (/divex/i.test(texto)) {
+            // Padrão: "DIVEX - Piracicaba" ou "Divisão de Execução - Piracicaba"
+            // Extrair apenas "DIVEX - Piracicaba"
+            const match = texto.match(/(?:divex|divisão de execução)\s*[-–—−]?\s*([a-záàâãéèêíïóôõöúçñ\s]+?)(?:\s*[-–—−]\s*|$)/i);
+            if (match && match[1]) {
+              return `DIVEX - ${match[1].trim()}`;
+            }
+          }
+
+          return texto;
+        };
+
+        // Simplificar OJs antes de normalizar
+        const oj1Original = oj1;
+        const oj2Original = oj2;
+        oj1 = simplificarOJ(oj1);
+        oj2 = simplificarOJ(oj2);
+
+        // Debug: mostrar simplificação de CEJUSC (apenas se houver mudança)
+        // DESABILITADO para reduzir poluição no console
+        // if (oj1 !== oj1Original || oj2 !== oj2Original) {
+        //   console.log('🔄 CEJUSC simplificado:');
+        //   if (oj1 !== oj1Original) console.log(`   "${oj1Original}" → "${oj1}"`);
+        //   if (oj2 !== oj2Original) console.log(`   "${oj2Original}" → "${oj2}"`);
+        // }
+
         // Normalizar ambos os nomes
         let norm1 = normalizarNome(oj1);
         let norm2 = normalizarNome(oj2);
-        
+
         // Converter números por extenso
         norm1 = converterNumeroExtenso(norm1);
         norm2 = converterNumeroExtenso(norm2);
@@ -11736,7 +12016,8 @@ FROM pje.tb_classe_judicial;`
           }
           
           // Extrair tipo (ordem específica para evitar falsos positivos)
-          if (texto.includes('con')) componentes.tipo = 'con';
+          if (texto.includes('divex')) componentes.tipo = 'divex';
+          else if (texto.includes('con')) componentes.tipo = 'con';
           else if (texto.includes('liq')) componentes.tipo = 'liq';
           else if (texto.includes('exe')) componentes.tipo = 'exe';
           else if (texto.includes('dam')) componentes.tipo = 'dam';
@@ -11841,7 +12122,17 @@ FROM pje.tb_classe_judicial;`
 
         // CEJUSC: exigir tipo e cidade (podem não ter número)
         if (comp1.tipo === 'cejusc' && comp2.tipo === 'cejusc') {
-          return cidadeMatch;
+          const resultado = cidadeMatch;
+          // Logar apenas quando houver MATCH para debugar falsos positivos
+          if (resultado) {
+            console.log(`🔍 [MATCH] CEJUSCs EQUIVALENTES:`);
+            console.log(`   → Original 1: "${oj1Original}"`);
+            console.log(`   → Original 2: "${oj2Original}"`);
+            console.log(`   → Cidade 1: "${cidade1}"`);
+            console.log(`   → Cidade 2: "${cidade2}"`);
+            console.log(`   → ✅ MATCH CONFIRMADO\n`);
+          }
+          return resultado;
         }
 
         // Para outros tipos: exigir tipo, especialidade, cidade e número (se aplicável)
@@ -11855,21 +12146,51 @@ FROM pje.tb_classe_judicial;`
         return especialidadeMatch && numeroMatch;
       };
       
+      // 🔍 LOG DETALHADO: Verificar cada OJ esperado
+      console.log('\n🔍 ====== VERIFICAÇÃO DETALHADA DE CADA OJ ======');
+      console.log(`📋 Servidor: ${servidor.nome} (CPF: ${servidor.cpf})`);
+      console.log(`📋 Total de OJs esperados: ${ojsEsperados.length}`);
+      console.log(`📋 Total de OJs cadastrados no banco: ${ojsCadastrados.length}\n`);
+
+      console.log('📝 OJs CADASTRADOS NO BANCO:');
+      ojsCadastrados.forEach((oj, i) => {
+        console.log(`  ${i + 1}. "${oj}"`);
+      });
+      console.log('');
+
+      console.log('📝 OJs ESPERADOS (do JSON):');
+      ojsEsperados.forEach((ojEsperado, index) => {
+        const encontrado = ojsCadastrados.some(ojCadastrado => ojsEquivalentes(ojEsperado, ojCadastrado));
+        console.log(`  ${index + 1}. "${ojEsperado}" → ${encontrado ? '✅ ENCONTRADO' : '❌ NÃO ENCONTRADO'}`);
+
+        // Se não encontrado, tentar match parcial para debug
+        if (!encontrado) {
+          console.log(`     🔍 Tentando match com cada OJ do banco:`);
+          ojsCadastrados.forEach((ojCadastrado) => {
+            const resultado = ojsEquivalentes(ojEsperado, ojCadastrado);
+            if (resultado || ojCadastrado.toLowerCase().includes(ojEsperado.toLowerCase()) || ojEsperado.toLowerCase().includes(ojCadastrado.toLowerCase())) {
+              console.log(`        • "${ojCadastrado}" → ${resultado ? '✅ EQUIVALENTE' : '⚠️ CONTÉM TEXTO SIMILAR'}`);
+            }
+          });
+        }
+      });
+      console.log('='.repeat(50) + '\n');
+
       // Identificar OJs faltantes (esperados mas não cadastrados)
-      const ojsFaltantes = ojsEsperados.filter(ojEsperado => 
+      const ojsFaltantes = ojsEsperados.filter(ojEsperado =>
         !ojsCadastrados.some(ojCadastrado => ojsEquivalentes(ojEsperado, ojCadastrado))
       );
-      
+
       // Identificar OJs extras (cadastrados mas não esperados)
-      const ojsExtras = ojsCadastrados.filter(ojCadastrado => 
+      const ojsExtras = ojsCadastrados.filter(ojCadastrado =>
         !ojsEsperados.some(ojEsperado => ojsEquivalentes(ojCadastrado, ojEsperado))
       );
-      
+
       // Identificar OJs corretos (esperados e cadastrados)
-      const ojsCorretos = ojsCadastrados.filter(ojCadastrado => 
+      const ojsCorretos = ojsCadastrados.filter(ojCadastrado =>
         ojsEsperados.some(ojEsperado => ojsEquivalentes(ojCadastrado, ojEsperado))
       );
-      
+
       // Log detalhado da comparação
       console.log('📊 Resultado da comparação:');
       console.log('   ✅ OJs corretos (já cadastrados):', ojsCorretos);
@@ -11935,6 +12256,7 @@ FROM pje.tb_classe_judicial;`
     const completos = resultados.filter(r => r.status === 'completo').length;
     const incompletos = resultados.filter(r => r.status === 'incompleto').length;
     const naoCadastrados = resultados.filter(r => r.status === 'nao_cadastrado').length;
+    const cpfsInvalidos = resultados.filter(r => r.status === 'cpf_invalido').length;
     const erros = resultados.filter(r => r.status === 'erro').length;
 
     // Calcular totais de OJs
@@ -11947,14 +12269,37 @@ FROM pje.tb_classe_judicial;`
         <h3>📊 Resumo da Verificação de OJs Faltantes</h3>
         <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0;">
           <p style="margin: 5px 0; font-size: 18px;">
-            <strong>Total de OJs que precisam ser cadastrados:</strong> 
+            <strong>Total de OJs que precisam ser cadastrados:</strong>
             <span style="color: #dc3545; font-size: 24px; font-weight: bold;">${totalOjsFaltantes}</span>
           </p>
           <p style="margin: 5px 0;">
             <strong>Servidores com pendências:</strong> ${totalServidoresComPendencias} de ${resultados.length}
           </p>
+          ${cpfsInvalidos > 0 ? `
+            <p style="margin: 10px 0; color: #dc3545; font-weight: bold;">
+              ⚠️ <strong>${cpfsInvalidos} servidor(es) com CPF inválido!</strong>
+            </p>
+          ` : ''}
         </div>
       </div>
+
+      ${cpfsInvalidos > 0 ? `
+        <div class="cpfs-invalidos" style="background: #f8d7da; border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 20px 0;">
+          <h3 style="color: #721c24; margin-top: 0;">❌ CPFs Inválidos</h3>
+          <p style="margin-bottom: 15px;">Os seguintes servidores possuem CPF inválido e precisam ser corrigidos:</p>
+          <div class="cpf-invalido-lista">
+            ${resultados
+              .filter(r => r.status === 'cpf_invalido')
+              .map(r => `
+                <div style="background: white; padding: 12px; border-radius: 6px; margin-bottom: 10px; border-left: 4px solid #dc3545;">
+                  <p style="margin: 5px 0;"><strong>Nome:</strong> ${r.servidor}</p>
+                  <p style="margin: 5px 0;"><strong>CPF:</strong> <code>${r.cpf}</code></p>
+                  <p style="margin: 5px 0; color: #dc3545;"><strong>Erro:</strong> ${r.mensagemErro}</p>
+                </div>
+              `).join('')}
+          </div>
+        </div>
+      ` : ''}
 
       <div class="resultado-detalhes" style="margin-top: 30px;">
         <h3>📋 Detalhes por Servidor</h3>
@@ -11965,7 +12310,12 @@ FROM pje.tb_classe_judicial;`
     resultados.forEach((resultado) => {
       const servidor = resultado.servidor;
       const detalhes = resultado.detalhes || {};
-      
+
+      // ⚠️ Pular servidores com CPF inválido (já exibidos na seção de alertas)
+      if (resultado.status === 'cpf_invalido') {
+        return;
+      }
+
       // Só mostrar servidores com OJs faltantes
       if (!detalhes.ojsFaltantes || detalhes.ojsFaltantes.length === 0) {
         return; // Pular servidores que estão completos
