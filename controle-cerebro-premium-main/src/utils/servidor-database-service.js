@@ -390,8 +390,9 @@ class ServidorDatabaseService {
         connectionTimeoutMillis: 5000,
       });
 
-      // Query específica para buscar OJs do servidor (TODOS OS VÍNCULOS - INCLUINDO INATIVOS)
-      // NOTA: Filtro dt_final IS NULL TEMPORARIAMENTE REMOVIDO PARA DEBUG
+      // Query específica para buscar OJs do servidor
+      // IMPORTANTE: Usar regexp_replace para comparar CPF sem formatação
+      // pois o banco pode armazenar com ou sem pontos/hífens
       const query = `
         SELECT DISTINCT
           o.ds_orgao_julgador as orgao_julgador,
@@ -400,6 +401,7 @@ class ServidorDatabaseService {
           us.dt_final,
           us.dt_inicio,
           l.ds_nome as nome_servidor,
+          l.ds_login as cpf_banco,
           CASE
             WHEN us.dt_final IS NULL THEN 'ATIVO'
             ELSE 'INATIVO'
@@ -419,9 +421,9 @@ class ServidorDatabaseService {
           pje.tb_papel p
             ON p.id_papel = ul.id_papel
         WHERE
-          l.ds_login = $1
-          -- TEMPORARIAMENTE SEM FILTRO: AND us.dt_final IS NULL
-          AND o.in_ativo = 'S'     -- Apenas OJs ativos no sistema
+          regexp_replace(l.ds_login, '[^0-9]', '', 'g') = $1
+          AND us.dt_final IS NULL
+          AND (o.in_ativo IS NULL OR o.in_ativo = 'S')
         ORDER BY
           o.ds_orgao_julgador
       `;
@@ -440,6 +442,10 @@ class ServidorDatabaseService {
 
       if (result.rows.length > 0) {
         console.log(`📋 [DEBUG] OJs encontrados:\n`);
+        console.log(`📋 Servidor: ${result.rows[0].nome_servidor}`);
+        console.log(`📋 CPF no banco: "${result.rows[0].cpf_banco}"`);
+        console.log(`📋 CPF buscado: "${cpf}"\n`);
+
         result.rows.forEach((row, index) => {
           console.log(`  ${index + 1}. "${row.orgao_julgador}" ← NOME EXATO DO BANCO`);
           console.log(`     - ID OJ: ${row.id_orgao_julgador}`);
